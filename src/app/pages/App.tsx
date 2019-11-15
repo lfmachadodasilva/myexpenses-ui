@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import logo from "../../logo.svg";
 import "./App.scss";
 import { Button, Modal } from "react-bootstrap";
+import { HeaderComponent } from "../components/header/header";
 
 const App: React.FC = () => {
   const [show, setShow] = useState(false);
@@ -11,6 +12,7 @@ const App: React.FC = () => {
 
   return (
     <div className="App">
+      <HeaderComponent />
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
