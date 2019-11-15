@@ -1,3 +1,3 @@
-import { ServiceBase } from "./serviceBase";
+import { ServiceBase } from './serviceBase';
 
 export class ExpenseService extends ServiceBase {}

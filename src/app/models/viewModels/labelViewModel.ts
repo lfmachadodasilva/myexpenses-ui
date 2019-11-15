@@ -1,17 +1,17 @@
-export interface ILabelDto {
+export interface ILabelViewModel {
     id: number;
     name: string;
 
     groupId: number;
 }
 
-export interface ILabelWithValuesDto extends ILabelDto {
+export interface ILabelWithValuesViewModel extends ILabelViewModel {
     lastValue: number;
     currentValue: number;
     averangeValue: number;
 }
 
-export interface ILabelToAddDto {
+export interface ILabelToAddViewModel {
     id: number;
     name: string;
 }
