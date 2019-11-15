@@ -1,3 +1,3 @@
 export abstract class ServiceBase {
-    constructor(private authToken: string) {}
+    // constructor(private authToken: string) {}
 }
