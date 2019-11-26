@@ -1,0 +1,8 @@
+{
+    "HEADER": {
+        "BRAND": "MyExpenses",
+        "GROUPS": "Groups {{count}}",
+        "LABELS": "Labels",
+        "EXPENSES": "Expenses"
+    }
+}

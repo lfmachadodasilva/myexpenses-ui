@@ -17,17 +17,14 @@ const App: React.FC = () => {
                         <Route path='/expense'>
                             <ExpensePage />
                         </Route>
-                        {/* <Route path='/expense/add'>
-                            <ExpenseAddEditPage />
-                        </Route> */}
-                        {/* <Route path='/expense/edit'>
-                            <ExpenseAddEditPage />
-                        </Route> */}
                         <Route path='/label'>
                             <LabelPage />
                         </Route>
-                        <Route path='/'>
+                        <Route exact path='/'>
                             <h1> HOME </h1>
+                        </Route>
+                        <Route path='*'>
+                            <h1> 404 </h1>
                         </Route>
                     </Switch>
                 </Container>
