@@ -1,0 +1,6 @@
+{
+    "javascript.preferences.importModuleSpecifier": "relative",
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "files.autoSave": "onFocusChange",
+    "editor.formatOnSave": true
+}
