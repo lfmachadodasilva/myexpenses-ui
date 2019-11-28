@@ -9,7 +9,7 @@ import { ExpensePage } from './expense/expense';
 
 const App: React.FC = () => {
     return (
-        <Router>
+        <Router basename={process.env.PUBLIC_URL}>
             <div className='App'>
                 <HeaderComponent />
                 <Container>
@@ -21,7 +21,10 @@ const App: React.FC = () => {
                             <LabelPage />
                         </Route>
                         <Route exact path='/'>
-                            <h1> HOME </h1>
+                            <>
+                                <h1> HOME </h1>
+                                <h3> myexpenses home page </h3>
+                            </>
                         </Route>
                         <Route path='*'>
                             <h1> 404 </h1>

@@ -6,7 +6,7 @@ import { ExpenseAllPage } from './expenseAll';
 export class ExpensePage extends React.Component {
     render(): React.ReactNode {
         return (
-            <Router>
+            <Router basename={process.env.PUBLIC_URL}>
                 <h1> Expense Page </h1>
                 <Switch>
                     <Route path='/expense' exact strict>

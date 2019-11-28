@@ -19,6 +19,14 @@ before_script:
     - npm rebuild node-sass
 
 script:
-    - npm run build --if-present
+    - npm run build:github
     - npm run flow
     - npm test
+
+deploy:
+    provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    local_dir: build
+    on:
+        branch: master

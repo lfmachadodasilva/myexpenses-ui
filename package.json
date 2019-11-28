@@ -1,5 +1,6 @@
 {
-    "name": "myexpenses-frontend-react",
+    "name": "myexpenses-ui",
+    "homepage": "https://lfmachadodasilva.github.io/myexpenses-ui",
     "version": "0.1.0",
     "private": true,
     "dependencies": {
@@ -10,6 +11,7 @@
         "@types/react-router-dom": "^5.1.2",
         "bootstrap": "^4.3.1",
         "flow-bin": "^0.112.0",
+        "gh-pages": "^2.1.1",
         "i18next": "^19.0.1",
         "i18next-browser-languagedetector": "^4.0.1",
         "jquery": "^3.4.1",
@@ -25,9 +27,11 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build",
+        "build": "react-scripts build --if-present",
+        "build:github": "react-scripts build --base-href https://lfmachadodasilva.github.io/myexpenses-frontend/ && cp build/index.html build/404.html",
         "test": "react-scripts test --watchAll=false",
         "eject": "react-scripts eject",
+        "deploy": "gh-pages -d build",
         "flow": "flow"
     },
     "eslintConfig": {
