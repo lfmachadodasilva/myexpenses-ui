@@ -16,7 +16,6 @@ export class HeaderComponent extends React.Component<HeaderProps, HeaderState> {
     }
 
     render(): React.ReactNode {
-        console.log(process.env.PUBLIC_URL);
         return (
             <Navbar collapseOnSelect bg='dark' variant='dark' expand='sm'>
                 <Navbar.Brand href={process.env.PUBLIC_URL + '/'}>

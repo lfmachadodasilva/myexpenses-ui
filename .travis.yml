@@ -14,14 +14,19 @@ notifications:
 
 install:
     - npm install
+    - npm install -g codecov
 
 before_script:
     - npm rebuild node-sass
 
 script:
-    - npm run build:github
-    - npm run flow
-    - npm test
+    - npm run build:github || travis_terminate 1;
+    - npm run flow || travis_terminate 1;
+    - npm run test || travis_terminate 1;
+
+after_success:
+    - npm run test:coverage || travis_terminate 1;
+    - codecov -t $CODECOV_TOKEN -f coverage/*
 
 deploy:
     provider: pages

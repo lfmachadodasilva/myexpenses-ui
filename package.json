@@ -30,6 +30,7 @@
         "build": "react-scripts build --if-present",
         "build:github": "react-scripts build --base-href https://lfmachadodasilva.github.io/myexpenses-frontend/ && cp build/index.html build/404.html",
         "test": "react-scripts test --watchAll=false",
+        "test:coverage": "react-scripts test --watchAll=false --coverage",
         "eject": "react-scripts eject",
         "deploy": "gh-pages -d build",
         "flow": "flow"
