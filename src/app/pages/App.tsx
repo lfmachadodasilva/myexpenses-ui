@@ -14,9 +14,7 @@ const App: React.FC = () => {
                 <HeaderComponent />
                 <Container>
                     <Switch>
-                        <Route path='/expense'>
-                            <ExpensePage />
-                        </Route>
+                        <Route path='/expense' component={ExpensePage} />
                         <Route path='/label'>
                             <LabelPage />
                         </Route>
