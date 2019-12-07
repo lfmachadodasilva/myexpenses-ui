@@ -4,5 +4,26 @@
         "GROUPS": "Groups {{count}}",
         "LABELS": "Labels",
         "EXPENSES": "Expenses"
+    },
+    "SEARCH": {
+        "GROUP": "Group",
+        "MONTH": "Month",
+        "YEAR": "Year",
+        "EXPAND": "Click me!",
+        "SUBMIT": "Search",
+        "MONTHS": {
+            "JANUARY": "January",
+            "FEBRUARY": "February",
+            "MARCH": "March",
+            "APRIL": "April",
+            "MAY": "May",
+            "JUNE": "June",
+            "JULY": "July",
+            "AUGUST": "August",
+            "SEPTEMBER": "September",
+            "OCTOBER": "October",
+            "NOVEMBER": "November",
+            "DECEMBER": "December"
+        }
     }
 }
