@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { shallow } from 'enzyme';
-import { HeaderComponent } from './header';
+import HeaderComponent from './header';
 import { Nav } from 'react-bootstrap';
 
 describe('header component', () => {

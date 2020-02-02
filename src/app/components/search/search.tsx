@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Col, Row, Button, Container } from 'react-bootstrap';
+
 import './search.scss';
 import { Trans } from 'react-i18next';
 import { MonthViewModel } from '../../models/viewModels/MonthViewModel';
@@ -141,6 +142,7 @@ export class SearchComponent extends React.Component<SearchProps, SearchState> {
 
     private getMonths(): MonthViewModel[] {
         let month = 0;
+
         return [
             'JANUARY',
             'FEBRUARY',
