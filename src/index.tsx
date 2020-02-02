@@ -5,6 +5,10 @@ import App from './app/pages/App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './i18n';
+import config from './firebase-config';
+import { initializeApp } from 'firebase';
+
+initializeApp(config);
 
 ReactDOM.render(<App />, document.getElementById('root'));
 

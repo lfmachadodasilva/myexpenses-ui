@@ -1,10 +1,27 @@
 import { ServiceBase } from './serviceBase';
 import { ILabelDto, ILabelWithValuesDto, ILabelToAddDto } from '../models/dtos/labelDto';
+import { User } from 'firebase';
+// import axios from 'axios';
 
 /**
  * Label service
  */
 export class LabelService extends ServiceBase {
+    user: User;
+
+    // private getHeaders = (token: string) => {
+    //     headers: {
+    //         Authorization: `Bearer ${token}`;
+    //     }
+    // };
+
+    /**
+     *
+     */
+    constructor(user: User) {
+        super();
+        this.user = user;
+    }
     /**
      * Get all labels
      */

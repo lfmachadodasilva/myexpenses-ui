@@ -3,7 +3,22 @@
         "BRAND": "MyExpenses",
         "GROUPS": "Groups {{count}}",
         "LABELS": "Labels",
-        "EXPENSES": "Expenses"
+        "EXPENSES": "Expenses",
+        "LOGIN_REGISTER": "Login / Register",
+        "LOGOUT": "Log out"
+    },
+    "LOGIN_REGISTER": {
+        "LOGIN": "Login",
+        "REGISTER": "Register",
+        "EMAIL": "Email",
+        "PASSWORD": "Password",
+        "CONFIRM_PASSWORD": "Confirm password",
+        "EMAIL_PLACEHOLDER": "Enter email",
+        "PASSWORD_PLACEHOLDER": "Enter password",
+        "USERNAME": "User name",
+        "USERNAME_PLACEHOLDER": "Enter user name",
+        "FORGOT": "Forgot password",
+        "RESET": "Reset"
     },
     "SEARCH": {
         "GROUP": "Group",
