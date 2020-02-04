@@ -6,6 +6,7 @@ import { FaFacebook } from 'react-icons/fa';
 import RegisterPage from './register';
 import LoginPage from './login';
 import ForgotPage from './forgot';
+import { ConfigurationManager } from '../../../configuration/manager';
 
 /**
  * Login/Regiter page
@@ -21,6 +22,8 @@ const LoginRegisterPage: React.FC = () => {
         });
     };
 
+    const [config] = useState(ConfigurationManager.get());
+
     if (redirectToReferrer) {
         return <Redirect from='' to={from.pathname} />;
     }
@@ -35,24 +38,28 @@ const LoginRegisterPage: React.FC = () => {
                 </Col>
             </Row>
 
-            <hr></hr>
+            {config.enableLoginByEmail && (
+                <>
+                    <hr></hr>
 
-            <Row className='justify-content-center'>
-                <Col xs={12} sm={6}>
-                    <LoginPage />
-                </Col>
-                <Col xs={12} sm={6}>
-                    <RegisterPage />
-                </Col>
-            </Row>
+                    <Row className='justify-content-center'>
+                        <Col xs={12} sm={6}>
+                            <LoginPage />
+                        </Col>
+                        <Col xs={12} sm={6}>
+                            <RegisterPage />
+                        </Col>
+                    </Row>
 
-            <hr></hr>
+                    <hr></hr>
 
-            <Row className='justify-content-center'>
-                <Col xs={12} sm={6}>
-                    <ForgotPage />
-                </Col>
-            </Row>
+                    <Row className='justify-content-center'>
+                        <Col xs={12} sm={6}>
+                            <ForgotPage />
+                        </Col>
+                    </Row>
+                </>
+            )}
         </div>
     );
 };
