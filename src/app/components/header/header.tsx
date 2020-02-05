@@ -1,5 +1,5 @@
 import React, { useContext, useMemo } from 'react';
-import { Navbar, Nav, Image } from 'react-bootstrap';
+import { Navbar, Nav, Image, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { userContext } from '../../contexts/user-context';
 
@@ -73,7 +73,14 @@ const HeaderComponent: React.FC = () => {
                                         history.push('/login-register');
                                     }}
                                 >
-                                    Logout
+                                    Logout 1
+                                </Button>
+                            <Button
+                                    onClick={() => {
+                                        history.push(process.env.PUBLIC_URL + '/login-register');
+                                    }}
+                                >
+                                    Logout 2
                                 </Button>
                             <Nav.Link href={process.env.PUBLIC_URL + '/login-register'}>
                                 {t('HEADER.LOGIN_REGISTER')}
