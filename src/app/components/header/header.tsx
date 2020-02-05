@@ -68,6 +68,13 @@ const HeaderComponent: React.FC = () => {
                 {!hasUser && (
                     <Navbar.Collapse id='basic-navbar-nav' className='justify-content-end'>
                         <Nav>
+                            <Button
+                                    onClick={() => {
+                                        history.push('/login-register');
+                                    }}
+                                >
+                                    Logout
+                                </Button>
                             <Nav.Link href={process.env.PUBLIC_URL + '/login-register'}>
                                 {t('HEADER.LOGIN_REGISTER')}
                             </Nav.Link>
