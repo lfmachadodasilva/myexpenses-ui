@@ -2,6 +2,7 @@ import React, { useContext, useMemo } from 'react';
 import { Navbar, Nav, Image, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { userContext } from '../../contexts/user-context';
+import { useHistory } from 'react-router-dom';
 
 /**
  * Header component
