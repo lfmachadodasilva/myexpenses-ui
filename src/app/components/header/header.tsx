@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom';
 const HeaderComponent: React.FC = () => {
     const { t } = useTranslation();
     const { user } = useContext(userContext);
+    const history = useHistory();
 
     const { hasUser, displayName, photoURL } = useMemo(() => {
         const hasUser = user !== null;
