@@ -11,14 +11,30 @@ import firebaseConfig from './configuration/firebase';
 import { ConfigurationManager } from './configuration/manager';
 import { AppConfig } from './configuration/app-config';
 
-initializeApp(firebaseConfig);
+// SameSite cookies explained: https://web.dev/samesite-cookies-explained/
+document.cookie = 'SameSite=None; Secure';
+
+export const firebaseApp = initializeApp(firebaseConfig);
+
+// auth().onAuthStateChanged(function(user) {
+//     if (user) {
+//         // User is signed in.
+//         console.log('if', user);
+//         // ...
+//     } else {
+//         // User is signed out.
+//         // ...
+//         console.log('else', user);
+//     }
+//     console.log('if', user);
+// });
 
 ReactDOM.render(<App />, document.getElementById('root'), () => {
     let config: AppConfig;
     try {
         // read from the config json file
         config = require('./configuration/app-config.json');
-    } catch (e) {
+    } catch {
         // use default configuration
         config = new AppConfig();
     }

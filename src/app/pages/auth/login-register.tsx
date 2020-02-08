@@ -30,11 +30,9 @@ const LoginRegisterPage: React.FC = () => {
 
     return (
         <div key='LoginRegisterPage'>
-            <Row className='justify-content-center'>
+            <Row style={{ textAlign: 'center' }}>
                 <Col className='pt-4'>
-                    <div style={{ color: '#3b5998', cursor: 'pointer' }}>
-                        <FaFacebook size={64} onClick={handleFacebook} />
-                    </div>
+                    <FaFacebook size={64} onClick={handleFacebook} style={{ color: '#3b5998', cursor: 'pointer' }} />
                 </Col>
             </Row>
 
@@ -42,7 +40,7 @@ const LoginRegisterPage: React.FC = () => {
                 <>
                     <hr></hr>
 
-                    <Row className='justify-content-center'>
+                    <Row>
                         <Col xs={12} sm={6}>
                             <LoginPage />
                         </Col>

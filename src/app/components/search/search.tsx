@@ -1,188 +1,202 @@
-import React from 'react';
-import { Form, Col, Row, Button, Container } from 'react-bootstrap';
+import React, { useContext, useState, useEffect, useMemo } from 'react';
+import { Form, Col, Row, Spinner, Card, Button, Accordion, Badge } from 'react-bootstrap';
+import { isMobile } from 'react-device-detect';
 
-import './search.scss';
-import { Trans } from 'react-i18next';
-import { MonthViewModel } from '../../models/viewModels/MonthViewModel';
-import { GroupViewModel } from '../../models/viewModels/groupViewModel';
+import { useTranslation } from 'react-i18next';
+import { globalContext } from '../../contexts/global-context';
+import { FetchStatus } from '../../services/fetch-status';
+import { FaSearch } from 'react-icons/fa';
 
 export interface SearchProps {
-    group: number;
-    month: number;
-    year: number;
-
-    search: (group: number, month: number, year: number) => void;
-}
-export interface SearchState {
-    group: number;
-    month: number;
-    year: number;
+    search: (group: string, month: number, year: number) => void;
 }
 
 /**
  * Search component
  */
-export class SearchComponent extends React.Component<SearchProps, SearchState> {
-    private month = this.getMonths();
-    private groups = this.getGroups();
+const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
+    const { group, month, year, groupReducer, expenseReducer } = useContext(globalContext);
+    const { t } = useTranslation();
 
-    constructor(props: SearchProps) {
-        super(props);
+    const [groupSelected, setGroup] = useState(group);
+    const [monthSelected, setMonth] = useState(month);
+    const [yearSelected, setYear] = useState(year);
+    const [collapse, setCollpase] = useState(isMobile);
 
-        var today = new Date();
-        this.state = {
-            group: !isNaN(this.props.group) ? props.group : 1,
-            month: !isNaN(this.props.month) ? props.month : today.getMonth() + 1,
-            year: !isNaN(this.props.year) ? props.year : today.getFullYear()
-        };
+    const { groups } = groupReducer.state;
+    const { years } = expenseReducer.state;
 
-        this.handleSearch = this.handleSearch.bind(this);
-
-        this.handleGroup = this.handleGroup.bind(this);
-        this.handleMonth = this.handleMonth.bind(this);
-        this.handleYear = this.handleYear.bind(this);
-    }
-
-    componentDidUpdate() {}
-
-    render(): React.ReactNode {
-        return (
-            <div className='search' key='searchComponent'>
-                <Form>
-                    <Container>
-                        <Row className='justify-content-md-center justify-content-lg-center'>
-                            <Col xs={12} md>
-                                <Form.Group as={Col} controlId='formGroup'>
-                                    <Form.Label>
-                                        <Trans>SEARCH.GROUP</Trans>
-                                    </Form.Label>
-                                    <Form.Control
-                                        as='select'
-                                        defaultValue={this.state.group}
-                                        onChange={this.handleGroup}
-                                    >
-                                        {this.groups.map(group => {
-                                            return (
-                                                <option key={group.id} value={group.id}>
-                                                    {group.name}
-                                                </option>
-                                            );
-                                        })}
-                                    </Form.Control>
-                                </Form.Group>
-                            </Col>
-                            <Col xs={12} md>
-                                <Form.Group as={Col} controlId='formYear'>
-                                    <Form.Label>
-                                        <Trans>SEARCH.MONTH</Trans>
-                                    </Form.Label>
-                                    <Form.Control
-                                        as='select'
-                                        defaultValue={this.state.month}
-                                        onChange={this.handleMonth}
-                                    >
-                                        {this.month.map(month => {
-                                            return (
-                                                <option key={month.id} value={month.id}>
-                                                    {month.name}
-                                                </option>
-                                            );
-                                        })}
-                                    </Form.Control>
-                                </Form.Group>
-                            </Col>
-                            <Col xs={12} md>
-                                <Form.Group as={Col} controlId='formYear'>
-                                    <Form.Label>
-                                        <Trans>SEARCH.YEAR</Trans>
-                                    </Form.Label>
-                                    <Form.Control as='select' defaultValue={this.state.year} onChange={this.handleYear}>
-                                        {this.getYears().map(year => (
-                                            <option key={year} value={year}>
-                                                {year}
-                                            </option>
-                                        ))}
-                                    </Form.Control>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Button variant='primary' onClick={this.handleSearch}>
-                                    <Trans>SEARCH.SUBMIT</Trans>
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Container>
-                </Form>
-            </div>
-        );
-    }
-
-    private getYears(): number[] {
-        return [2020, 2019, 2018, 2017];
-    }
-
-    private getGroups(): GroupViewModel[] {
-        return [
-            {
-                id: 1,
-                name: 'Group 1'
-            },
-            {
-                id: 2,
-                name: 'Group 2'
-            },
-            {
-                id: 3,
-                name: 'Group 3'
+    const groupName = useMemo(() => {
+        if (groups.status === FetchStatus.Loaded) {
+            const g = groups.data.find(x => x.id === groupSelected);
+            if (g !== null && g !== undefined) {
+                return g.name;
             }
-        ];
-    }
+        }
+        return '';
+    }, [groupSelected, groups]);
 
-    private getMonths(): MonthViewModel[] {
-        let month = 0;
+    useEffect(() => {
+        setGroup(group);
+        setMonth(month);
+        setYear(year);
+    }, [group, month, year]);
 
-        return [
-            'JANUARY',
-            'FEBRUARY',
-            'MARCH',
-            'APRIL',
-            'MAY',
-            'JUNE',
-            'JULY',
-            'AUGUST',
-            'SEPTEMBER',
-            'OCTOBER',
-            'NOVEMBER',
-            'DECEMBER'
-        ].map(x => {
-            return {
-                id: ++month,
-                name: `SEARCH.MONTHS.${x}`
-            } as MonthViewModel;
-        });
-    }
+    const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-    private handleSearch() {
-        this.props.search(this.state.group, this.state.month, this.state.year);
-    }
+    const showLoading = (status: FetchStatus = FetchStatus.Loading): JSX.Element => {
+        return (
+            status === FetchStatus.Loading && (
+                <>
+                    &nbsp;
+                    <Spinner as='span' animation='border' size='sm' role='status' aria-hidden='true' />
+                    &nbsp;
+                </>
+            )
+        );
+    };
 
-    private handleGroup(e: any) {
-        this.setState({
-            group: e.target.value
-        });
-    }
+    const loadingGroupOrYear = groups.status === FetchStatus.Loading || years.status === FetchStatus.Loading;
 
-    private handleMonth(e: any) {
-        this.setState({
-            month: e.target.value
-        });
-    }
+    return (
+        <div className='search mt-4 mb-4' key='searchComponent'>
+            <Accordion defaultActiveKey={isMobile ? '1' : '0'}>
+                <Card>
+                    <Accordion.Toggle
+                        as={Card.Header}
+                        eventKey='0'
+                        onClick={() => {
+                            setCollpase(!collapse);
+                        }}
+                    >
+                        {!collapse && t('SEARCH.TITLE')}
+                        {collapse && (
+                            <>
+                                <Row>
+                                    <Col xs={4}>
+                                        {showLoading(groups.status)}
+                                        {groups.status === FetchStatus.Loaded && (
+                                            <h5 className='mb-0'>
+                                                <Badge variant='secondary'>{groupName}</Badge>
+                                            </h5>
+                                        )}
+                                    </Col>
+                                    <Col style={{ textAlign: 'center' }} xs={4}>
+                                        {loadingGroupOrYear && showLoading()}
 
-    private handleYear(e: any) {
-        this.setState({
-            year: e.target.value
-        });
-    }
-}
+                                        {!loadingGroupOrYear && (
+                                            <h5 className='mb-0'>
+                                                <Badge variant='secondary'>{t('SEARCH.MONTHS.' + monthSelected)}</Badge>
+                                            </h5>
+                                        )}
+                                    </Col>
+                                    <Col style={{ textAlign: 'right' }} xs={4}>
+                                        {loadingGroupOrYear && showLoading()}
+                                        {!loadingGroupOrYear && (
+                                            <h5 className='mb-0'>
+                                                <Badge variant='secondary'>{yearSelected}</Badge>
+                                            </h5>
+                                        )}
+                                    </Col>
+                                </Row>
+                            </>
+                        )}
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey='0' className='p-2'>
+                        <Form>
+                            <Row>
+                                <Col className='p-0' xs={12} sm={4}>
+                                    <Form.Group as={Col} controlId='formGroup'>
+                                        <Form.Label>{t('SEARCH.GROUP')}</Form.Label>
+                                        {showLoading(groups.status)}
+                                        <Form.Control
+                                            as='select'
+                                            defaultValue={groupSelected}
+                                            disabled={groups.status !== FetchStatus.Loaded}
+                                            onChange={(value: any) => {
+                                                setGroup(value.target.value);
+                                            }}
+                                        >
+                                            {groups.status === FetchStatus.Loaded &&
+                                                groups.data &&
+                                                groups.data.map(group => {
+                                                    return (
+                                                        <option key={group.id} value={group.id}>
+                                                            {group.name}
+                                                        </option>
+                                                    );
+                                                })}
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                                <Col className='p-0' xs={12} sm={4}>
+                                    <Form.Group as={Col} controlId='formMonth'>
+                                        <Form.Label>{t('SEARCH.MONTH')} </Form.Label>
+                                        {loadingGroupOrYear && showLoading()}
+                                        <Form.Control
+                                            as='select'
+                                            defaultValue={monthSelected}
+                                            disabled={loadingGroupOrYear}
+                                            onChange={(value: any) => {
+                                                setMonth(+value.target.value);
+                                            }}
+                                        >
+                                            {months.map(month => {
+                                                return (
+                                                    <option key={month} value={month}>
+                                                        {t('SEARCH.MONTHS.' + month)}
+                                                    </option>
+                                                );
+                                            })}
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                                <Col className='p-0' xs={12} sm={4}>
+                                    <Form.Group as={Col} controlId='formYear'>
+                                        <Form.Label>{t('SEARCH.YEAR')}</Form.Label>
+                                        {loadingGroupOrYear && showLoading()}
+                                        <Form.Control
+                                            as='select'
+                                            defaultValue={yearSelected}
+                                            disabled={loadingGroupOrYear}
+                                            onChange={(value: any) => {
+                                                setYear(+value.target.value);
+                                            }}
+                                        >
+                                            {years.status === FetchStatus.Loaded &&
+                                                years.data &&
+                                                years.data.map(year => {
+                                                    return (
+                                                        <option key={year} value={year}>
+                                                            {year}
+                                                        </option>
+                                                    );
+                                                })}
+                                        </Form.Control>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Button
+                                        variant='primary'
+                                        size='sm'
+                                        onClick={() => {
+                                            props.search(groupSelected, monthSelected, yearSelected);
+                                        }}
+                                    >
+                                        <FaSearch size={16} />
+                                        &nbsp;
+                                        {t('SEARCH.SEARCH')}
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Form>
+                    </Accordion.Collapse>
+                </Card>
+            </Accordion>
+        </div>
+    );
+};
+
+export default SearchComponent;

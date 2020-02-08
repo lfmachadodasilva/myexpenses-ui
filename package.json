@@ -21,6 +21,7 @@
         "query-string": "^6.9.0",
         "react": "^16.12.0",
         "react-bootstrap": "^1.0.0-beta.14",
+        "react-device-detect": "^1.11.14",
         "react-dom": "^16.12.0",
         "react-firebase-hooks": "^2.1.1",
         "react-global-configuration": "^1.4.0",
@@ -54,6 +55,12 @@
         "flow": "flow",
         "ui-tests": "start-server-and-test start:silent http://localhost:3000 cy:run",
         "cy:run": "cypress run"
+    },
+    "eslintConfig": {
+        "extends": "react-app",
+        "rules": {
+            "jsx-a11y/anchor-is-valid": "off"
+        }
     },
     "browserslist": {
         "production": [

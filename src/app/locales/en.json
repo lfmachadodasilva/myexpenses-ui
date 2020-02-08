@@ -21,24 +21,25 @@
         "RESET": "Reset"
     },
     "SEARCH": {
+        "TITLE": "Search",
         "GROUP": "Group",
         "MONTH": "Month",
         "YEAR": "Year",
         "EXPAND": "Click me!",
-        "SUBMIT": "Search",
+        "SEARCH": "Search",
         "MONTHS": {
-            "JANUARY": "January",
-            "FEBRUARY": "February",
-            "MARCH": "March",
-            "APRIL": "April",
-            "MAY": "May",
-            "JUNE": "June",
-            "JULY": "July",
-            "AUGUST": "August",
-            "SEPTEMBER": "September",
-            "OCTOBER": "October",
-            "NOVEMBER": "November",
-            "DECEMBER": "December"
+            "1": "January",
+            "2": "February",
+            "3": "March",
+            "4": "April",
+            "5": "May",
+            "6": "June",
+            "7": "July",
+            "8": "August",
+            "9": "September",
+            "10": "October",
+            "11": "November",
+            "12": "December"
         }
     }
 }

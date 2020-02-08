@@ -43,7 +43,7 @@ const ForgotPage: React.FC = () => {
     return (
         <div key='ForgotPage'>
             <Card>
-                <Card.Title className='pt-2'>{t('LOGIN_REGISTER.FORGOT')}</Card.Title>
+                <Card.Header className=''>{t('LOGIN_REGISTER.FORGOT')}</Card.Header>
 
                 <Card.Body>
                     <Form>

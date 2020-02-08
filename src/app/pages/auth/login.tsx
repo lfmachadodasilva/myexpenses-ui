@@ -44,7 +44,7 @@ const LoginPage: React.FC = () => {
     return (
         <div key='LoginPage'>
             <Card>
-                <Card.Title className='pt-2'>{t('LOGIN_REGISTER.LOGIN')}</Card.Title>
+                <Card.Header className='pt-2'>{t('LOGIN_REGISTER.LOGIN')}</Card.Header>
 
                 <Card.Body>
                     <Form>

@@ -44,7 +44,7 @@ const RegisterPage: React.FC = () => {
     return (
         <div key='RegisterPage'>
             <Card>
-                <Card.Title className='pt-2'>{t('LOGIN_REGISTER.REGISTER')}</Card.Title>
+                <Card.Header className='pt-2'>{t('LOGIN_REGISTER.REGISTER')}</Card.Header>
                 <Card.Body>
                     <Form>
                         <Form.Group controlId='formRegisterEmail'>
