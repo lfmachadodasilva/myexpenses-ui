@@ -9,6 +9,8 @@ export interface GlobalContext {
 
     groupReducer: GroupReducer;
     expenseReducer: ExpenseReducer;
+
+    loadingBase: boolean;
 }
 
 export const initalGlobalContext: GlobalContext = {
@@ -17,7 +19,9 @@ export const initalGlobalContext: GlobalContext = {
     month: new Date().getMonth() + 1,
 
     groupReducer: null,
-    expenseReducer: null
+    expenseReducer: null,
+
+    loadingBase: true
 };
 
 export const globalContext = React.createContext<GlobalContext>(initalGlobalContext);

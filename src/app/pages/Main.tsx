@@ -5,7 +5,7 @@ import { Container } from 'react-bootstrap';
 import { useSession } from '../auth';
 import { MyRoute } from '../route';
 import ExpensePage from './expense/expense';
-import { LabelPage } from './label/label';
+import LabelPage from './label/label';
 import LoginRegisterPage from './auth/login-register';
 import LogoutPage from './auth/logout';
 

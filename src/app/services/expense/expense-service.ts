@@ -55,7 +55,7 @@ export class ExpenseService implements IService<Expense> {
     /**
      * Get expense
      */
-    get(id: string): Promise<Expense> {
+    public async get(id: string): Promise<Expense> {
         if (this.config.enableFakeDatabase) {
             const service = new ExpenseServiceFake();
             return service.get(id);

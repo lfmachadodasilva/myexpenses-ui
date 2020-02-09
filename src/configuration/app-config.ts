@@ -4,7 +4,7 @@ export class AppConfig {
     /** enable fake database */
     enableFakeDatabase: boolean = true;
     /** enable fake database timeout */
-    enableFakeDatabaseTimeout: number = 5000;
+    enableFakeDatabaseTimeout: number = 1000;
     /** enable firebase database */
     enableFirebaseDatabase: boolean = false;
     /** enable login/register/forgot by email */

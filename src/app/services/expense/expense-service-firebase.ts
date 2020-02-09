@@ -22,7 +22,7 @@ export class ExpenseServiceFirebase implements IService<Label> {
         throw new Error('Method not implemented.');
     }
 
-    get(id: string): Promise<Label> {
+    public async get(id: string): Promise<Label> {
         throw new Error('Method not implemented.');
     }
 

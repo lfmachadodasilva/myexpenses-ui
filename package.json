@@ -45,6 +45,7 @@
     "scripts": {
         "start": "react-scripts start",
         "start:https": "HTTPS=true react-scripts start",
+        "start:https:win": "set HTTPS=true&&react-scripts start",
         "start:silent": "BROWSER=none react-scripts start",
         "build": "react-scripts build --if-present",
         "build:github": "react-scripts build --base-href https://lfmachadodasilva.github.io/myexpenses-ui/ && cp build/index.html build/404.html",

@@ -48,7 +48,6 @@ export const useLabelReducer = (user: User, groupId: string): LabelReducer => {
     } as LabelState;
 
     function reducer(state: LabelState = initialState, action: LabelAction) {
-        console.log(state, action);
         switch (action.type) {
             case LabelActionType.LOADING:
                 return {

@@ -55,7 +55,7 @@ export class ExpenseServiceFake implements IService<Expense> {
             }, this.config.enableFakeDatabaseTimeout);
         });
     }
-    get(id: string): Promise<Expense> {
+    public async get(id: string): Promise<Expense> {
         throw new Error('Method not implemented.');
     }
     public async add(obj: Expense): Promise<void> {

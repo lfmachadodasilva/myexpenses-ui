@@ -47,7 +47,6 @@ export const useExpenseReducer = (user: User, groupId: string): ExpenseReducer =
     } as ExpenseState;
 
     function reducer(state: ExpenseState = initialState, action: ExpenseAction) {
-        console.log(state, action);
         switch (action.type) {
             case ExpenseActionType.LOADING:
                 return {

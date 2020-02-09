@@ -1,5 +1,5 @@
 import { User } from 'firebase';
-import { Label } from '../../models/label';
+import { Label, LabelWithDetails } from '../../models/label';
 import { ConfigurationManager } from '../../../configuration/manager';
 import { AppConfig } from '../../../configuration/app-config';
 import { LabelServiceFake } from './label-service-fake';
@@ -37,9 +37,27 @@ export class LabelService implements IService<Label> {
     }
 
     /**
+     * Get all labels with details
+     */
+    public async getAllWithDetails(groupId: string): Promise<LabelWithDetails[]> {
+        if (this.config.enableFakeDatabase) {
+            const service = new LabelServiceFake();
+            return service.getAllWithDetails(groupId);
+        } else if (this.config.enableFirebaseDatabase) {
+            const service = new LabelServiceFirebase(this.user);
+            return service.getAllWithDetails(groupId);
+        }
+
+        return new Promise(resolve => {
+            // TODO
+            resolve([]);
+        });
+    }
+
+    /**
      * Get label
      */
-    get(id: string): Promise<Label> {
+    public async get(id: string): Promise<Label> {
         if (this.config.enableFakeDatabase) {
             const service = new LabelServiceFake();
             return service.get(id);

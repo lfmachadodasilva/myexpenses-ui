@@ -19,6 +19,7 @@ const App: React.FC = () => {
     const groupReducer = useGroupReducer(user);
 
     const { state, getGroups } = groupReducer;
+    const [loadingBase, setLoadingBase] = useState(true);
     const [group, setGroup] = useState('');
     const [year, setYear] = useState(currentYear);
 
@@ -39,6 +40,8 @@ const App: React.FC = () => {
                         // if not, select next year available
                         setYear(years.sort((a, b) => (a > b ? 1 : -1))[0]);
                     }
+
+                    setLoadingBase(false);
                 });
             });
     }, [initialising, state, getGroups, getExpensesYears, currentYear]);
@@ -62,7 +65,8 @@ const App: React.FC = () => {
                                     group: group,
                                     year: year,
                                     groupReducer: groupReducer,
-                                    expenseReducer: expenseReducer
+                                    expenseReducer: expenseReducer,
+                                    loadingBase: loadingBase
                                 }}
                             >
                                 <Main />

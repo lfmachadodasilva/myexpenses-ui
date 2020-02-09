@@ -47,7 +47,6 @@ export const useGroupReducer = (user: User): GroupReducer => {
     } as GroupState;
 
     function reducer(state: GroupState = initialState, action: GroupAction) {
-        console.log(state, action);
         switch (action.type) {
             case GroupActionType.LOADING:
                 return {

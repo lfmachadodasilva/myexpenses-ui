@@ -71,7 +71,7 @@ const LoginPage: React.FC = () => {
                             />
                         </Form.Group>
 
-                        <Button variant='primary' onClick={handle} disabled={disabledButton}>
+                        <Button variant='primary' onClick={handle} disabled={disabledButton} size='sm'>
                             {loading && (
                                 <>
                                     <Spinner as='span' animation='border' size='sm' role='status' aria-hidden='true' />

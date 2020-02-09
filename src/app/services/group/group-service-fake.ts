@@ -7,9 +7,6 @@ export class GroupServiceFake implements IService<Group> {
     groups: Group[];
     config = ConfigurationManager.get();
 
-    /**
-     *
-     */
     constructor() {
         this.groups = JSON.parse(localStorage.getItem(this.collection)) as Group[];
         if (this.groups === null || this.groups.length === 0) {
@@ -31,28 +28,32 @@ export class GroupServiceFake implements IService<Group> {
         }
     }
 
-    getAll(groupId: string = ''): Promise<Group[]> {
+    public async getAll(groupId: string = ''): Promise<Group[]> {
         return new Promise(resolve => {
             return setTimeout(() => {
                 resolve(this.groups);
             }, this.config.enableFakeDatabaseTimeout);
         });
     }
-    get(id: string): Promise<Group> {
+
+    public async get(id: string): Promise<Group> {
         return new Promise(resolve => {
             resolve(this.groups.find(x => x.id === id));
         });
     }
-    add(obj: Group): Promise<void> {
+
+    public async add(obj: Group): Promise<void> {
         return new Promise(resolve => {
             this.groups.push(obj);
             resolve();
         });
     }
-    update(obj: Group): Promise<void> {
+
+    public async update(obj: Group): Promise<void> {
         throw new Error('Method not implemented.');
     }
-    delete(id: string): Promise<void> {
+
+    public async delete(id: string): Promise<void> {
         throw new Error('Method not implemented.');
     }
 }

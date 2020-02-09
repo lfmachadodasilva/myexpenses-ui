@@ -15,7 +15,7 @@ export interface SearchProps {
  * Search component
  */
 const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
-    const { group, month, year, groupReducer, expenseReducer } = useContext(globalContext);
+    const { group, month, year, groupReducer, expenseReducer, loadingBase } = useContext(globalContext);
     const { t } = useTranslation();
 
     const [groupSelected, setGroup] = useState(group);
@@ -68,8 +68,9 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                         onClick={() => {
                             setCollpase(!collapse);
                         }}
+                        className='p-2'
                     >
-                        {!collapse && t('SEARCH.TITLE')}
+                        {!collapse && <h6 className='m-0'>{t('SEARCH.TITLE')}</h6>}
                         {collapse && (
                             <>
                                 <Row>
@@ -111,11 +112,12 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                         {showLoading(groups.status)}
                                         <Form.Control
                                             as='select'
-                                            defaultValue={groupSelected}
+                                            value={groupSelected}
                                             disabled={groups.status !== FetchStatus.Loaded}
                                             onChange={(value: any) => {
                                                 setGroup(value.target.value);
                                             }}
+                                            size='sm'
                                         >
                                             {groups.status === FetchStatus.Loaded &&
                                                 groups.data &&
@@ -140,6 +142,7 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                             onChange={(value: any) => {
                                                 setMonth(+value.target.value);
                                             }}
+                                            size='sm'
                                         >
                                             {months.map(month => {
                                                 return (
@@ -162,6 +165,7 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                             onChange={(value: any) => {
                                                 setYear(+value.target.value);
                                             }}
+                                            size='sm'
                                         >
                                             {years.status === FetchStatus.Loaded &&
                                                 years.data &&
@@ -184,6 +188,7 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                         onClick={() => {
                                             props.search(groupSelected, monthSelected, yearSelected);
                                         }}
+                                        disabled={loadingBase}
                                     >
                                         <FaSearch size={16} />
                                         &nbsp;
