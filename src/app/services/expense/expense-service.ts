@@ -2,12 +2,22 @@ import { User } from 'firebase/app';
 
 import { ConfigurationManager } from '../../../configuration/manager';
 import { AppConfig } from '../../../configuration/app-config';
-import { IService } from '../service-base';
-import { Expense } from '../../models/expense';
+import { Expense, ExpenseWithDetails } from '../../models/expense';
 import { ExpenseServiceFirebase } from './expense-service-firebase';
 import { ExpenseServiceFake } from './expense-service-fake';
 
-export class ExpenseService implements IService<Expense> {
+export interface IExpenseService {
+    getAllYears(groupId: string): Promise<number[]>;
+    getAll(groupId: string): Promise<Expense[]>;
+    getAllWithDetails(groupId: string, month: number, year: number): Promise<ExpenseWithDetails[]>;
+    get(id: string): Promise<Expense>;
+    getWithDetails(id: string): Promise<ExpenseWithDetails>;
+    add(obj: Expense): Promise<void>;
+    update(obj: Expense): Promise<void>;
+    delete(id: string): Promise<void>;
+}
+
+export class ExpenseService implements IExpenseService {
     user: User;
     config: AppConfig;
 
@@ -35,7 +45,7 @@ export class ExpenseService implements IService<Expense> {
     }
 
     /**
-     * Get all labels
+     * Get all expenses
      */
     public async getAll(groupId: string): Promise<Expense[]> {
         if (this.config.enableFakeDatabase) {
@@ -44,6 +54,21 @@ export class ExpenseService implements IService<Expense> {
         } else if (this.config.enableFirebaseDatabase) {
             const service = new ExpenseServiceFirebase(this.user);
             return service.getAll(groupId);
+        }
+
+        return new Promise(resolve => {
+            // TODO
+            resolve([]);
+        });
+    }
+
+    getAllWithDetails(groupId: string, month: number, year: number): Promise<ExpenseWithDetails[]> {
+        if (this.config.enableFakeDatabase) {
+            const service = new ExpenseServiceFake();
+            return service.getAllWithDetails(groupId, month, year);
+        } else if (this.config.enableFirebaseDatabase) {
+            const service = new ExpenseServiceFirebase(this.user);
+            return service.getAllWithDetails(groupId, month, year);
         }
 
         return new Promise(resolve => {
@@ -68,6 +93,10 @@ export class ExpenseService implements IService<Expense> {
             // TODO
             resolve(null);
         });
+    }
+
+    getWithDetails(id: string): Promise<ExpenseWithDetails> {
+        throw new Error('Method not implemented.');
     }
 
     /**

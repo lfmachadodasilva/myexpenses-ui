@@ -1,8 +1,12 @@
-import { Label, LabelWithDetails } from '../../models/label';
 import { User, database } from 'firebase/app';
-import { IService } from '../service-base';
+import { Label, LabelWithDetails } from '../../models/label';
+import { ILabelService } from './label-service';
+import { ExpenseService } from '../expense/expense-service';
+import { Expense } from '../../models/expense';
+import { sumBy } from 'lodash';
+import { addMonths, addDays, compareAsc } from 'date-fns';
 
-export class LabelServiceFirebase implements IService<Label> {
+export class LabelServiceFirebase implements ILabelService {
     collection = 'labels/';
     db: database.Database = database();
     user: User;
@@ -11,27 +15,131 @@ export class LabelServiceFirebase implements IService<Label> {
         this.user = user;
     }
 
-    public async getAll(groupId: string): Promise<Label[]> {
-        throw new Error('Method not implemented.');
+    getAll(groupId: string): Promise<Label[]> {
+        const ref = this.db.ref(this.collection);
+        return ref.once('value').then(value => {
+            ref.off();
+
+            const data = value.val();
+            if (data) {
+                const labels = Object.keys(data).map(i => data[i]) as Label[];
+                return labels.filter(label => label.groupId === groupId);
+            }
+
+            return [];
+        });
+    }
+    async getAllWithDetails(groupId: string, month: number, year: number): Promise<LabelWithDetails[]> {
+        const ref = this.db.ref(this.collection);
+        const expenses = await new ExpenseService(this.user).getAll(groupId);
+
+        return ref.once('value').then(value => {
+            ref.off();
+
+            const data = value.val();
+            if (data) {
+                const labels = Object.keys(data).map(i => data[i]) as Label[];
+                return labels
+                    .filter(label => label.groupId === groupId)
+                    .map(label => {
+                        const [currentValue, lastMonthValue, averageValue] = this.getLabelValues(
+                            label.id,
+                            expenses,
+                            year,
+                            month
+                        );
+                        return {
+                            ...label,
+                            currentValue: currentValue,
+                            lastMonthValue: lastMonthValue,
+                            averageValue: averageValue
+                        } as LabelWithDetails;
+                    });
+            }
+
+            return [];
+        });
+    }
+    get(id: string): Promise<Label> {
+        const ref = this.db.ref(this.collection + id);
+        return ref
+            .once('value')
+            .then((value: any) => {
+                return { ...value.val() } as Label;
+            })
+            .finally(() => {
+                ref.off();
+            });
+    }
+    getWithDetails(id: string): Promise<LabelWithDetails> {
+        const ref = this.db.ref(this.collection + id);
+        return ref
+            .once('value')
+            .then(async (value: any) => {
+                const label = { ...value.val() } as Label;
+                const expenses = await new ExpenseService(this.user).getAll(label.groupId);
+                const today = new Date();
+                const [currentValue, lastMonthValue, averageValue] = this.getLabelValues(
+                    label.id,
+                    expenses,
+                    today.getFullYear(),
+                    today.getMonth() + 1
+                );
+                return {
+                    ...label,
+                    currentValue: currentValue,
+                    lastMonthValue: lastMonthValue,
+                    averageValue: averageValue
+                } as LabelWithDetails;
+            })
+            .finally(() => {
+                ref.off();
+            });
+    }
+    async add(obj: Label): Promise<void> {
+        const ref = await this.db.ref(this.collection).push();
+        return ref.set({ ...obj, id: ref.key }).finally(() => {
+            ref.off();
+        });
+    }
+    update(obj: Label): Promise<void> {
+        const ref = database().ref(this.collection + obj.id);
+        return ref.update(obj).finally(() => {
+            ref.off();
+        });
+    }
+    delete(id: string): Promise<void> {
+        const ref = database().ref(this.collection + id);
+        return ref.remove().finally(() => {
+            ref.off();
+        });
     }
 
-    public async getAllWithDetails(groupId: string): Promise<LabelWithDetails[]> {
-        throw new Error('Method not implemented.');
-    }
+    private getLabelValues(labelId: string, expenses: Expense[], year: number, month: number) {
+        const expensesByLabel = expenses.filter(expense => expense.labelId === labelId);
+        const today = new Date(year, month);
+        const currentValue = sumBy(
+            expensesByLabel.filter(
+                expense =>
+                    expense.date.getFullYear() === today.getFullYear() && expense.date.getMonth() === today.getMonth()
+            ),
+            expense => expense.value
+        );
+        const lastMonth = addMonths(today, -1);
+        const lastMonthValue = sumBy(
+            expensesByLabel.filter(
+                expense =>
+                    expense.date.getFullYear() === lastMonth.getFullYear() &&
+                    expense.date.getMonth() === lastMonth.getMonth()
+            ),
+            expense => expense.value
+        );
+        const lastDayOfPreviousMonth = addDays(new Date(today.getMonth(), today.getMonth(), 1), -1);
+        const averageValue = sumBy(
+            expensesByLabel.filter(expense => compareAsc(expense.date, lastDayOfPreviousMonth) <= 0),
+            expense => expense.value
+        );
 
-    public async get(id: string): Promise<Label> {
-        throw new Error('Method not implemented.');
-    }
-
-    public async add(obj: Label): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-
-    public async update(obj: Label): Promise<void> {
-        throw new Error('Method not implemented.');
-    }
-
-    public async delete(id: string): Promise<void> {
-        throw new Error('Method not implemented.');
+        return [currentValue, lastMonthValue, averageValue];
     }
 }

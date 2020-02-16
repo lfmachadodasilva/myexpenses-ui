@@ -1,24 +1,22 @@
-import { User, firestore, database } from 'firebase/app';
+import { User, database } from 'firebase/app';
 import { Group } from '../../models/group';
-import { firebaseApp } from '../../..';
 import { IGroupService } from './group-service';
 import { UserService } from '../user/user.service';
 
 export class GroupServiceFirebase implements IGroupService {
     user: User;
     collection = 'groups/';
-    db: firestore.Firestore;
+    db: database.Database = database();
 
     /**
      * Constructor
      */
     constructor(user: User) {
         this.user = user;
-        this.db = firestore(firebaseApp);
     }
 
     public async getAll(): Promise<Group[]> {
-        const refUser = database().ref(this.collection);
+        const refUser = this.db.ref(this.collection);
         return refUser
             .once('value')
             .then((value: any) => {
@@ -42,7 +40,7 @@ export class GroupServiceFirebase implements IGroupService {
     }
 
     public async get(id: string): Promise<Group> {
-        const refUser = database().ref(this.collection + id);
+        const refUser = this.db.ref(this.collection + id);
         return refUser
             .once('value')
             .then((value: any) => {
@@ -55,7 +53,7 @@ export class GroupServiceFirebase implements IGroupService {
 
     public async getWithDetails(id: string): Promise<Group> {
         const users = await new UserService().getAll();
-        const refUser = database().ref(this.collection + id);
+        const refUser = this.db.ref(this.collection + id);
         return refUser
             .once('value')
             .then((value: any) => {
@@ -71,11 +69,10 @@ export class GroupServiceFirebase implements IGroupService {
     }
 
     public async add(obj: Group): Promise<void> {
-        const newRef = await database()
-            .ref(this.collection)
-            .push();
-        newRef.set({ ...obj, id: newRef.key });
-        newRef.off();
+        const newRef = await this.db.ref(this.collection).push();
+        return newRef.set({ ...obj, id: newRef.key }).finally(() => {
+            newRef.off();
+        });
     }
 
     public async update(obj: Group): Promise<void> {
@@ -98,7 +95,7 @@ export class GroupServiceFirebase implements IGroupService {
         const group = await this.get(id);
         return new Promise((resolve, reject) => {
             if ((group.users as string[]).some(x => x === this.user.uid)) {
-                const refUser = database().ref(this.collection + id);
+                const refUser = this.db.ref(this.collection + id);
                 return refUser.remove().finally(() => {
                     refUser.off();
                     resolve();

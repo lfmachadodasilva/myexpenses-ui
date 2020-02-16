@@ -1,9 +1,9 @@
 import { ConfigurationManager } from '../../../configuration/manager';
 import { AppConfig } from '../../../configuration/app-config';
-import { IService } from '../service-base';
-import { Expense } from '../../models/expense';
+import { Expense, ExpenseWithDetails } from '../../models/expense';
+import { IExpenseService } from './expense-service';
 
-export class ExpenseServiceFake implements IService<Expense> {
+export class ExpenseServiceFake implements IExpenseService {
     config: AppConfig = ConfigurationManager.get();
 
     years: number[];
@@ -24,7 +24,7 @@ export class ExpenseServiceFake implements IService<Expense> {
         }
     }
 
-    public async getAllYears(_groupId: string): Promise<number[]> {
+    public async getAllYears(groupId: string): Promise<number[]> {
         return new Promise(resolve => {
             setTimeout(() => {
                 resolve(this.years);
@@ -38,22 +38,25 @@ export class ExpenseServiceFake implements IService<Expense> {
                 resolve([
                     {
                         id: '1',
-                        name: 'Expense 1',
-                        groupId: groupId
+                        name: 'Expense 1'
                     },
                     {
                         id: '2',
-                        name: 'Expense 2',
-                        groupId: groupId
+                        name: 'Expense 2'
                     },
                     {
                         id: '3',
-                        name: 'Expense 3',
-                        groupId: groupId
+                        name: 'Expense 3'
                     }
                 ] as Expense[]);
             }, this.config.enableFakeDatabaseTimeout);
         });
+    }
+    public async getAllWithDetails(groupId: string, month: number, year: number): Promise<ExpenseWithDetails[]> {
+        throw new Error('Method not implemented.');
+    }
+    public async getWithDetails(id: string): Promise<ExpenseWithDetails> {
+        throw new Error('Method not implemented.');
     }
     public async get(id: string): Promise<Expense> {
         throw new Error('Method not implemented.');

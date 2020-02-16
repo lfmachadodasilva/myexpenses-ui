@@ -9,8 +9,6 @@ import SearchComponent from '../../components/search/search';
 import { LocalStorageHelper } from '../../helpers/localStorage-helper';
 import { LabelService } from '../../services/label/label-service';
 import { userContext } from '../../contexts/user-context';
-import { LabelWithDetails } from '../../models/label';
-import { FetchData } from '../../services/fetch-data';
 import { FetchStatus } from '../../services/fetch-status';
 import { MyRoute } from '../../route';
 
@@ -20,57 +18,32 @@ const LabelAllPage: React.FC = () => {
     const { t } = useTranslation();
     const history = useHistory();
 
-    const [loadingDelete, setLoadingDelete] = useState('');
-    const [labels, setLabels] = useState({
-        status: FetchStatus.Ready,
-        data: null
-    } as FetchData<LabelWithDetails[]>);
+    const { group, month, year, labelReducer, loadingBase } = global;
 
-    const cbGetLabels = useCallback(() => {
-        if (global.group.length === 0) {
+    const [loadingDelete, setLoadingDelete] = useState('');
+
+    const { state: labelState, getLabelsWithDetails } = labelReducer;
+    const { labelsWithDetails: labels } = labelState;
+    useEffect(() => {
+        if (loadingBase || (labels && labels.status !== FetchStatus.Ready)) {
             return;
         }
 
-        setLabels({
-            status: FetchStatus.Loading,
-            data: null
-        } as FetchData<LabelWithDetails[]>);
-        new LabelService(user)
-            .getAllWithDetails(global.group)
-            .then(value => {
-                setLabels({
-                    status: FetchStatus.Loaded,
-                    data: value
-                } as FetchData<LabelWithDetails[]>);
-            })
-            .catch(() => {
-                setLabels({
-                    status: FetchStatus.Error,
-                    data: null
-                } as FetchData<LabelWithDetails[]>);
-            });
-    }, [global.group, user]);
-
-    useEffect(() => {
-        if (!global.loadingBase && labels.status === FetchStatus.Ready) {
-            cbGetLabels();
-        }
-    }, [global.loadingBase, labels.status, cbGetLabels]);
+        getLabelsWithDetails(group, month, year);
+    }, [labels, getLabelsWithDetails, loadingBase, group, month, year]);
 
     const handleDelete = useCallback(
         (id: string) => {
             setLoadingDelete(id);
             new LabelService(user)
                 .delete(id)
-                .then(() => {
-                    cbGetLabels();
-                })
+                .then(() => {})
                 .catch(() => {})
                 .finally(() => {
                     setLoadingDelete('');
                 });
         },
-        [user, cbGetLabels]
+        [user]
     );
 
     const search = (group: string, month: number, year: number) => {
@@ -80,8 +53,6 @@ const LabelAllPage: React.FC = () => {
         global.group = group;
         global.month = month;
         global.year = year;
-
-        cbGetLabels();
     };
 
     return (

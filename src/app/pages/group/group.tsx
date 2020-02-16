@@ -1,9 +1,10 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import { MyRoute } from '../../route';
 import GroupAddEditPage from './group-add-edit';
 import GroupAllPage from './group-all';
+
+import { MyRoute } from '../../route';
 
 const GroupPage: React.FC = () => (
     <Switch>

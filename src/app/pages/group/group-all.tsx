@@ -3,10 +3,9 @@ import { userContext } from '../../contexts/user-context';
 import { useTranslation } from 'react-i18next';
 import { FetchStatus } from '../../services/fetch-status';
 import { Alert, Row, Col, Spinner, Button, ListGroup, Badge, OverlayTrigger, Popover, Image } from 'react-bootstrap';
-import { FaUserAlt } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaRegWindowClose, FaUserAlt } from 'react-icons/fa';
 
 import { MyRoute } from '../../route';
-import { FaPlus, FaEdit, FaRegWindowClose } from 'react-icons/fa';
 import { GroupService } from '../../services/group/group-service';
 import { useHistory } from 'react-router';
 import { User } from '../../models/user';

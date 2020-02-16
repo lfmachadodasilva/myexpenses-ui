@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { GroupReducer } from '../reducers/group-reducer';
 import { ExpenseReducer } from '../reducers/expense-reducer';
+import { LabelReducer } from '../reducers/label-reducer';
 
 export interface GlobalContext {
     group: string;
@@ -9,6 +10,7 @@ export interface GlobalContext {
 
     groupReducer: GroupReducer;
     expenseReducer: ExpenseReducer;
+    labelReducer: LabelReducer;
 
     loadingBase: boolean;
 }
@@ -20,6 +22,7 @@ export const initalGlobalContext: GlobalContext = {
 
     groupReducer: null,
     expenseReducer: null,
+    labelReducer: null,
 
     loadingBase: true
 };

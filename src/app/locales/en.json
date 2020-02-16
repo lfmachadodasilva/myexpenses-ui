@@ -73,5 +73,31 @@
             "USERS": "Users",
             "USERS_PLACEHOLDER": "Select users"
         }
+    },
+    "EXPENSE": {
+        "TYPE": "Type",
+        "INCOMING": "Incoming",
+        "OUTCOMING": "Outcoming",
+
+        "NAME": "Name",
+        "NAME_PLACEHOLDER": "Enter name",
+
+        "DATE": "Date",
+        "DATE_PLACEHOLDER": "Enter date",
+
+        "VALUE": "Value",
+        "VALUE_PLACEHOLDER": "Enter value",
+
+        "LABEL": "Label",
+        "LABEL_PLACEHOLDER": "Enter Label",
+
+        "ADD": "Add new expense",
+        "EDIT": "Update",
+
+        "ADD_TITLE": "Add new expense",
+        "EDIT_TITLE": "Edit expense",
+
+        "TOTAL_USED": "Total used",
+        "TOTAL_LEFT": "Total left"
     }
 }

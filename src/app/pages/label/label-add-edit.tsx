@@ -12,7 +12,8 @@ import { globalContext } from '../../contexts/global-context';
 const LabelAddEditPage: React.FC = () => {
     const { t } = useTranslation();
     const { user } = useContext(userContext);
-    const { group, loadingBase } = useContext(globalContext);
+    const { group, loadingBase, labelReducer } = useContext(globalContext);
+    const { resetLabelsWithDetails } = labelReducer;
 
     const { label } = useParams();
     const isAdd = useRef(label === undefined);
@@ -55,6 +56,7 @@ const LabelAddEditPage: React.FC = () => {
         new LabelService(user)
             .add({ name: name, groupId: group } as Label)
             .then(() => {
+                resetLabelsWithDetails();
                 history.push(MyRoute.LABEL);
             })
             .catch(e => {
@@ -63,13 +65,14 @@ const LabelAddEditPage: React.FC = () => {
             .finally(() => {
                 setLoading(false);
             });
-    }, [history, user, name, group]);
+    }, [history, user, name, group, resetLabelsWithDetails]);
 
     const handleEdit = useCallback(() => {
         setLoading(true);
         new LabelService(user)
             .update({ ...currentLabel, name: name } as Label)
             .then(() => {
+                resetLabelsWithDetails();
                 history.push(MyRoute.LABEL);
             })
             .catch(e => {
@@ -78,7 +81,7 @@ const LabelAddEditPage: React.FC = () => {
             .finally(() => {
                 setLoading(false);
             });
-    }, [history, user, name, currentLabel]);
+    }, [history, user, name, currentLabel, resetLabelsWithDetails]);
 
     return (
         <div className='mt-4'>

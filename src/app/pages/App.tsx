@@ -12,20 +12,25 @@ import { useExpenseReducer } from '../reducers/expense-reducer';
 import Main from './Main';
 import { FetchStatus } from '../services/fetch-status';
 import { UserService } from '../services/user/user.service';
+import { useLabelReducer } from '../reducers/label-reducer';
+import { firebaseApp } from '../..';
 
 const App: React.FC = () => {
     const currentYear = new Date().getFullYear();
 
-    const [user, initialising] = useAuthState(auth());
+    const [user, initialising] = useAuthState(auth(firebaseApp));
     const groupReducer = useGroupReducer(user);
 
     const { state, getGroups } = groupReducer;
+    const { groups } = state;
     const [loadingBase, setLoadingBase] = useState(true);
     const [group, setGroup] = useState('');
     const [year, setYear] = useState(currentYear);
 
     const expenseReducer = useExpenseReducer(user, group);
     const { getExpensesYears } = expenseReducer;
+
+    const labelReducer = useLabelReducer(user, group);
 
     useEffect(() => {
         if (initialising || !user) {
@@ -43,7 +48,8 @@ const App: React.FC = () => {
     // run after retrieve user information
     useEffect(() => {
         !initialising &&
-            state.groups.status === FetchStatus.Ready &&
+            user &&
+            groups.status === FetchStatus.Ready &&
             getGroups().then(data => {
                 // define the current group
                 setGroup(LocalStorageHelper.getGroup(data));
@@ -59,7 +65,7 @@ const App: React.FC = () => {
                     setLoadingBase(false);
                 });
             });
-    }, [initialising, state, getGroups, getExpensesYears, currentYear]);
+    }, [initialising, user, groups, getGroups, getExpensesYears, currentYear]);
 
     return (
         <userContext.Provider
@@ -81,6 +87,7 @@ const App: React.FC = () => {
                                     year: year,
                                     groupReducer: groupReducer,
                                     expenseReducer: expenseReducer,
+                                    labelReducer: labelReducer,
                                     loadingBase: loadingBase
                                 }}
                             >
