@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, Form, Button, Spinner, Alert } from 'react-bootstrap';
-import { createUserWithEmail } from '../../auth';
+import { createUserWithEmail } from '../../services/auth-service';
 import { Redirect } from 'react-router';
 
 /**

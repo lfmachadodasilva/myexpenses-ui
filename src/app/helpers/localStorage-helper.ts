@@ -2,10 +2,18 @@ import { Group } from '../models/group';
 
 export class LocalStorageHelper {
     public static getGroup(groups: Group[]): string {
+        if (groups.length === 0) {
+            // user does not have any groups
+            return '';
+        }
+
         let selectedGroup = localStorage.getItem('group');
 
         // do not have any selected, select the first available group
-        if (selectedGroup === undefined && selectedGroup.length === 0 && groups.length > 0) {
+        if (
+            (selectedGroup === null || selectedGroup === undefined || selectedGroup.length === 0) &&
+            groups.length > 0
+        ) {
             selectedGroup = groups[0].id;
         }
 

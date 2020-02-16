@@ -1,12 +1,22 @@
-import { User } from 'firebase';
+import { User } from 'firebase/app';
+
 import { Group } from '../../models/group';
-import { IService } from '../service-base';
 import { AppConfig } from '../../../configuration/app-config';
 import { ConfigurationManager } from '../../../configuration/manager';
 import { GroupServiceFake } from './group-service-fake';
 import { GroupServiceFirebase } from './group-service-firebase';
 
-export class GroupService implements IService<Group> {
+export interface IGroupService {
+    getAll(): Promise<Group[]>;
+    getAllWithDetails(): Promise<Group[]>;
+    get(id: string): Promise<Group>;
+    getWithDetails(id: string): Promise<Group>;
+    add(obj: Group): Promise<void>;
+    update(obj: Group): Promise<void>;
+    delete(id: string): Promise<void>;
+}
+
+export class GroupService implements IGroupService {
     user: User;
     config: AppConfig;
 
@@ -18,13 +28,13 @@ export class GroupService implements IService<Group> {
         this.config = ConfigurationManager.get();
     }
 
-    public async getAll(groupId: string = ''): Promise<Group[]> {
+    public async getAll(): Promise<Group[]> {
         if (this.config.enableFakeDatabase) {
-            const service = new GroupServiceFake();
-            return service.getAll(groupId);
+            const service = new GroupServiceFake(this.user);
+            return service.getAll();
         } else if (this.config.enableFirebaseDatabase) {
             const service = new GroupServiceFirebase(this.user);
-            return service.getAll(groupId);
+            return service.getAll();
         }
 
         return new Promise(resolve => {
@@ -32,16 +42,94 @@ export class GroupService implements IService<Group> {
             resolve([]);
         });
     }
+
+    public async getAllWithDetails(): Promise<Group[]> {
+        if (this.config.enableFakeDatabase) {
+            const service = new GroupServiceFake(this.user);
+            return service.getAllWithDetails();
+        } else if (this.config.enableFirebaseDatabase) {
+            const service = new GroupServiceFirebase(this.user);
+            return service.getAllWithDetails();
+        }
+
+        return new Promise(resolve => {
+            // TODO
+            resolve([]);
+        });
+    }
+
     public async get(id: string): Promise<Group> {
-        throw new Error('Method not implemented.');
+        if (this.config.enableFakeDatabase) {
+            const service = new GroupServiceFake(this.user);
+            return service.get(id);
+        } else if (this.config.enableFirebaseDatabase) {
+            const service = new GroupServiceFirebase(this.user);
+            return service.get(id);
+        }
+
+        return new Promise(resolve => {
+            // TODO
+            resolve({} as Group);
+        });
     }
+
+    public async getWithDetails(id: string): Promise<Group> {
+        if (this.config.enableFakeDatabase) {
+            const service = new GroupServiceFake(this.user);
+            return service.getWithDetails(id);
+        } else if (this.config.enableFirebaseDatabase) {
+            const service = new GroupServiceFirebase(this.user);
+            return service.getWithDetails(id);
+        }
+
+        return new Promise(resolve => {
+            // TODO
+            resolve({} as Group);
+        });
+    }
+
     public async add(obj: Group): Promise<void> {
-        throw new Error('Method not implemented.');
+        if (this.config.enableFakeDatabase) {
+            const service = new GroupServiceFake(this.user);
+            return service.add(obj);
+        } else if (this.config.enableFirebaseDatabase) {
+            const service = new GroupServiceFirebase(this.user);
+            return service.add(obj);
+        }
+
+        return new Promise(resolve => {
+            // TODO
+            resolve();
+        });
     }
+
     public async update(obj: Group): Promise<void> {
-        throw new Error('Method not implemented.');
+        if (this.config.enableFakeDatabase) {
+            const service = new GroupServiceFake(this.user);
+            return service.update(obj);
+        } else if (this.config.enableFirebaseDatabase) {
+            const service = new GroupServiceFirebase(this.user);
+            return service.update(obj);
+        }
+
+        return new Promise(resolve => {
+            // TODO
+            resolve();
+        });
     }
+
     public async delete(id: string): Promise<void> {
-        throw new Error('Method not implemented.');
+        if (this.config.enableFakeDatabase) {
+            const service = new GroupServiceFake(this.user);
+            return service.delete(id);
+        } else if (this.config.enableFirebaseDatabase) {
+            const service = new GroupServiceFirebase(this.user);
+            return service.delete(id);
+        }
+
+        return new Promise(resolve => {
+            // TODO
+            resolve();
+        });
     }
 }

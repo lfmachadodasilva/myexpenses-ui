@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from 'firebase';
+import { auth } from 'firebase/app';
 
 import HeaderComponent, { HeaderSimpleComponent } from '../components/header/header';
 import { userContext } from '../contexts/user-context';
@@ -11,6 +11,7 @@ import { LocalStorageHelper } from '../helpers/localStorage-helper';
 import { useExpenseReducer } from '../reducers/expense-reducer';
 import Main from './Main';
 import { FetchStatus } from '../services/fetch-status';
+import { UserService } from '../services/user/user.service';
 
 const App: React.FC = () => {
     const currentYear = new Date().getFullYear();
@@ -26,11 +27,25 @@ const App: React.FC = () => {
     const expenseReducer = useExpenseReducer(user, group);
     const { getExpensesYears } = expenseReducer;
 
+    useEffect(() => {
+        if (initialising || !user) {
+            return;
+        }
+
+        new UserService().saveOrUpdate({
+            id: user.uid,
+            displayName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL
+        });
+    }, [user, initialising]);
+
     // run after retrieve user information
     useEffect(() => {
         !initialising &&
             state.groups.status === FetchStatus.Ready &&
             getGroups().then(data => {
+                // define the current group
                 setGroup(LocalStorageHelper.getGroup(data));
 
                 // get available years

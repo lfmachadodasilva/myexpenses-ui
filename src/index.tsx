@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { initializeApp } from 'firebase';
-import './i18n';
+import { initializeApp } from 'firebase/app';
 
+import './i18n';
 import './index.css';
 import App from './app/pages/App';
 import * as serviceWorker from './configuration/serviceWorker';

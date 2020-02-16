@@ -10,6 +10,10 @@ const ExpensePage: React.FC<RouteComponentProps> = (props: RouteComponentProps) 
                 {/* <Route path='/expense/add' component={ExpenseAddEditPage} />
                 <Route path='/expense/edit' component={ExpenseAddEditPage} /> */}
                 <Route path='/expense' component={ExpenseAllPage} />
+
+                <Route path='*'>
+                    <h1> 404 </h1>
+                </Route>
             </Switch>
         </Router>
     </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { loginWithFacebook } from '../../auth';
+import { loginWithFacebook } from '../../services/auth-service';
 import { Redirect } from 'react-router';
 import { FaFacebook } from 'react-icons/fa';
 import RegisterPage from './register';

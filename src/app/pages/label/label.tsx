@@ -11,8 +11,9 @@ const LabelPage: React.FC = () => (
         <Route path={MyRoute.LABEL_EDIT} component={LabelAddEditPage} />
         <Route path={MyRoute.LABEL} component={LabelAllPage} />
 
-        {/* <Route path='/label/add' component={LabelAddEditPage} /> */}
-        {/* <Route path='/label/edit/:group/:label/:date' component={LabelAddEditPage} /> */}
+        <Route path='*'>
+            <h1> 404 </h1>
+        </Route>
     </Switch>
 );
 

@@ -1,5 +1,5 @@
 import { Label, LabelWithDetails } from '../../models/label';
-import { User, database } from 'firebase';
+import { User, database } from 'firebase/app';
 import { IService } from '../service-base';
 
 export class LabelServiceFirebase implements IService<Label> {

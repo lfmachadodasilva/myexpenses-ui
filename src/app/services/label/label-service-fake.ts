@@ -103,7 +103,7 @@ export class LabelServiceFake implements IService<Label> {
                 this.labels.push(obj);
                 localStorage.setItem(this.collection, JSON.stringify(this.labels));
                 return resolve();
-            }, this.config.enableFakeDatabaseTimeout * 5);
+            }, this.config.enableFakeDatabaseTimeout);
         });
     }
 
@@ -117,7 +117,7 @@ export class LabelServiceFake implements IService<Label> {
                 this.labels = this.labels.filter(x => x.id !== id);
                 localStorage.setItem(this.collection, JSON.stringify(this.labels));
                 return resolve();
-            }, this.config.enableFakeDatabaseTimeout * 5);
+            }, this.config.enableFakeDatabaseTimeout);
         });
     }
 }

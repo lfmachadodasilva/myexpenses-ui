@@ -1,4 +1,4 @@
-import { User } from 'firebase';
+import { User } from 'firebase/app';
 
 import { ConfigurationManager } from '../../../configuration/manager';
 import { AppConfig } from '../../../configuration/app-config';

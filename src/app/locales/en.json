@@ -58,5 +58,20 @@
             "NAME": "Name",
             "NAME_PLACEHOLDER": "Enter name"
         }
+    },
+    "GROUP": {
+        "ADD": "Add new label",
+        "NOT_LOADED": "Not loaded yet",
+        "EMPTY": "Empty list",
+        "ADD_EDIT": {
+            "ADD": "Add",
+            "EDIT": "Edit",
+            "ADD_TITLE": "Add new group",
+            "EDIT_TITLE": "Edit group",
+            "NAME": "Name",
+            "NAME_PLACEHOLDER": "Enter name",
+            "USERS": "Users",
+            "USERS_PLACEHOLDER": "Select users"
+        }
     }
 }

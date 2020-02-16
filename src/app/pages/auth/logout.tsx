@@ -1,6 +1,6 @@
 import { Redirect } from 'react-router';
 import React from 'react';
-import { signOut } from '../../auth';
+import { signOut } from '../../services/auth-service';
 
 /**
  * Logout page

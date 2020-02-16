@@ -2,12 +2,13 @@ import { Redirect, Switch, Route } from 'react-router';
 import React from 'react';
 import { Container } from 'react-bootstrap';
 
-import { useSession } from '../auth';
+import { useSession } from '../services/auth-service';
 import { MyRoute } from '../route';
 import ExpensePage from './expense/expense';
 import LabelPage from './label/label';
 import LoginRegisterPage from './auth/login-register';
 import LogoutPage from './auth/logout';
+import GroupPage from './group/group';
 
 interface PrivateRouteProps {
     component: any;
@@ -32,8 +33,10 @@ const Main: React.FC = () => {
     return (
         <Container>
             <Switch>
-                <PrivateRoute path={MyRoute.EXPENSE} component={ExpensePage} />
+                <PrivateRoute path={MyRoute.GROUP} component={GroupPage} />
                 <PrivateRoute path={MyRoute.LABEL} component={LabelPage} />
+                <PrivateRoute path={MyRoute.EXPENSE} component={ExpensePage} />
+
                 <Route path={MyRoute.LOGIN_REGISTER} component={LoginRegisterPage} />
                 <Route path={MyRoute.LOGOUT} component={LogoutPage} />
 

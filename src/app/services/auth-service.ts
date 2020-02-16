@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useContext } from 'react';
 
-import { userContext } from './contexts/user-context';
-import { auth, User } from 'firebase';
+import { userContext } from '../contexts/user-context';
+import { User } from 'firebase/app';
+import { auth } from 'firebase';
 
 export const useAuth = () => {
     const [state, setState] = useState(() => {
@@ -55,7 +56,11 @@ const facebook = new auth.FacebookAuthProvider();
 
 export const loginWithFacebook = async () => {
     try {
-        return await auth().signInWithPopup(facebook);
+        return await auth()
+            .signInWithPopup(facebook)
+            .then(x => {
+                console.log(x);
+            });
     } catch (err) {
         console.error(err);
         throw err;

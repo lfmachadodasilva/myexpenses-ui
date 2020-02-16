@@ -1,5 +1,5 @@
 import { useReducer, Dispatch, useCallback } from 'react';
-import { User } from 'firebase';
+import { User } from 'firebase/app';
 
 import { FetchData } from '../services/fetch-data';
 import { FetchStatus } from '../services/fetch-status';
