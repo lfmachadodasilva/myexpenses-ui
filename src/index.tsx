@@ -14,6 +14,8 @@ import { AppConfig } from './configuration/app-config';
 // SameSite cookies explained: https://web.dev/samesite-cookies-explained/
 document.cookie = 'SameSite=None; Secure';
 
+console.log(process.env);
+
 export const firebaseApp = initializeApp(firebaseConfig);
 
 // auth().onAuthStateChanged(function(user) {

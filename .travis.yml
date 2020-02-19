@@ -7,6 +7,13 @@ sudo: false
 # This caches $HOME/.npm or node_modules, depending on the repository’s structure
 cache: npm
 
+env:
+    global:
+        - REACT_APP_FOCA=$MYEXPENSE_FOO
+        - REACT_APP_FOCA2=$MYEXPENSE_FOO
+        - REACT_APP_FOCA3=$MYEXPENSE_FOO2
+        - FOCA2=$MYEXPENSE_FOO
+
 notifications:
     email:
         on_success: never
