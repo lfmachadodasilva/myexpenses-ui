@@ -41,14 +41,14 @@ export class LabelServiceFake implements IService<Label> {
         }
     }
 
-    public async getAll(groupId: string): Promise<Label[]> {
+    async getAll(groupId: string): Promise<Label[]> {
         return new Promise(resolve => {
             return setTimeout(() => {
                 return resolve(this.labels.filter(x => x.groupId === groupId));
             }, this.config.enableFakeDatabaseTimeout);
         });
     }
-    public async getAllWithDetails(groupId: string): Promise<LabelWithDetails[]> {
+    async getAllWithDetails(groupId: string): Promise<LabelWithDetails[]> {
         return new Promise(resolve => {
             return setTimeout(() => {
                 return resolve(this.labels.filter(x => x.groupId === groupId) as LabelWithDetails[]);
@@ -56,7 +56,7 @@ export class LabelServiceFake implements IService<Label> {
         });
     }
 
-    public async get(id: string): Promise<Label> {
+    async get(id: string): Promise<Label> {
         return new Promise((resolve, reject) => {
             return setTimeout(() => {
                 const label = this.labels.find(x => x.id === id);
@@ -68,7 +68,7 @@ export class LabelServiceFake implements IService<Label> {
         });
     }
 
-    public async add(obj: Label): Promise<void> {
+    async add(obj: Label): Promise<void> {
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 if (obj.name.length <= 2) {
@@ -92,7 +92,7 @@ export class LabelServiceFake implements IService<Label> {
         });
     }
 
-    public async update(obj: Label): Promise<void> {
+    async update(obj: Label): Promise<void> {
         return new Promise((resolve, reject) => {
             return setTimeout(() => {
                 const label = this.labels.find(x => x.id === obj.id);
@@ -107,7 +107,7 @@ export class LabelServiceFake implements IService<Label> {
         });
     }
 
-    public async delete(id: string): Promise<void> {
+    async delete(id: string): Promise<void> {
         return new Promise((resolve, reject) => {
             return setTimeout(() => {
                 const label = this.labels.find(x => x.id === id);

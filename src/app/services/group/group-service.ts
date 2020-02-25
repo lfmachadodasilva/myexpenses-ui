@@ -28,7 +28,7 @@ export class GroupService implements IGroupService {
         this.config = ConfigurationManager.get();
     }
 
-    public async getAll(): Promise<Group[]> {
+    async getAll(): Promise<Group[]> {
         if (this.config.enableFakeDatabase) {
             const service = new GroupServiceFake(this.user);
             return service.getAll();
@@ -43,7 +43,7 @@ export class GroupService implements IGroupService {
         });
     }
 
-    public async getAllWithDetails(): Promise<Group[]> {
+    async getAllWithDetails(): Promise<Group[]> {
         if (this.config.enableFakeDatabase) {
             const service = new GroupServiceFake(this.user);
             return service.getAllWithDetails();
@@ -58,7 +58,7 @@ export class GroupService implements IGroupService {
         });
     }
 
-    public async get(id: string): Promise<Group> {
+    async get(id: string): Promise<Group> {
         if (this.config.enableFakeDatabase) {
             const service = new GroupServiceFake(this.user);
             return service.get(id);
@@ -73,7 +73,7 @@ export class GroupService implements IGroupService {
         });
     }
 
-    public async getWithDetails(id: string): Promise<Group> {
+    async getWithDetails(id: string): Promise<Group> {
         if (this.config.enableFakeDatabase) {
             const service = new GroupServiceFake(this.user);
             return service.getWithDetails(id);
@@ -88,7 +88,7 @@ export class GroupService implements IGroupService {
         });
     }
 
-    public async add(obj: Group): Promise<void> {
+    async add(obj: Group): Promise<void> {
         if (this.config.enableFakeDatabase) {
             const service = new GroupServiceFake(this.user);
             return service.add(obj);
@@ -103,7 +103,7 @@ export class GroupService implements IGroupService {
         });
     }
 
-    public async update(obj: Group): Promise<void> {
+    async update(obj: Group): Promise<void> {
         if (this.config.enableFakeDatabase) {
             const service = new GroupServiceFake(this.user);
             return service.update(obj);
@@ -118,7 +118,7 @@ export class GroupService implements IGroupService {
         });
     }
 
-    public async delete(id: string): Promise<void> {
+    async delete(id: string): Promise<void> {
         if (this.config.enableFakeDatabase) {
             const service = new GroupServiceFake(this.user);
             return service.delete(id);

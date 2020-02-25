@@ -8,14 +8,14 @@ export class ConfigurationManager {
     /**
      * Update the application configuration shared across all component.
      */
-    public static set = (configurationSettings: AppConfig) => {
+    static set = (configurationSettings: AppConfig) => {
         config.set({ ApplicationConfiguration: configurationSettings }, { freeze: false } as Options);
     };
 
     /**
      * Gets the application configuration shared across all component.
      */
-    public static get(): AppConfig {
+    static get(): AppConfig {
         const configurationObject = config.get('ApplicationConfiguration');
 
         // The object we get back is just a JSON object, we use Object.assign here to make it an

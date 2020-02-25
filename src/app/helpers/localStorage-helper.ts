@@ -1,7 +1,7 @@
 import { Group } from '../models/group';
 
 export class LocalStorageHelper {
-    public static getGroup(groups: Group[]): string {
+    static getGroup(groups: Group[]): string {
         if (groups.length === 0) {
             // user does not have any groups
             return '';
@@ -28,7 +28,7 @@ export class LocalStorageHelper {
         return selectedGroup;
     }
 
-    public static setGroup(groupId: string) {
+    static setGroup(groupId: string) {
         localStorage.setItem('group', groupId);
     }
 }

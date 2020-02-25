@@ -24,7 +24,7 @@ export class ExpenseServiceFake implements IExpenseService {
         }
     }
 
-    public async getAllYears(groupId: string): Promise<number[]> {
+    async getAllYears(groupId: string): Promise<number[]> {
         return new Promise(resolve => {
             setTimeout(() => {
                 resolve(this.years);
@@ -32,7 +32,7 @@ export class ExpenseServiceFake implements IExpenseService {
         });
     }
 
-    public async getAll(groupId: string): Promise<Expense[]> {
+    async getAll(groupId: string): Promise<Expense[]> {
         return new Promise(resolve => {
             setTimeout(() => {
                 resolve([
@@ -52,22 +52,22 @@ export class ExpenseServiceFake implements IExpenseService {
             }, this.config.enableFakeDatabaseTimeout);
         });
     }
-    public async getAllWithDetails(groupId: string, month: number, year: number): Promise<ExpenseWithDetails[]> {
+    async getAllWithDetails(groupId: string, month: number, year: number): Promise<ExpenseWithDetails[]> {
         throw new Error('Method not implemented.');
     }
-    public async getWithDetails(id: string): Promise<ExpenseWithDetails> {
+    async getWithDetails(id: string): Promise<ExpenseWithDetails> {
         throw new Error('Method not implemented.');
     }
-    public async get(id: string): Promise<Expense> {
+    async get(id: string): Promise<Expense> {
         throw new Error('Method not implemented.');
     }
-    public async add(obj: Expense): Promise<void> {
+    async add(obj: Expense): Promise<void> {
         throw new Error('Method not implemented.');
     }
-    public async update(obj: Expense): Promise<void> {
+    async update(obj: Expense): Promise<void> {
         throw new Error('Method not implemented.');
     }
-    public async delete(id: string): Promise<void> {
+    async delete(id: string): Promise<void> {
         throw new Error('Method not implemented.');
     }
 }

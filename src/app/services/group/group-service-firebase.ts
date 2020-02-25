@@ -1,6 +1,8 @@
 import { User, database } from 'firebase/app';
-import { Group } from '../../models/group';
+
 import { IGroupService } from './group-service';
+
+import { Group } from '../../models/group';
 import { UserService } from '../user/user.service';
 
 export class GroupServiceFirebase implements IGroupService {
@@ -15,7 +17,7 @@ export class GroupServiceFirebase implements IGroupService {
         this.user = user;
     }
 
-    public async getAll(): Promise<Group[]> {
+    async getAll(): Promise<Group[]> {
         const refUser = this.db.ref(this.collection);
         return refUser
             .once('value')
@@ -27,7 +29,7 @@ export class GroupServiceFirebase implements IGroupService {
                 refUser.off();
             });
     }
-    public async getAllWithDetails(): Promise<Group[]> {
+    async getAllWithDetails(): Promise<Group[]> {
         const groupsPromise = this.getAll();
         const usersPrimise = new UserService().getAll();
         const [groups, users] = await Promise.all([groupsPromise, usersPrimise]);
@@ -39,7 +41,7 @@ export class GroupServiceFirebase implements IGroupService {
         });
     }
 
-    public async get(id: string): Promise<Group> {
+    async get(id: string): Promise<Group> {
         const refUser = this.db.ref(this.collection + id);
         return refUser
             .once('value')
@@ -51,7 +53,7 @@ export class GroupServiceFirebase implements IGroupService {
             });
     }
 
-    public async getWithDetails(id: string): Promise<Group> {
+    async getWithDetails(id: string): Promise<Group> {
         const users = await new UserService().getAll();
         const refUser = this.db.ref(this.collection + id);
         return refUser
@@ -68,14 +70,14 @@ export class GroupServiceFirebase implements IGroupService {
             });
     }
 
-    public async add(obj: Group): Promise<void> {
+    async add(obj: Group): Promise<void> {
         const newRef = await this.db.ref(this.collection).push();
         return newRef.set({ ...obj, id: newRef.key }).finally(() => {
             newRef.off();
         });
     }
 
-    public async update(obj: Group): Promise<void> {
+    async update(obj: Group): Promise<void> {
         const group = await this.get(obj.id);
         return new Promise((resolve, reject) => {
             if ((group.users as string[]).some(x => x === this.user.uid)) {
@@ -91,7 +93,7 @@ export class GroupServiceFirebase implements IGroupService {
         });
     }
 
-    public async delete(id: string): Promise<void> {
+    async delete(id: string): Promise<void> {
         const group = await this.get(id);
         return new Promise((resolve, reject) => {
             if ((group.users as string[]).some(x => x === this.user.uid)) {

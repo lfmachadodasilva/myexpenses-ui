@@ -11,6 +11,7 @@ import { LabelService } from '../../services/label/label-service';
 import { userContext } from '../../contexts/user-context';
 import { FetchStatus } from '../../services/fetch-status';
 import { MyRoute } from '../../route';
+import { hasValue } from '../../helpers/util-helper';
 
 const LabelAllPage: React.FC = () => {
     const global = useContext(globalContext);
@@ -18,7 +19,7 @@ const LabelAllPage: React.FC = () => {
     const { t } = useTranslation();
     const history = useHistory();
 
-    const { group, month, year, labelReducer, loadingBase } = global;
+    const { labelReducer, groupReducer, expenseReducer, loadingBase } = global;
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [loadingDelete, setLoadingDelete] = useState('');
@@ -26,12 +27,17 @@ const LabelAllPage: React.FC = () => {
     const { state: labelState, getLabelsWithDetails } = labelReducer;
     const { labelsWithDetails: labels } = labelState;
     useEffect(() => {
-        if (loadingBase || (labels && labels.status !== FetchStatus.Ready)) {
+        if (
+            loadingBase ||
+            (labels && labels.status !== FetchStatus.Ready) ||
+            !hasValue(global.group) ||
+            !hasValue(global.month)
+        ) {
             return;
         }
 
-        getLabelsWithDetails(group, month, year);
-    }, [labels, getLabelsWithDetails, loadingBase, group, month, year]);
+        getLabelsWithDetails(global.group, global.month, global.year);
+    }, [labels, getLabelsWithDetails, loadingBase, global.group, global.month, global.year]);
 
     const handleDelete = useCallback(
         (id: string) => {
@@ -50,11 +56,11 @@ const LabelAllPage: React.FC = () => {
                 .finally(() => {
                     setLoadingDelete('');
                     if (doIt) {
-                        getLabelsWithDetails(group, month, year);
+                        getLabelsWithDetails(global.group, global.month, global.year);
                     }
                 });
         },
-        [user, getLabelsWithDetails, group, month, year]
+        [user, getLabelsWithDetails, global.group, global.month, global.year]
     );
 
     const handleOnCloseDeleteModel = useCallback(() => {
@@ -62,18 +68,27 @@ const LabelAllPage: React.FC = () => {
         setLoadingDelete('');
     }, []);
 
-    const search = (group: string, month: number, year: number) => {
+    const handleOnSearch = (group: string, month: number, year: number) => {
         LocalStorageHelper.setGroup(group);
 
         // update global context
         global.group = group;
         global.month = month;
         global.year = year;
+
+        getLabelsWithDetails(group, month, year);
     };
 
     return (
         <div key='LabelAllPage'>
-            <SearchComponent search={search} />
+            <SearchComponent
+                group={global.group}
+                groups={groupReducer.state.groups}
+                month={global.month}
+                year={global.year}
+                years={expenseReducer.state.years}
+                onSearch={handleOnSearch}
+            />
 
             <hr></hr>
 

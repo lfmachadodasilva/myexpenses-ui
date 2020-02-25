@@ -37,7 +37,7 @@ export class UserService implements IUserService {
     /**
      * Get all users
      */
-    public async getAll(): Promise<User[]> {
+    async getAll(): Promise<User[]> {
         if (this.config.enableFakeDatabase) {
             const service = new UserServiceFake();
             return service.getAll();
@@ -55,7 +55,7 @@ export class UserService implements IUserService {
     /**
      * Get all labels
      */
-    public async get(users: string[]): Promise<User[]> {
+    async get(users: string[]): Promise<User[]> {
         if (this.config.enableFakeDatabase) {
             const service = new UserServiceFake();
             return service.get(users);
@@ -73,7 +73,7 @@ export class UserService implements IUserService {
     /**
      * Save or update
      */
-    public async saveOrUpdate(user: User): Promise<void> {
+    async saveOrUpdate(user: User): Promise<void> {
         if (this.config.enableFakeDatabase) {
             const service = new UserServiceFake();
             return service.saveOrUpdate(user);

@@ -29,7 +29,7 @@ export class ExpenseService implements IExpenseService {
         this.config = ConfigurationManager.get();
     }
 
-    public async getAllYears(groupId: string): Promise<number[]> {
+    async getAllYears(groupId: string): Promise<number[]> {
         if (this.config.enableFakeDatabase) {
             const service = new ExpenseServiceFake();
             return service.getAllYears(groupId);
@@ -47,7 +47,7 @@ export class ExpenseService implements IExpenseService {
     /**
      * Get all expenses
      */
-    public async getAll(groupId: string): Promise<Expense[]> {
+    async getAll(groupId: string): Promise<Expense[]> {
         if (this.config.enableFakeDatabase) {
             const service = new ExpenseServiceFake();
             return service.getAll(groupId);
@@ -80,7 +80,7 @@ export class ExpenseService implements IExpenseService {
     /**
      * Get expense
      */
-    public async get(id: string): Promise<Expense> {
+    async get(id: string): Promise<Expense> {
         if (this.config.enableFakeDatabase) {
             const service = new ExpenseServiceFake();
             return service.get(id);
@@ -102,7 +102,7 @@ export class ExpenseService implements IExpenseService {
     /**
      * Add expense
      */
-    public async add(obj: Expense): Promise<void> {
+    async add(obj: Expense): Promise<void> {
         if (this.config.enableFakeDatabase) {
             const service = new ExpenseServiceFake();
             return service.add(obj);
@@ -120,7 +120,7 @@ export class ExpenseService implements IExpenseService {
     /**
      * Update expense
      */
-    public async update(obj: Expense): Promise<void> {
+    async update(obj: Expense): Promise<void> {
         if (this.config.enableFakeDatabase) {
             const service = new ExpenseServiceFake();
             return service.update(obj);
@@ -138,7 +138,7 @@ export class ExpenseService implements IExpenseService {
     /**
      * Delete label
      */
-    public async delete(id: string): Promise<void> {
+    async delete(id: string): Promise<void> {
         if (this.config.enableFakeDatabase) {
             const service = new ExpenseServiceFake();
             return service.delete(id);

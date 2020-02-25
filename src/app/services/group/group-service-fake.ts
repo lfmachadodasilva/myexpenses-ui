@@ -47,7 +47,7 @@ export class GroupServiceFake implements IGroupService {
         }
     }
 
-    public async getAll(): Promise<Group[]> {
+    async getAll(): Promise<Group[]> {
         const groups = this.groups.filter(x => (x.users as string[]).some(y => y === this.user.uid));
         return new Promise(resolve => {
             return setTimeout(() => {
@@ -56,7 +56,7 @@ export class GroupServiceFake implements IGroupService {
         });
     }
 
-    public async getAllWithDetails(): Promise<Group[]> {
+    async getAllWithDetails(): Promise<Group[]> {
         const groups = this.groups.filter(x => (x.users as string[]).some(y => y === this.user.uid));
         const users = await new UserService().get([].concat(...groups.map(x => x.users as string[])));
         return new Promise(resolve => {
@@ -73,7 +73,7 @@ export class GroupServiceFake implements IGroupService {
         });
     }
 
-    public async get(id: string): Promise<Group> {
+    async get(id: string): Promise<Group> {
         const group = this.groups.find(x => x.id === id && (x.users as string[]).some(y => y === this.user.uid));
         return new Promise(resolve => {
             return setTimeout(() => {
@@ -82,7 +82,7 @@ export class GroupServiceFake implements IGroupService {
         });
     }
 
-    public async getWithDetails(id: string): Promise<Group> {
+    async getWithDetails(id: string): Promise<Group> {
         const group = this.groups.find(x => x.id === id && (x.users as string[]).some(y => y === this.user.uid));
         const users = await new UserService().get(group.users as string[]);
         return new Promise(resolve => {
@@ -95,7 +95,7 @@ export class GroupServiceFake implements IGroupService {
         });
     }
 
-    public async add(obj: Group): Promise<void> {
+    async add(obj: Group): Promise<void> {
         return new Promise(resolve => {
             return setTimeout(() => {
                 const max = Math.max.apply(
@@ -112,7 +112,7 @@ export class GroupServiceFake implements IGroupService {
         });
     }
 
-    public async update(obj: Group): Promise<void> {
+    async update(obj: Group): Promise<void> {
         return new Promise((resolve, reject) => {
             const group = this.groups.find(x => x.id === obj.id);
             if (group === null || group === undefined) {
@@ -128,7 +128,7 @@ export class GroupServiceFake implements IGroupService {
         });
     }
 
-    public async delete(id: string): Promise<void> {
+    async delete(id: string): Promise<void> {
         return new Promise((resolve, reject) => {
             return setTimeout(() => {
                 const group = this.groups.find(x => x.id === id);

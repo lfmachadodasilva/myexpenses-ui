@@ -1,10 +1,12 @@
+import { sumBy, meanBy } from 'lodash';
+import { addMonths, addDays, compareAsc } from 'date-fns';
 import { User, database } from 'firebase/app';
-import { Label, LabelWithDetails } from '../../models/label';
+
 import { ILabelService } from './label-service';
+
+import { Label, LabelWithDetails } from '../../models/label';
 import { ExpenseService } from '../expense/expense-service';
 import { Expense } from '../../models/expense';
-import { sumBy } from 'lodash';
-import { addMonths, addDays, compareAsc } from 'date-fns';
 
 export class LabelServiceFirebase implements ILabelService {
     collection = 'labels/';
@@ -117,15 +119,16 @@ export class LabelServiceFirebase implements ILabelService {
 
     private getLabelValues(labelId: string, expenses: Expense[], year: number, month: number) {
         const expensesByLabel = expenses.filter(expense => expense.labelId === labelId);
-        const today = new Date(year, month);
+        const current = new Date(year, month - 1);
         const currentValue = sumBy(
             expensesByLabel.filter(
                 expense =>
-                    expense.date.getFullYear() === today.getFullYear() && expense.date.getMonth() === today.getMonth()
+                    expense.date.getFullYear() === current.getFullYear() &&
+                    expense.date.getMonth() === current.getMonth()
             ),
             expense => expense.value
         );
-        const lastMonth = addMonths(today, -1);
+        const lastMonth = addMonths(current, -1);
         const lastMonthValue = sumBy(
             expensesByLabel.filter(
                 expense =>
@@ -134,8 +137,8 @@ export class LabelServiceFirebase implements ILabelService {
             ),
             expense => expense.value
         );
-        const lastDayOfPreviousMonth = addDays(new Date(today.getMonth(), today.getMonth(), 1), -1);
-        const averageValue = sumBy(
+        const lastDayOfPreviousMonth = addDays(new Date(current.getFullYear(), current.getMonth(), 1), -1);
+        const averageValue = meanBy(
             expensesByLabel.filter(expense => compareAsc(expense.date, lastDayOfPreviousMonth) <= 0),
             expense => expense.value
         );

@@ -15,6 +15,7 @@ import { FetchData } from '../../services/fetch-data';
 import { userContext } from '../../contexts/user-context';
 import { ExpenseService } from '../../services/expense/expense-service';
 import { sumBy } from 'lodash';
+import { hasValue } from '../../helpers/util-helper';
 
 const ExpenseAllPage: React.FC = () => {
     const global = useContext(globalContext);
@@ -22,29 +23,36 @@ const ExpenseAllPage: React.FC = () => {
     const { t } = useTranslation();
     const history = useHistory();
 
-    const { loadingBase, expenseReducer } = global;
+    // const { search: searchParams } = useLocation();
+    // const queryParams = new URLSearchParams(searchParams);
+    // console.log(searchParams, queryParams.has('group'), queryParams.get('group'));
 
-    const search = async (g: string, m: number, y: number) => {
-        LocalStorageHelper.setGroup(g);
+    const { loadingBase, expenseReducer, groupReducer } = global;
 
-        global.group = g;
-        global.month = m;
-        global.year = y;
+    const handleOnSearch = async (group: string, month: number, year: number) => {
+        LocalStorageHelper.setGroup(group);
 
-        // TODO test
-        // await global.groupReducer.getGroups();
+        global.group = group;
+        global.month = month;
+        global.year = year;
 
-        // TODO search
+        getExpenses(group, month, year);
     };
 
     const { state: expenseState, getExpenses, resetExpenses } = expenseReducer;
+    const { expenses } = expenseState;
     useEffect(() => {
-        if (loadingBase || (expenseState.expenses && expenseState.expenses.status !== FetchStatus.Ready)) {
+        if (
+            loadingBase ||
+            (hasValue(expenses) && expenses.status !== FetchStatus.Ready) ||
+            !hasValue(global.group) ||
+            !hasValue(global.year)
+        ) {
             return;
         }
 
         getExpenses(global.group, global.month, global.year);
-    }, [expenseState.expenses, getExpenses, loadingBase, global.group, global.month, global.year]);
+    }, [expenses, getExpenses, loadingBase, global.group, global.month, global.year]);
 
     const handleOnEdit = useCallback(
         (id: string): Promise<void> => {
@@ -77,14 +85,8 @@ const ExpenseAllPage: React.FC = () => {
         [user, resetExpenses]
     );
 
-    const { expenses } = expenseState;
     const [totalUsed, totalUsedPercentage, totalLeft, totalLeftPercentage] = useMemo(() => {
-        if (
-            expenses == null ||
-            expenses === undefined ||
-            expenses.status !== FetchStatus.Loaded ||
-            expenses.data.length === 0
-        ) {
+        if (!hasValue(expenses) || expenses.status !== FetchStatus.Loaded || expenses.data.length === 0) {
             return [0, 0, 0, 0];
         }
 
@@ -107,7 +109,14 @@ const ExpenseAllPage: React.FC = () => {
 
     return (
         <div key='ExpenseAllPage'>
-            <SearchComponent search={search} />
+            <SearchComponent
+                group={global.group}
+                groups={groupReducer.state.groups}
+                month={global.month}
+                year={global.year}
+                years={expenseReducer.state.years}
+                onSearch={handleOnSearch}
+            />
 
             <hr></hr>
 
@@ -115,7 +124,7 @@ const ExpenseAllPage: React.FC = () => {
                 className='mb-4'
                 variant='primary'
                 size='sm'
-                disabled={expenseState.expenses && expenseState.expenses.status !== FetchStatus.Loaded}
+                disabled={hasValue(expenses) && expenses.status !== FetchStatus.Loaded}
                 onClick={() => {
                     history.push(MyRoute.EXPENSE_ADD);
                 }}
@@ -125,55 +134,69 @@ const ExpenseAllPage: React.FC = () => {
                 {t('EXPENSE.ADD')}
             </Button>
 
-            <Alert variant={totalLeft >= 0 ? 'success' : 'danger'}>
-                <div className='d-flex justify-content-around'>
-                    <h6>{t('EXPENSE.TOTAL_USED')} </h6>
-                    <h6>{t('CURRENCY') + ' ' + totalUsed.toFixed(2)}</h6>
-                    <h6>{totalUsedPercentage.toFixed(2) + ' %'}</h6>
-                </div>
-                <div className='d-flex justify-content-around'>
-                    <h6 className='m-0'>{t('EXPENSE.TOTAL_LEFT')}</h6>
-                    <h6 className='m-0'>{t('CURRENCY') + ' ' + totalLeft.toFixed(2)}</h6>
-                    <h6 className='m-0'>{totalLeftPercentage.toFixed(2) + ' %'}</h6>
-                </div>
-            </Alert>
+            {hasValue(expenses) && expenses.status === FetchStatus.Ready && (
+                <Alert key='NotLoaded' variant='info' className='mt-4'>
+                    {t('LABEL.NOT_LOADED')}
+                </Alert>
+            )}
+            {hasValue(expenses) && expenses.status === FetchStatus.Loaded && expenses.data.length === 0 && (
+                <Alert key='EmptyLabel' variant='warning' className='mt-4'>
+                    {t('LABEL.EMPTY')}
+                </Alert>
+            )}
 
-            <Row>
-                <Col>
-                    <h6>{t('EXPENSE.OUTCOMING')}</h6>
-                    {expenseState.expenses && expenseState.expenses.status === FetchStatus.Loaded && (
-                        <ExpenseList
-                            expenses={
-                                {
-                                    data: expenseState.expenses.data.filter(
-                                        expense => expense.type === ExpenseType.Outcoming
-                                    ),
-                                    status: expenseState.expenses.status
-                                } as FetchData<ExpenseWithDetails[]>
-                            }
-                            onEdit={handleOnEdit}
-                            onDelete={handleOnDelete}
-                        />
-                    )}
-                </Col>
-                <Col>
-                    <h6>{t('EXPENSE.INCOMING')}</h6>
-                    {expenseState.expenses && expenseState.expenses.status === FetchStatus.Loaded && (
-                        <ExpenseList
-                            expenses={
-                                {
-                                    data: expenseState.expenses.data.filter(
-                                        expense => expense.type === ExpenseType.Incoming
-                                    ),
-                                    status: expenseState.expenses.status
-                                } as FetchData<ExpenseWithDetails[]>
-                            }
-                            onEdit={handleOnEdit}
-                            onDelete={handleOnDelete}
-                        />
-                    )}
-                </Col>
-            </Row>
+            {hasValue(expenses) && expenses.status === FetchStatus.Loaded && expenses.data.length > 0 && (
+                <>
+                    <Alert variant={totalLeft >= 0 ? 'success' : 'danger'}>
+                        <div className='d-flex justify-content-around'>
+                            <h6>{t('EXPENSE.TOTAL_USED')} </h6>
+                            <h6>{t('CURRENCY') + ' ' + totalUsed.toFixed(2)}</h6>
+                            <h6>{totalUsedPercentage.toFixed(2) + ' %'}</h6>
+                        </div>
+                        <div className='d-flex justify-content-around'>
+                            <h6 className='m-0'>{t('EXPENSE.TOTAL_LEFT')}</h6>
+                            <h6 className='m-0'>{t('CURRENCY') + ' ' + totalLeft.toFixed(2)}</h6>
+                            <h6 className='m-0'>{totalLeftPercentage.toFixed(2) + ' %'}</h6>
+                        </div>
+                    </Alert>
+                    <Row>
+                        <Col>
+                            <h6>{t('EXPENSE.OUTCOMING')}</h6>
+                            {expenses && expenses.status === FetchStatus.Loaded && (
+                                <ExpenseList
+                                    expenses={
+                                        {
+                                            data: expenses.data.filter(
+                                                expense => expense.type === ExpenseType.Outcoming
+                                            ),
+                                            status: expenses.status
+                                        } as FetchData<ExpenseWithDetails[]>
+                                    }
+                                    onEdit={handleOnEdit}
+                                    onDelete={handleOnDelete}
+                                />
+                            )}
+                        </Col>
+                        <Col>
+                            <h6>{t('EXPENSE.INCOMING')}</h6>
+                            {expenses && expenses.status === FetchStatus.Loaded && (
+                                <ExpenseList
+                                    expenses={
+                                        {
+                                            data: expenses.data.filter(
+                                                expense => expense.type === ExpenseType.Incoming
+                                            ),
+                                            status: expenses.status
+                                        } as FetchData<ExpenseWithDetails[]>
+                                    }
+                                    onEdit={handleOnEdit}
+                                    onDelete={handleOnDelete}
+                                />
+                            )}
+                        </Col>
+                    </Row>
+                </>
+            )}
         </div>
     );
 };

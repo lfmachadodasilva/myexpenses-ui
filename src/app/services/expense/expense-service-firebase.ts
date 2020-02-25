@@ -1,8 +1,10 @@
-import { User, database } from 'firebase/app';
-import { IExpenseService } from './expense-service';
-import { Expense, ExpenseWithDetails } from '../../models/expense';
 import { uniq } from 'lodash';
 import { format, parse } from 'date-fns';
+import { User, database } from 'firebase/app';
+
+import { IExpenseService } from './expense-service';
+
+import { Expense, ExpenseWithDetails } from '../../models/expense';
 import { LabelService } from '../label/label-service';
 
 export class ExpenseServiceFirebase implements IExpenseService {
@@ -22,19 +24,21 @@ export class ExpenseServiceFirebase implements IExpenseService {
         const ref = this.db.ref(this.collection);
         return ref.once('value').then(value => {
             ref.off();
+            const today = new Date();
 
             const data = value.val();
             if (data) {
                 const expenses = Object.keys(data).map(i => {
-                    return { ...data[i], date: parse(data[i].date.toString(), this.dateFormat, new Date()) };
+                    return { ...data[i], date: parse(data[i].date.toString(), this.dateFormat, today) };
                 }) as Expense[];
                 const years = uniq(
                     expenses.filter(expense => expense.groupId === groupId).map(x => x.date.getFullYear())
                 );
-                return years.length === 0 ? [new Date().getFullYear()] : years;
+                console.log(years);
+                return years.length === 0 ? [today.getFullYear()] : years;
             }
 
-            return [];
+            return [today.getFullYear()];
         });
     }
     getAll(groupId: string): Promise<Expense[]> {
@@ -47,11 +51,7 @@ export class ExpenseServiceFirebase implements IExpenseService {
                 const expenses = Object.keys(data).map(i => {
                     return { ...data[i], date: parse(data[i].date.toString(), this.dateFormat, new Date()) };
                 }) as Expense[];
-                return expenses
-                    .filter(expense => expense.groupId === groupId)
-                    .map(expense => {
-                        return { ...expense, date: parse(expense.date.toString(), this.dateFormat, new Date()) };
-                    });
+                return expenses.filter(expense => expense.groupId === groupId);
             }
 
             return [];

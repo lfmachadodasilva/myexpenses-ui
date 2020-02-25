@@ -1,45 +1,50 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Form, Col, Row, Spinner, Card, Button, Accordion, Badge } from 'react-bootstrap';
 import { isMobile } from 'react-device-detect';
 
 import { useTranslation } from 'react-i18next';
-import { globalContext } from '../../contexts/global-context';
 import { FetchStatus } from '../../services/fetch-status';
 import { FaSearch } from 'react-icons/fa';
+import { FetchData } from '../../services/fetch-data';
+import { Group } from '../../models/group';
+import { hasValue } from '../../helpers/util-helper';
 
 export interface SearchProps {
-    search: (group: string, month: number, year: number) => void;
+    group: string;
+    groups: FetchData<Group[]>;
+    month: number;
+    year: number;
+    years: FetchData<number[]>;
+
+    onSearch: (group: string, month: number, year: number) => void;
 }
 
 /**
  * Search component
  */
 const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
-    const { group, month, year, groupReducer, expenseReducer, loadingBase } = useContext(globalContext);
     const { t } = useTranslation();
+    const { group, groups, month, year, years } = props;
 
-    const [groupSelected, setGroup] = useState(group);
-    const [monthSelected, setMonth] = useState(month);
-    const [yearSelected, setYear] = useState(year);
+    const [groupSelected, setGroupSelected] = useState(group);
+    const [monthSelected, setMonthSelected] = useState(month);
+    const [yearSelected, setYearSelected] = useState(year);
     const [collapse, setCollpase] = useState(isMobile);
-
-    const { groups } = groupReducer.state;
-    const { years } = expenseReducer.state;
 
     const groupName = useMemo(() => {
         if (groups.status === FetchStatus.Loaded) {
-            const g = groups.data.find(x => x.id === groupSelected);
-            if (g !== null && g !== undefined) {
-                return g.name;
+            const groupDetail = groups.data.find(group => group.id === groupSelected);
+            if (hasValue(groupDetail)) {
+                return groupDetail.name;
             }
         }
         return '';
     }, [groupSelected, groups]);
 
     useEffect(() => {
-        setGroup(group);
-        setMonth(month);
-        setYear(year);
+        setGroupSelected(group);
+        setMonthSelected(month);
+        setYearSelected(year);
     }, [group, month, year]);
 
     const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -65,42 +70,34 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                     <Accordion.Toggle
                         as={Card.Header}
                         eventKey='0'
-                        onClick={() => {
-                            setCollpase(!collapse);
-                        }}
+                        onClick={() => setCollpase(!collapse)}
                         className='p-2'
                     >
                         {!collapse && <h6 className='m-0'>{t('SEARCH.TITLE')}</h6>}
                         {collapse && (
-                            <>
-                                <Row>
-                                    <Col xs={4}>
-                                        {showLoading(groups.status)}
-                                        {groups.status === FetchStatus.Loaded && (
-                                            <h5 className='mb-0'>
-                                                <Badge variant='secondary'>{groupName}</Badge>
-                                            </h5>
-                                        )}
-                                    </Col>
-                                    <Col style={{ textAlign: 'center' }} xs={4}>
-                                        {loadingGroupOrYear && showLoading()}
+                            <div className='d-flex justify-content-around'>
+                                {showLoading(groups.status)}
+                                {groups.status === FetchStatus.Loaded && (
+                                    <h5 className='mb-0'>
+                                        <Badge variant='secondary'>{groupName}</Badge>
+                                    </h5>
+                                )}
 
-                                        {!loadingGroupOrYear && (
-                                            <h5 className='mb-0'>
-                                                <Badge variant='secondary'>{t('SEARCH.MONTHS.' + monthSelected)}</Badge>
-                                            </h5>
-                                        )}
-                                    </Col>
-                                    <Col style={{ textAlign: 'right' }} xs={4}>
-                                        {loadingGroupOrYear && showLoading()}
-                                        {!loadingGroupOrYear && (
-                                            <h5 className='mb-0'>
-                                                <Badge variant='secondary'>{yearSelected}</Badge>
-                                            </h5>
-                                        )}
-                                    </Col>
-                                </Row>
-                            </>
+                                {loadingGroupOrYear && showLoading()}
+
+                                {!loadingGroupOrYear && (
+                                    <h5 className='mb-0'>
+                                        <Badge variant='secondary'>{t('SEARCH.MONTHS.' + monthSelected)}</Badge>
+                                    </h5>
+                                )}
+
+                                {loadingGroupOrYear && showLoading()}
+                                {!loadingGroupOrYear && (
+                                    <h5 className='mb-0'>
+                                        <Badge variant='secondary'>{yearSelected}</Badge>
+                                    </h5>
+                                )}
+                            </div>
                         )}
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey='0' className='p-2'>
@@ -115,7 +112,7 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                             value={groupSelected}
                                             disabled={groups.status !== FetchStatus.Loaded}
                                             onChange={(value: any) => {
-                                                setGroup(value.target.value);
+                                                setGroupSelected(value.target.value);
                                             }}
                                             size='sm'
                                         >
@@ -140,7 +137,7 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                             defaultValue={monthSelected}
                                             disabled={loadingGroupOrYear}
                                             onChange={(value: any) => {
-                                                setMonth(+value.target.value);
+                                                setMonthSelected(+value.target.value);
                                             }}
                                             size='sm'
                                         >
@@ -163,7 +160,7 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                             defaultValue={yearSelected}
                                             disabled={loadingGroupOrYear}
                                             onChange={(value: any) => {
-                                                setYear(+value.target.value);
+                                                setYearSelected(+value.target.value);
                                             }}
                                             size='sm'
                                         >
@@ -185,10 +182,7 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                     <Button
                                         variant='primary'
                                         size='sm'
-                                        onClick={() => {
-                                            props.search(groupSelected, monthSelected, yearSelected);
-                                        }}
-                                        disabled={loadingBase}
+                                        onClick={() => props.onSearch(groupSelected, monthSelected, yearSelected)}
                                     >
                                         <FaSearch size={16} />
                                         &nbsp;
