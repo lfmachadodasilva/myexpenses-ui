@@ -91,6 +91,10 @@ const ExpenseAddEditPage: React.FC = () => {
             });
     }, [user, type, name, date, value, label, expenseId, group, history, resetExpenses]);
 
+    const handleCancel = useCallback(() => {
+        history.push(MyRoute.EXPENSE);
+    }, [history]);
+
     useEffect(() => {
         if (loadingBase) {
             return;
@@ -259,6 +263,7 @@ const ExpenseAddEditPage: React.FC = () => {
                                 disabled={disabledButton}
                                 onClick={isAdd.current ? handleAdd : handleEdit}
                                 size='sm'
+                                className='mr-4'
                             >
                                 {loading && (
                                     <>
@@ -273,6 +278,9 @@ const ExpenseAddEditPage: React.FC = () => {
                                     </>
                                 )}
                                 {t(isAdd.current ? 'EXPENSE.ADD' : 'EXPENSE.EDIT')}
+                            </Button>
+                            <Button variant='secondary' onClick={handleCancel} size='sm'>
+                                {t('ADD_EDIT.CANCEL')}
                             </Button>
                         </Form>
 

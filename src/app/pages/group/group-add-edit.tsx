@@ -170,6 +170,10 @@ const GroupAddEditPage: React.FC = () => {
             });
     }, [selected, history, group, name, user, resetGroupsWithDetails]);
 
+    const handleCancel = useCallback(() => {
+        history.push(MyRoute.GROUP);
+    }, [history]);
+
     return (
         <div className='mt-4'>
             {loadingBase && (
@@ -235,6 +239,7 @@ const GroupAddEditPage: React.FC = () => {
                                 disabled={disabledButton}
                                 onClick={isAdd.current ? handleAdd : handleEdit}
                                 size='sm'
+                                className='mr-4'
                             >
                                 {loading && (
                                     <>
@@ -249,6 +254,9 @@ const GroupAddEditPage: React.FC = () => {
                                     </>
                                 )}
                                 {t(isAdd.current ? 'GROUP.ADD_EDIT.ADD' : 'GROUP.ADD_EDIT.EDIT')}
+                            </Button>
+                            <Button variant='secondary' onClick={handleCancel} size='sm'>
+                                {t('ADD_EDIT.CANCEL')}
                             </Button>
                         </Form>
 

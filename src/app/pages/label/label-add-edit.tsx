@@ -83,6 +83,10 @@ const LabelAddEditPage: React.FC = () => {
             });
     }, [history, user, name, currentLabel, resetLabelsWithDetails]);
 
+    const handleCancel = useCallback(() => {
+        history.push(MyRoute.GROUP);
+    }, [history]);
+
     return (
         <div className='mt-4'>
             {loadingBase && (
@@ -133,6 +137,7 @@ const LabelAddEditPage: React.FC = () => {
                                 disabled={disabledButton}
                                 onClick={isAdd.current ? handleAdd : handleEdit}
                                 size='sm'
+                                className='mr-4'
                             >
                                 {loading && (
                                     <>
@@ -147,6 +152,9 @@ const LabelAddEditPage: React.FC = () => {
                                     </>
                                 )}
                                 {t(isAdd.current ? 'LABEL.ADD_EDIT.ADD' : 'LABEL.ADD_EDIT.EDIT')}
+                            </Button>
+                            <Button variant='secondary' onClick={handleCancel} size='sm'>
+                                {t('ADD_EDIT.CANCEL')}
                             </Button>
                         </Form>
 

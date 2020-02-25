@@ -99,5 +99,8 @@
 
         "TOTAL_USED": "Total used",
         "TOTAL_LEFT": "Total left"
+    },
+    "ADD_EDIT": {
+        "CANCEL": "Cancel"
     }
 }
