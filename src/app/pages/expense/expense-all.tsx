@@ -59,10 +59,19 @@ const ExpenseAllPage: React.FC = () => {
     const handleOnDelete = useCallback(
         (id: string): Promise<void> => {
             return new Promise((resolve, reject) => {
-                new ExpenseService(user).delete(id).then(() => {
-                    resetExpenses();
-                    resolve();
-                });
+                let doIt = false;
+                new ExpenseService(user)
+                    .delete(id)
+                    .then(() => {
+                        doIt = true;
+                        resolve();
+                    })
+                    .catch(() => reject())
+                    .finally(() => {
+                        if (doIt) {
+                            resetExpenses();
+                        }
+                    });
             });
         },
         [user, resetExpenses]
@@ -70,7 +79,12 @@ const ExpenseAllPage: React.FC = () => {
 
     const { expenses } = expenseState;
     const [totalUsed, totalUsedPercentage, totalLeft, totalLeftPercentage] = useMemo(() => {
-        if (expenses == null || expenses === undefined || expenses.status !== FetchStatus.Loaded) {
+        if (
+            expenses == null ||
+            expenses === undefined ||
+            expenses.status !== FetchStatus.Loaded ||
+            expenses.data.length === 0
+        ) {
             return [0, 0, 0, 0];
         }
 

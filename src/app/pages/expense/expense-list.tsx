@@ -1,9 +1,9 @@
 import { FetchData } from '../../services/fetch-data';
 import { ExpenseWithDetails } from '../../models/expense';
 import { FetchStatus } from '../../services/fetch-status';
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { FaEdit, FaRegWindowClose } from 'react-icons/fa';
-import { ListGroup, Badge, Spinner } from 'react-bootstrap';
+import { ListGroup, Badge, Spinner, Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 
 export interface ExpenseListProps {
@@ -14,7 +14,22 @@ export interface ExpenseListProps {
 const ExpenseList: React.FC<ExpenseListProps> = (props: ExpenseListProps) => {
     const { expenses, onEdit, onDelete } = props;
     const { t } = useTranslation();
+
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [loadingDelete, setLoadingDelete] = useState('');
+
+    const handleOnCloseDeleteModel = useCallback(() => {
+        setShowDeleteModal(false);
+        setLoadingDelete('');
+    }, []);
+
+    const handleDelete = useCallback(() => {
+        setShowDeleteModal(true);
+        setLoadingDelete(loadingDelete);
+        onDelete(loadingDelete).finally(() => {
+            setLoadingDelete(null);
+        });
+    }, [onDelete, loadingDelete]);
 
     return (
         <>
@@ -48,10 +63,8 @@ const ExpenseList: React.FC<ExpenseListProps> = (props: ExpenseListProps) => {
                                                 size={16}
                                                 style={{ cursor: 'pointer' }}
                                                 onClick={() => {
+                                                    setShowDeleteModal(true);
                                                     setLoadingDelete(expense.id);
-                                                    onDelete(expense.id).finally(() => {
-                                                        setLoadingDelete(null);
-                                                    });
                                                 }}
                                             />
                                         )}
@@ -80,6 +93,20 @@ const ExpenseList: React.FC<ExpenseListProps> = (props: ExpenseListProps) => {
                     })}
                 </ListGroup>
             )}
+            <Modal show={showDeleteModal} onHide={handleOnCloseDeleteModel} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>{t('ADD_EDIT.DELETE_TITLE')}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{t('ADD_EDIT.DELETE_BODY')}</Modal.Body>
+                <Modal.Footer>
+                    <Button variant='danger' onClick={handleDelete}>
+                        {t('ADD_EDIT.DELETE')}
+                    </Button>
+                    <Button variant='secondary' onClick={handleOnCloseDeleteModel}>
+                        {t('ADD_EDIT.CANCEL')}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 };

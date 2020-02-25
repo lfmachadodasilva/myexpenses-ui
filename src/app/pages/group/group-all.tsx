@@ -2,7 +2,19 @@ import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { userContext } from '../../contexts/user-context';
 import { useTranslation } from 'react-i18next';
 import { FetchStatus } from '../../services/fetch-status';
-import { Alert, Row, Col, Spinner, Button, ListGroup, Badge, OverlayTrigger, Popover, Image } from 'react-bootstrap';
+import {
+    Alert,
+    Row,
+    Col,
+    Spinner,
+    Button,
+    ListGroup,
+    Badge,
+    OverlayTrigger,
+    Popover,
+    Image,
+    Modal
+} from 'react-bootstrap';
 import { FaPlus, FaEdit, FaRegWindowClose, FaUserAlt } from 'react-icons/fa';
 
 import { MyRoute } from '../../route';
@@ -19,12 +31,14 @@ const GroupAllPage: React.FC = () => {
     const { t } = useTranslation();
     const history = useHistory();
 
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [loadingDelete, setLoadingDelete] = useState('');
     const groups = groupReducer.state.groupsWithDetails;
 
     const handleDelete = useCallback(
         (id: string) => {
             let doIt = false;
+            setShowDeleteModal(false);
             setLoadingDelete(id);
             new GroupService(user)
                 .delete(id)
@@ -41,6 +55,11 @@ const GroupAllPage: React.FC = () => {
         },
         [user, getGroupsWithDetails]
     );
+
+    const handleOnCloseDeleteModel = useCallback(() => {
+        setShowDeleteModal(false);
+        setLoadingDelete('');
+    }, []);
 
     const getToolTip = (u: User) => {
         const displayName = u.displayName && u.displayName.length > 0 ? u.displayName : u.email.split('@')[0];
@@ -139,7 +158,11 @@ const GroupAllPage: React.FC = () => {
                                                 <FaRegWindowClose
                                                     size={16}
                                                     style={{ cursor: 'pointer' }}
-                                                    onClick={() => handleDelete(group.id)}
+                                                    onClick={() => {
+                                                        //handleDelete(group.id);
+                                                        setLoadingDelete(group.id);
+                                                        setShowDeleteModal(true);
+                                                    }}
                                                 />
                                             )}
                                         </div>
@@ -173,6 +196,21 @@ const GroupAllPage: React.FC = () => {
                     </ListGroup>
                 </>
             )}
+
+            <Modal show={showDeleteModal} onHide={handleOnCloseDeleteModel} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>{t('ADD_EDIT.DELETE_TITLE')}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{t('ADD_EDIT.DELETE_BODY')}</Modal.Body>
+                <Modal.Footer>
+                    <Button variant='danger' onClick={() => handleDelete(loadingDelete)}>
+                        {t('ADD_EDIT.DELETE')}
+                    </Button>
+                    <Button variant='secondary' onClick={handleOnCloseDeleteModel}>
+                        {t('ADD_EDIT.CANCEL')}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };

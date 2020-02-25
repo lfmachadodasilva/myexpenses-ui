@@ -1,4 +1,4 @@
-import { ListGroup, Button, Row, Col, Spinner, Badge, Alert } from 'react-bootstrap';
+import { ListGroup, Button, Row, Col, Spinner, Badge, Alert, Modal } from 'react-bootstrap';
 import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { FaPlus, FaEdit, FaRegWindowClose } from 'react-icons/fa';
@@ -20,6 +20,7 @@ const LabelAllPage: React.FC = () => {
 
     const { group, month, year, labelReducer, loadingBase } = global;
 
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [loadingDelete, setLoadingDelete] = useState('');
 
     const { state: labelState, getLabelsWithDetails } = labelReducer;
@@ -34,17 +35,32 @@ const LabelAllPage: React.FC = () => {
 
     const handleDelete = useCallback(
         (id: string) => {
+            let doIt = false;
             setLoadingDelete(id);
+            setShowDeleteModal(false);
             new LabelService(user)
                 .delete(id)
-                .then(() => {})
-                .catch(() => {})
+                .then(() => {
+                    console.log('deleted');
+                    doIt = true;
+                })
+                .catch(() => {
+                    console.log('delete with error');
+                })
                 .finally(() => {
                     setLoadingDelete('');
+                    if (doIt) {
+                        getLabelsWithDetails(group, month, year);
+                    }
                 });
         },
-        [user]
+        [user, getLabelsWithDetails, group, month, year]
     );
+
+    const handleOnCloseDeleteModel = useCallback(() => {
+        setShowDeleteModal(false);
+        setLoadingDelete('');
+    }, []);
 
     const search = (group: string, month: number, year: number) => {
         LocalStorageHelper.setGroup(group);
@@ -60,6 +76,19 @@ const LabelAllPage: React.FC = () => {
             <SearchComponent search={search} />
 
             <hr></hr>
+
+            <Button
+                variant='primary'
+                size='sm'
+                disabled={labels.status !== FetchStatus.Loaded}
+                onClick={() => {
+                    history.push(MyRoute.LABEL_ADD);
+                }}
+            >
+                <FaPlus size={16} />
+                &nbsp;
+                {t('LABEL.ADD')}
+            </Button>
 
             {labels.status === FetchStatus.Ready && (
                 <Alert key='NotLoaded' variant='info' className='mt-4'>
@@ -82,18 +111,6 @@ const LabelAllPage: React.FC = () => {
             )}
             {labels.status === FetchStatus.Loaded && labels.data && labels.data.length > 0 && (
                 <>
-                    <Button
-                        variant='primary'
-                        size='sm'
-                        disabled={labels.status !== FetchStatus.Loaded}
-                        onClick={() => {
-                            history.push(MyRoute.LABEL_ADD);
-                        }}
-                    >
-                        <FaPlus size={16} />
-                        &nbsp;
-                        {t('LABEL.ADD')}
-                    </Button>
                     <ListGroup className='mt-3 mb-3'>
                         {labels.data.map(label => {
                             return (
@@ -122,7 +139,10 @@ const LabelAllPage: React.FC = () => {
                                                 <FaRegWindowClose
                                                     size={16}
                                                     style={{ cursor: 'pointer' }}
-                                                    onClick={() => handleDelete(label.id)}
+                                                    onClick={() => {
+                                                        setLoadingDelete(label.id);
+                                                        setShowDeleteModal(true);
+                                                    }}
                                                 />
                                             )}
                                         </div>
@@ -165,6 +185,21 @@ const LabelAllPage: React.FC = () => {
                     </ListGroup>
                 </>
             )}
+
+            <Modal show={showDeleteModal} onHide={handleOnCloseDeleteModel} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>{t('ADD_EDIT.DELETE_TITLE')}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>{t('ADD_EDIT.DELETE_BODY')}</Modal.Body>
+                <Modal.Footer>
+                    <Button variant='danger' onClick={() => handleDelete(loadingDelete)}>
+                        {t('ADD_EDIT.DELETE')}
+                    </Button>
+                    <Button variant='secondary' onClick={handleOnCloseDeleteModel}>
+                        {t('ADD_EDIT.CANCEL')}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
