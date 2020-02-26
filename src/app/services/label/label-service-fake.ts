@@ -2,6 +2,7 @@ import { Label, LabelWithDetails } from '../../models/label';
 import { ConfigurationManager } from '../../../configuration/manager';
 import { AppConfig } from '../../../configuration/app-config';
 import { IService } from '../service-base';
+import { hasValue } from '../../helpers/util-helper';
 
 export class LabelServiceFake implements IService<Label> {
     config: AppConfig = ConfigurationManager.get();
@@ -10,7 +11,7 @@ export class LabelServiceFake implements IService<Label> {
 
     constructor() {
         this.labels = JSON.parse(localStorage.getItem(this.collection)) as Label[];
-        if (this.labels === null || this.labels.length === 0) {
+        if (!hasValue(this.labels)) {
             this.labels = [
                 {
                     id: '1',
@@ -60,7 +61,7 @@ export class LabelServiceFake implements IService<Label> {
         return new Promise((resolve, reject) => {
             return setTimeout(() => {
                 const label = this.labels.find(x => x.id === id);
-                if (label === null || label === undefined) {
+                if (!hasValue(label)) {
                     return reject('Does not exist');
                 }
                 return resolve(label);
@@ -96,7 +97,7 @@ export class LabelServiceFake implements IService<Label> {
         return new Promise((resolve, reject) => {
             return setTimeout(() => {
                 const label = this.labels.find(x => x.id === obj.id);
-                if (label === null || label === undefined) {
+                if (!hasValue(label)) {
                     return reject('Does not exist');
                 }
                 this.labels = this.labels.filter(x => x.id !== obj.id);
@@ -111,7 +112,7 @@ export class LabelServiceFake implements IService<Label> {
         return new Promise((resolve, reject) => {
             return setTimeout(() => {
                 const label = this.labels.find(x => x.id === id);
-                if (label === null || label === undefined) {
+                if (!hasValue(label)) {
                     return reject('Does not exist');
                 }
                 this.labels = this.labels.filter(x => x.id !== id);

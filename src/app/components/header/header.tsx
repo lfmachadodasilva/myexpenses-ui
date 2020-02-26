@@ -1,8 +1,10 @@
-import React, { useContext, useMemo } from 'react';
-import { Navbar, Nav, Image, Container, Row, Spinner, Col } from 'react-bootstrap';
+import React, { useContext, useMemo, useCallback } from 'react';
+import { Navbar, Nav, Image, Container, Row, Spinner, Col, OverlayTrigger, Popover } from 'react-bootstrap';
+import { FaUserAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { userContext } from '../../contexts/user-context';
 import { useHistory } from 'react-router-dom';
+
+import { userContext } from '../../contexts/user-context';
 import { MyRoute } from '../../route';
 
 /**
@@ -13,16 +15,28 @@ const HeaderComponent: React.FC = () => {
     const { user } = useContext(userContext);
     const history = useHistory();
 
-    const { hasUser, displayName, photoURL } = useMemo(() => {
+    const { hasUser, displayName, email, photo } = useMemo(() => {
         const hasUser = user !== null;
         return {
             hasUser: hasUser,
             displayName: hasUser
                 ? user.displayName && user.displayName.length > 0
                     ? user.displayName.split(' ')[0]
-                    : user.email
+                    : user.email.split('@')[0]
                 : '',
-            photoURL: hasUser && user.photoURL ? user.photoURL : null
+            email: hasUser ? user.email : '',
+            photo:
+                hasUser && user.photoURL ? (
+                    <Image
+                        className='mr-1 justify-content-center'
+                        src={user.photoURL}
+                        height={32}
+                        width={32}
+                        roundedCircle
+                    />
+                ) : (
+                    <FaUserAlt className='mr-1' height={32} width={32} />
+                )
         };
     }, [user]);
 
@@ -45,6 +59,20 @@ const HeaderComponent: React.FC = () => {
         history.push(MyRoute.LOGIN_REGISTER);
     };
 
+    const showToolTip = useCallback(() => {
+        return (
+            <Popover id='popover-basic'>
+                <Popover.Title as='h6'>{displayName}</Popover.Title>
+                <Popover.Content>
+                    <div className='d-flex justify-content-around align-items-center'>
+                        {photo}
+                        <h6 className='m-0'>{email}</h6>
+                    </div>
+                </Popover.Content>
+            </Popover>
+        );
+    }, [displayName, photo, email]);
+
     return (
         <div key='headerComponent'>
             <Navbar collapseOnSelect bg='dark' variant='dark' expand='sm'>
@@ -54,9 +82,9 @@ const HeaderComponent: React.FC = () => {
                             src={process.env.PUBLIC_URL + '/logo.svg'}
                             width='30'
                             height='30'
-                            className='d-inline-block align-top'
+                            className='d-inline-block align-top mr-2'
                             alt='MyExpenses logo'
-                        />{' '}
+                        />
                         {t('HEADER.BRAND')}
                     </Navbar.Brand>
 
@@ -73,16 +101,10 @@ const HeaderComponent: React.FC = () => {
                             </Navbar.Collapse>
                             <Navbar.Collapse id='basic-navbar-nav' className='justify-content-end'>
                                 <Nav>
-                                    {photoURL && (
-                                        <Image
-                                            className='m-1 justify-content-center'
-                                            src={photoURL}
-                                            height={32}
-                                            width={32}
-                                            roundedCircle
-                                        />
-                                    )}
-                                    {photoURL && photoURL.length === 0 && <Navbar.Text>{displayName}</Navbar.Text>}
+                                    <OverlayTrigger key='overlaytrigger' placement='bottom' overlay={showToolTip()}>
+                                        <div className='d-flex align-items-center'>{photo}</div>
+                                    </OverlayTrigger>
+
                                     <Nav.Link onClick={handleOnClickLogout}>{t('HEADER.LOGOUT')}</Nav.Link>
                                 </Nav>
                             </Navbar.Collapse>

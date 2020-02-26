@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useCallback, useMemo } from 'react';
-import { Row, Col, Button, Alert } from 'react-bootstrap';
+import { Row, Col, Button, Alert, Badge, Card } from 'react-bootstrap';
 import { FaPlus } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
@@ -147,20 +147,40 @@ const ExpenseAllPage: React.FC = () => {
 
             {hasValue(expenses) && expenses.status === FetchStatus.Loaded && expenses.data.length > 0 && (
                 <>
-                    <Alert variant={totalLeft >= 0 ? 'success' : 'danger'}>
-                        <div className='d-flex justify-content-around'>
-                            <h6>{t('EXPENSE.TOTAL_USED')} </h6>
-                            <h6>{t('CURRENCY') + ' ' + totalUsed.toFixed(2)}</h6>
-                            <h6>{totalUsedPercentage.toFixed(2) + ' %'}</h6>
-                        </div>
-                        <div className='d-flex justify-content-around'>
-                            <h6 className='m-0'>{t('EXPENSE.TOTAL_LEFT')}</h6>
-                            <h6 className='m-0'>{t('CURRENCY') + ' ' + totalLeft.toFixed(2)}</h6>
-                            <h6 className='m-0'>{totalLeftPercentage.toFixed(2) + ' %'}</h6>
-                        </div>
-                    </Alert>
+                    <Card body className='mb-4'>
+                        <Row>
+                            <Col>
+                                <h6>{t('EXPENSE.TOTAL_USED')} </h6>
+                            </Col>
+                            <Col>
+                                <Badge variant={totalLeft >= 0 ? 'success' : 'danger'}>
+                                    {t('CURRENCY') + ' ' + totalUsed.toFixed(2)}
+                                </Badge>
+                            </Col>
+                            <Col>
+                                <Badge variant={totalLeft >= 0 ? 'success' : 'danger'}>
+                                    {totalUsedPercentage.toFixed(2) + ' %'}
+                                </Badge>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <h6> {t('EXPENSE.TOTAL_LEFT')}</h6>
+                            </Col>
+                            <Col>
+                                <Badge variant={totalLeft >= 0 ? 'success' : 'danger'}>
+                                    {t('CURRENCY') + ' ' + totalLeft.toFixed(2)}
+                                </Badge>
+                            </Col>
+                            <Col>
+                                <Badge variant={totalLeft >= 0 ? 'success' : 'danger'}>
+                                    {totalLeftPercentage.toFixed(2) + ' %'}
+                                </Badge>
+                            </Col>
+                        </Row>
+                    </Card>
                     <Row>
-                        <Col>
+                        <Col sm={12} md={12} lg={6}>
                             <h6>{t('EXPENSE.OUTCOMING')}</h6>
                             {expenses && expenses.status === FetchStatus.Loaded && (
                                 <ExpenseList
@@ -177,7 +197,7 @@ const ExpenseAllPage: React.FC = () => {
                                 />
                             )}
                         </Col>
-                        <Col>
+                        <Col sm={12} md={12} lg={6}>
                             <h6>{t('EXPENSE.INCOMING')}</h6>
                             {expenses && expenses.status === FetchStatus.Loaded && (
                                 <ExpenseList

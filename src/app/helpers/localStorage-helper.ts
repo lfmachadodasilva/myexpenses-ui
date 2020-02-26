@@ -1,4 +1,5 @@
 import { Group } from '../models/group';
+import { hasValue } from './util-helper';
 
 export class LocalStorageHelper {
     static getGroup(groups: Group[]): string {
@@ -10,10 +11,7 @@ export class LocalStorageHelper {
         let selectedGroup = localStorage.getItem('group');
 
         // do not have any selected, select the first available group
-        if (
-            (selectedGroup === null || selectedGroup === undefined || selectedGroup.length === 0) &&
-            groups.length > 0
-        ) {
+        if (!hasValue(selectedGroup) && groups.length > 0) {
             selectedGroup = groups[0].id;
         }
 

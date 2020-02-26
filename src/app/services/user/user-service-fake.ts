@@ -1,6 +1,7 @@
 import { ConfigurationManager } from '../../../configuration/manager';
 import { IUserService } from './user.service';
 import { User } from '../../models/user';
+import { hasValue } from '../../helpers/util-helper';
 
 export class UserServiceFake implements IUserService {
     config = ConfigurationManager.get();
@@ -9,7 +10,7 @@ export class UserServiceFake implements IUserService {
 
     constructor() {
         this.users = JSON.parse(localStorage.getItem(this.collection)) as User[];
-        if (this.users === null || this.users.length === 0) {
+        if (!hasValue(this.users)) {
             this.users = [
                 {
                     id: 'prCSRxTzTyRjaeDr9SzlvY6gAEi2',

@@ -13,6 +13,7 @@ import { FetchStatus } from '../../services/fetch-status';
 import { head } from 'lodash';
 import { ExpenseService } from '../../services/expense/expense-service';
 import { MyRoute } from '../../route';
+import { hasValue } from '../../helpers/util-helper';
 
 const ExpenseAddEditPage: React.FC = () => {
     const { t } = useTranslation();
@@ -114,13 +115,13 @@ const ExpenseAddEditPage: React.FC = () => {
                 setLabel(head(labelStatus.data).id);
             }
         }
-        if (!isAdd.current && (expense === null || expense === undefined)) {
+        if (!isAdd.current && !hasValue(expense)) {
             loadExpensesAsync();
         }
     }, [labelStatus, getLabels, loadExpensesAsync, isAdd, expense, loadingBase]);
 
     const disabledButton = useMemo(() => {
-        return loadingBase || loading || name === '' || value === null || value === undefined || label === '';
+        return loadingBase || loading || !hasValue(name) || !hasValue(value) || !hasValue(label);
     }, [loadingBase, loading, name, value, label]);
 
     return (

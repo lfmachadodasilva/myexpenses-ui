@@ -2,6 +2,7 @@ import { ConfigurationManager } from '../../../configuration/manager';
 import { AppConfig } from '../../../configuration/app-config';
 import { Expense, ExpenseWithDetails } from '../../models/expense';
 import { IExpenseService } from './expense-service';
+import { hasValue } from '../../helpers/util-helper';
 
 export class ExpenseServiceFake implements IExpenseService {
     config: AppConfig = ConfigurationManager.get();
@@ -14,7 +15,7 @@ export class ExpenseServiceFake implements IExpenseService {
      */
     constructor() {
         this.years = JSON.parse(localStorage.getItem(this.yearsCollection)) as number[];
-        if (this.years === null || this.years.length === 0) {
+        if (!hasValue(this.years)) {
             const currentYear = new Date().getFullYear();
             this.years = [];
             for (let i = 0; i < 5; i++) {

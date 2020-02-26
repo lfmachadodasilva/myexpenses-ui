@@ -84,7 +84,7 @@ const LabelAddEditPage: React.FC = () => {
     }, [history, user, name, currentLabel, resetLabelsWithDetails]);
 
     const handleCancel = useCallback(() => {
-        history.push(MyRoute.GROUP);
+        history.push(MyRoute.LABEL);
     }, [history]);
 
     return (

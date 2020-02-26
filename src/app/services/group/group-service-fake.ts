@@ -4,6 +4,7 @@ import { Group } from '../../models/group';
 import { ConfigurationManager } from '../../../configuration/manager';
 import { IGroupService } from './group-service';
 import { UserService } from '../user/user.service';
+import { hasValue } from '../../helpers/util-helper';
 
 export class GroupServiceFake implements IGroupService {
     user: User;
@@ -14,7 +15,7 @@ export class GroupServiceFake implements IGroupService {
     constructor(user: User) {
         this.user = user;
         this.groups = JSON.parse(localStorage.getItem(this.collection)) as Group[];
-        if (this.groups === null || this.groups.length === 0) {
+        if (!hasValue(this.groups)) {
             this.groups = [
                 {
                     id: '1',
@@ -115,7 +116,7 @@ export class GroupServiceFake implements IGroupService {
     async update(obj: Group): Promise<void> {
         return new Promise((resolve, reject) => {
             const group = this.groups.find(x => x.id === obj.id);
-            if (group === null || group === undefined) {
+            if (!hasValue(group)) {
                 return reject('You do not have access to this user');
             }
 
@@ -132,7 +133,7 @@ export class GroupServiceFake implements IGroupService {
         return new Promise((resolve, reject) => {
             return setTimeout(() => {
                 const group = this.groups.find(x => x.id === id);
-                if (group === null || group === undefined) {
+                if (!hasValue(group)) {
                     return reject('You do not have access to this user');
                 }
 
