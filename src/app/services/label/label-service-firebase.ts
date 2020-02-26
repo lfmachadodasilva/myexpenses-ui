@@ -149,6 +149,10 @@ export class LabelServiceFirebase implements ILabelService {
             expense => expense.value
         );
 
-        return [currentValue, lastMonthValue, averageValue];
+        return [
+            Number.isNaN(currentValue) ? +0 : currentValue,
+            Number.isNaN(lastMonthValue) ? +0 : lastMonthValue,
+            Number.isNaN(averageValue) ? +0 : averageValue
+        ];
     }
 }

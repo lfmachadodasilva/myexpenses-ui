@@ -1,8 +1,21 @@
-import { ListGroup, Button, Row, Col, Spinner, Badge, Alert, Modal } from 'react-bootstrap';
-import React, { useContext, useState, useCallback, useEffect } from 'react';
+import {
+    ListGroup,
+    Button,
+    Row,
+    Col,
+    Spinner,
+    Badge,
+    Alert,
+    Modal,
+    ToggleButtonGroup,
+    ToggleButton
+} from 'react-bootstrap';
+import React, { useContext, useState, useCallback, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router';
-import { FaPlus, FaEdit, FaRegWindowClose } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaRegWindowClose, FaRegSquare, FaCheckSquare } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import { Pie } from 'react-chartjs-2';
+import 'chartjs-plugin-colorschemes';
 
 import { globalContext } from '../../contexts/global-context';
 import SearchComponent from '../../components/search/search';
@@ -12,6 +25,12 @@ import { userContext } from '../../contexts/user-context';
 import { FetchStatus } from '../../services/fetch-status';
 import { MyRoute } from '../../route';
 import { hasValue } from '../../helpers/util-helper';
+
+enum LabelValueType {
+    CURRENT_VALUE = 0,
+    LAST_VALUE,
+    AVERAGE_VALUE
+}
 
 const LabelAllPage: React.FC = () => {
     const global = useContext(globalContext);
@@ -23,6 +42,7 @@ const LabelAllPage: React.FC = () => {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [loadingDelete, setLoadingDelete] = useState('');
+    const [labelValueType, setLabelValueType] = useState(LabelValueType.CURRENT_VALUE);
 
     const { state: labelState, getLabelsWithDetails } = labelReducer;
     const { labelsWithDetails: labels } = labelState;
@@ -79,6 +99,47 @@ const LabelAllPage: React.FC = () => {
         getLabelsWithDetails(group, month, year);
     };
 
+    const data = useMemo(() => {
+        if (labels.status === FetchStatus.Loaded && labels.data && labels.data.length > 0) {
+            const labelsData = labels.data.filter(x =>
+                labelValueType === LabelValueType.CURRENT_VALUE
+                    ? x.currentValue > 0
+                    : labelValueType === LabelValueType.LAST_VALUE
+                    ? x.lastMonthValue > 0
+                    : x.averageValue > 0
+            );
+            return {
+                datasets: [
+                    {
+                        data: labelsData.map(x =>
+                            labelValueType === LabelValueType.CURRENT_VALUE
+                                ? x.currentValue
+                                : labelValueType === LabelValueType.LAST_VALUE
+                                ? x.lastMonthValue
+                                : x.averageValue
+                        )
+                    }
+                ],
+
+                // These labels appear in the legend and in the tooltips when hovering different arcs
+                labels: labelsData.map(x => ' ' + x.name)
+            };
+        }
+
+        return {
+            datasets: [],
+            labels: []
+        };
+    }, [labels.status, labels.data, labelValueType]);
+
+    const options = {
+        plugins: {
+            colorschemes: {
+                scheme: 'tableau.Tableau20'
+            }
+        }
+    };
+
     return (
         <div key='LabelAllPage'>
             <SearchComponent
@@ -127,77 +188,126 @@ const LabelAllPage: React.FC = () => {
             {labels.status === FetchStatus.Loaded && labels.data && labels.data.length > 0 && (
                 <>
                     <ListGroup className='mt-3 mb-3'>
-                        {labels.data.map(label => {
-                            return (
-                                <ListGroup.Item key={JSON.stringify(label)}>
-                                    <div className='d-flex justify-content-between'>
-                                        <h5>{label.name}</h5>
-                                        <div className='d-flex justify-content-end'>
-                                            <FaEdit
-                                                className='mr-3'
+                        {labels.data.map(label => (
+                            <ListGroup.Item key={JSON.stringify(label)}>
+                                <div className='d-flex justify-content-between'>
+                                    <h5>{label.name}</h5>
+                                    <div className='d-flex justify-content-end'>
+                                        <FaEdit
+                                            className='mr-3'
+                                            size={16}
+                                            style={{ cursor: 'pointer' }}
+                                            onClick={() => history.push(MyRoute.LABEL + `/${label.id}`)}
+                                        />
+                                        {loadingDelete === label.id && (
+                                            <>
+                                                <Spinner
+                                                    as='span'
+                                                    animation='border'
+                                                    size='sm'
+                                                    role='status'
+                                                    aria-hidden='true'
+                                                />
+                                            </>
+                                        )}
+                                        {loadingDelete !== label.id && (
+                                            <FaRegWindowClose
                                                 size={16}
                                                 style={{ cursor: 'pointer' }}
-                                                onClick={() => history.push(MyRoute.LABEL + `/${label.id}`)}
+                                                onClick={() => {
+                                                    setLoadingDelete(label.id);
+                                                    setShowDeleteModal(true);
+                                                }}
                                             />
-                                            {loadingDelete === label.id && (
-                                                <>
-                                                    <Spinner
-                                                        as='span'
-                                                        animation='border'
-                                                        size='sm'
-                                                        role='status'
-                                                        aria-hidden='true'
-                                                    />
-                                                </>
-                                            )}
-                                            {loadingDelete !== label.id && (
-                                                <FaRegWindowClose
-                                                    size={16}
-                                                    style={{ cursor: 'pointer' }}
-                                                    onClick={() => {
-                                                        setLoadingDelete(label.id);
-                                                        setShowDeleteModal(true);
-                                                    }}
-                                                />
-                                            )}
-                                        </div>
+                                        )}
                                     </div>
+                                </div>
 
-                                    <hr className='m-1'></hr>
+                                <hr className='m-1'></hr>
 
-                                    <div className='d-flex justify-content-around'>
-                                        <h6 style={{ textAlign: 'center' }}>
-                                            {t('LABEL.CURRENT_VALUE')}
-                                            <br />
-                                            <Badge variant='info'>
-                                                {t('CURRENCY') + ' ' + label.currentValue.toFixed(2)}
-                                            </Badge>
-                                        </h6>
-                                        <h6 style={{ textAlign: 'center' }}>
-                                            {t('LABEL.LAST_VALUE')}
-                                            <br />
-                                            <Badge
-                                                variant={
-                                                    label.currentValue > label.lastMonthValue ? 'danger' : 'success'
-                                                }
-                                            >
-                                                {t('CURRENCY') + ' ' + label.lastMonthValue.toFixed(2)}
-                                            </Badge>
-                                        </h6>
-                                        <h6 style={{ textAlign: 'center' }}>
-                                            {t('LABEL.AVERAGE_VALUE')}
-                                            <br />
-                                            <Badge
-                                                variant={label.currentValue > label.averageValue ? 'danger' : 'success'}
-                                            >
-                                                {t('CURRENCY') + ' ' + label.averageValue.toFixed(2)}
-                                            </Badge>
-                                        </h6>
-                                    </div>
-                                </ListGroup.Item>
-                            );
-                        })}
+                                <div className='d-flex justify-content-around'>
+                                    <h6 style={{ textAlign: 'center' }}>
+                                        {t('LABEL.CURRENT_VALUE')}
+                                        <br />
+                                        <Badge variant='info'>
+                                            {t('CURRENCY') + ' ' + label.currentValue.toFixed(2)}
+                                        </Badge>
+                                    </h6>
+                                    <h6 style={{ textAlign: 'center' }}>
+                                        {t('LABEL.LAST_VALUE')}
+                                        <br />
+                                        <Badge
+                                            variant={label.currentValue > label.lastMonthValue ? 'danger' : 'success'}
+                                        >
+                                            {t('CURRENCY') + ' ' + label.lastMonthValue.toFixed(2)}
+                                        </Badge>
+                                    </h6>
+                                    <h6 style={{ textAlign: 'center' }}>
+                                        {t('LABEL.AVERAGE_VALUE')}
+                                        <br />
+                                        <Badge variant={label.currentValue > label.averageValue ? 'danger' : 'success'}>
+                                            {t('CURRENCY') + ' ' + label.averageValue.toFixed(2)}
+                                        </Badge>
+                                    </h6>
+                                </div>
+                            </ListGroup.Item>
+                        ))}
                     </ListGroup>
+
+                    <hr></hr>
+
+                    <div className='mb-4'>
+                        <div className='d-flex justify-content-around'>
+                            <ToggleButtonGroup
+                                size='sm'
+                                onChange={(value: any) => setLabelValueType(value)}
+                                type='radio'
+                                name='radio'
+                            >
+                                <ToggleButton
+                                    type='radio'
+                                    name='radio'
+                                    value={LabelValueType.CURRENT_VALUE}
+                                    variant='light'
+                                    defaultChecked
+                                >
+                                    {labelValueType === LabelValueType.CURRENT_VALUE ? (
+                                        <FaCheckSquare className='mr-1' size={16} />
+                                    ) : (
+                                        <FaRegSquare className='mr-1' size={16} />
+                                    )}
+                                    {t('LABEL.LAST_VALUE')}
+                                </ToggleButton>
+                                <ToggleButton
+                                    type='radio'
+                                    name='radio'
+                                    value={LabelValueType.LAST_VALUE}
+                                    variant='light'
+                                >
+                                    {labelValueType === LabelValueType.LAST_VALUE ? (
+                                        <FaCheckSquare className='mr-1' size={16} />
+                                    ) : (
+                                        <FaRegSquare className='mr-1' size={16} />
+                                    )}
+                                    {t('LABEL.LAST_VALUE')}
+                                </ToggleButton>
+                                <ToggleButton
+                                    type='radio'
+                                    name='radio'
+                                    value={LabelValueType.AVERAGE_VALUE}
+                                    variant='light'
+                                >
+                                    {labelValueType === LabelValueType.AVERAGE_VALUE ? (
+                                        <FaCheckSquare className='mr-1' size={16} />
+                                    ) : (
+                                        <FaRegSquare className='mr-1' size={16} />
+                                    )}
+                                    {t('LABEL.AVERAGE_VALUE')}
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                        </div>
+                        <Pie data={data} options={options} />
+                    </div>
                 </>
             )}
 
