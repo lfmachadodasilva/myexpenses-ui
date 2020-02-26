@@ -9,3 +9,7 @@ export const hasValue = (value: any): boolean => {
 
     return true;
 };
+
+export const getValueOrDefault = (value: string, defaultValue: string) => {
+    return hasValue(value) ? value : defaultValue;
+};

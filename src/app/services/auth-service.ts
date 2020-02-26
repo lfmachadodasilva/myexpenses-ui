@@ -56,11 +56,7 @@ const facebook = new auth.FacebookAuthProvider();
 
 export const loginWithFacebook = async () => {
     try {
-        return await auth()
-            .signInWithPopup(facebook)
-            .then(x => {
-                console.log(x);
-            });
+        return await auth().signInWithPopup(facebook);
     } catch (err) {
         console.error(err);
         throw err;
