@@ -1,4 +1,4 @@
-import { uniq } from 'lodash';
+import { uniq, orderBy } from 'lodash';
 import { format, parse } from 'date-fns';
 import { User, database } from 'firebase/app';
 
@@ -9,6 +9,7 @@ import { LabelService } from '../label/label-service';
 
 export class ExpenseServiceFirebase implements IExpenseService {
     dateFormat = 'yyyyMMdd';
+    orderFields = ['date', 'name', 'value'];
     collection = 'expenses/';
     db: database.Database = database();
     user: User;
@@ -34,13 +35,13 @@ export class ExpenseServiceFirebase implements IExpenseService {
                 const years = uniq(
                     expenses.filter(expense => expense.groupId === groupId).map(x => x.date.getFullYear())
                 );
-                console.log(years);
                 return years.length === 0 ? [today.getFullYear()] : years;
             }
 
             return [today.getFullYear()];
         });
     }
+
     getAll(groupId: string): Promise<Expense[]> {
         const ref = this.db.ref(this.collection);
         return ref.once('value').then(value => {
@@ -51,7 +52,10 @@ export class ExpenseServiceFirebase implements IExpenseService {
                 const expenses = Object.keys(data).map(i => {
                     return { ...data[i], date: parse(data[i].date.toString(), this.dateFormat, new Date()) };
                 }) as Expense[];
-                return expenses.filter(expense => expense.groupId === groupId);
+                return orderBy(
+                    expenses.filter(expense => expense.groupId === groupId),
+                    this.orderFields
+                );
             }
 
             return [];
@@ -72,19 +76,22 @@ export class ExpenseServiceFirebase implements IExpenseService {
                     return { ...data[i], date: parse(data[i].date.toString(), this.dateFormat, new Date()) };
                 }) as Expense[];
 
-                return expenses
-                    .filter(
-                        expense =>
-                            expense.groupId === groupId &&
-                            expense.date.getMonth() + 1 === month &&
-                            expense.date.getFullYear()
-                    )
-                    .map(expense => {
-                        return {
-                            ...expense,
-                            label: labels.find(label => label.id === expense.labelId)
-                        };
-                    }) as ExpenseWithDetails[];
+                return orderBy(
+                    expenses
+                        .filter(
+                            expense =>
+                                expense.groupId === groupId &&
+                                expense.date.getMonth() + 1 === month &&
+                                expense.date.getFullYear()
+                        )
+                        .map(expense => {
+                            return {
+                                ...expense,
+                                label: labels.find(label => label.id === expense.labelId)
+                            };
+                        }) as ExpenseWithDetails[],
+                    this.orderFields
+                );
             }
 
             return [];

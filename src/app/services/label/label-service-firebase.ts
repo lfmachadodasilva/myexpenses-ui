@@ -1,4 +1,4 @@
-import { sumBy, meanBy } from 'lodash';
+import { sumBy, meanBy, orderBy } from 'lodash';
 import { addMonths, addDays, compareAsc } from 'date-fns';
 import { User, database } from 'firebase/app';
 
@@ -25,7 +25,10 @@ export class LabelServiceFirebase implements ILabelService {
             const data = value.val();
             if (data) {
                 const labels = Object.keys(data).map(i => data[i]) as Label[];
-                return labels.filter(label => label.groupId === groupId);
+                return orderBy(
+                    labels.filter(label => label.groupId === groupId),
+                    ['name']
+                );
             }
 
             return [];
@@ -41,22 +44,25 @@ export class LabelServiceFirebase implements ILabelService {
             const data = value.val();
             if (data) {
                 const labels = Object.keys(data).map(i => data[i]) as Label[];
-                return labels
-                    .filter(label => label.groupId === groupId)
-                    .map(label => {
-                        const [currentValue, lastMonthValue, averageValue] = this.getLabelValues(
-                            label.id,
-                            expenses,
-                            year,
-                            month
-                        );
-                        return {
-                            ...label,
-                            currentValue: currentValue,
-                            lastMonthValue: lastMonthValue,
-                            averageValue: averageValue
-                        } as LabelWithDetails;
-                    });
+                return orderBy(
+                    labels
+                        .filter(label => label.groupId === groupId)
+                        .map(label => {
+                            const [currentValue, lastMonthValue, averageValue] = this.getLabelValues(
+                                label.id,
+                                expenses,
+                                year,
+                                month
+                            );
+                            return {
+                                ...label,
+                                currentValue: currentValue,
+                                lastMonthValue: lastMonthValue,
+                                averageValue: averageValue
+                            } as LabelWithDetails;
+                        }),
+                    ['name']
+                );
             }
 
             return [];

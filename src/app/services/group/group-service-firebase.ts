@@ -1,7 +1,7 @@
 import { User, database } from 'firebase/app';
+import { orderBy } from 'lodash';
 
 import { IGroupService } from './group-service';
-
 import { Group } from '../../models/group';
 import { UserService } from '../user/user.service';
 
@@ -33,12 +33,15 @@ export class GroupServiceFirebase implements IGroupService {
         const groupsPromise = this.getAll();
         const usersPrimise = new UserService().getAll();
         const [groups, users] = await Promise.all([groupsPromise, usersPrimise]);
-        return groups.map(group => {
-            return {
-                ...group,
-                users: (group.users as string[]).map(x => users.find(y => x === y.id))
-            };
-        });
+        return orderBy(
+            groups.map(group => {
+                return {
+                    ...group,
+                    users: (group.users as string[]).map(x => users.find(y => x === y.id))
+                };
+            }),
+            ['name']
+        );
     }
 
     async get(id: string): Promise<Group> {
@@ -111,9 +114,10 @@ export class GroupServiceFirebase implements IGroupService {
 
     private filterGroupByUser(groups: Group[]): Group[] {
         return groups
-            ? groups
-                  .filter(group => (group.users as string[]).some(userId => userId === this.user.uid))
-                  .sort((a, b) => a.name.localeCompare(b.name))
+            ? orderBy(
+                  groups.filter(group => (group.users as string[]).some(userId => userId === this.user.uid)),
+                  ['name']
+              )
             : [];
     }
 }
