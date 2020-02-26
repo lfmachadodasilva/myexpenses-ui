@@ -5,6 +5,7 @@ import React, { useState, useCallback } from 'react';
 import { FaEdit, FaRegWindowClose } from 'react-icons/fa';
 import { ListGroup, Badge, Spinner, Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { format } from 'date-fns';
 
 export interface ExpenseListProps {
     expenses: FetchData<ExpenseWithDetails[]>;
@@ -75,15 +76,18 @@ const ExpenseList: React.FC<ExpenseListProps> = (props: ExpenseListProps) => {
 
                                 <div className='d-flex justify-content-around'>
                                     <h6 style={{ textAlign: 'center' }}>
-                                        {t('Value')}
+                                        {t('EXPENSE.DATE')}
                                         <br />
+                                        <Badge variant='info'>{format(expense.date, 'dd/MM/yyyy')}</Badge>
+                                    </h6>
+                                    <h6 style={{ textAlign: 'center' }}>
+                                        {t('EXPENSE.VALUE')} <br />
                                         <Badge variant='info'>{t('CURRENCY') + ' ' + expense.value.toFixed(2)}</Badge>
                                     </h6>
 
                                     {expense.label && (
                                         <h6 style={{ textAlign: 'center' }}>
-                                            {t('Label')}
-                                            <br />
+                                            {t('EXPENSE.LABEL')} <br />
                                             <Badge variant='info'>{expense.label.name}</Badge>
                                         </h6>
                                     )}
