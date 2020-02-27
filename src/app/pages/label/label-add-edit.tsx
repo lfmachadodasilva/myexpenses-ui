@@ -13,7 +13,7 @@ const LabelAddEditPage: React.FC = () => {
     const { t } = useTranslation();
     const { user } = useContext(userContext);
     const { group, loadingBase, labelReducer } = useContext(globalContext);
-    const { resetLabelsWithDetails } = labelReducer;
+    const { resetLabelsWithDetails, resetLabels } = labelReducer;
 
     const { label } = useParams();
     const isAdd = useRef(label === undefined);
@@ -56,6 +56,7 @@ const LabelAddEditPage: React.FC = () => {
         new LabelService(user)
             .add({ name: name, groupId: group } as Label)
             .then(() => {
+                resetLabels();
                 resetLabelsWithDetails();
                 history.push(MyRoute.LABEL);
             })
@@ -72,6 +73,7 @@ const LabelAddEditPage: React.FC = () => {
         new LabelService(user)
             .update({ ...currentLabel, name: name } as Label)
             .then(() => {
+                resetLabels();
                 resetLabelsWithDetails();
                 history.push(MyRoute.LABEL);
             })

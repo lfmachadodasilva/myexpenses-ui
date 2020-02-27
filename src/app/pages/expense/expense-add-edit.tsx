@@ -22,7 +22,7 @@ const ExpenseAddEditPage: React.FC = () => {
     const { expenseReducer, labelReducer, loadingBase, group } = useContext(globalContext);
     const { resetExpenses } = expenseReducer;
     const { labels: labelStatus } = labelReducer.state;
-    const { getLabels } = labelReducer;
+    const { getLabels, resetLabelsWithDetails } = labelReducer;
 
     const { expense: expenseId } = useParams();
     const isAdd = useRef(expenseId === undefined);
@@ -71,9 +71,10 @@ const ExpenseAddEditPage: React.FC = () => {
             } as Expense)
             .finally(() => {
                 resetExpenses();
+                resetLabelsWithDetails();
                 history.push(MyRoute.EXPENSE);
             });
-    }, [type, name, date, value, label, user, group, history, resetExpenses]);
+    }, [type, name, date, value, label, user, group, history, resetExpenses, resetLabelsWithDetails]);
 
     const handleEdit = useCallback(() => {
         return new ExpenseService(user)
@@ -88,9 +89,10 @@ const ExpenseAddEditPage: React.FC = () => {
             } as Expense)
             .finally(() => {
                 resetExpenses();
+                resetLabelsWithDetails();
                 history.push(MyRoute.EXPENSE);
             });
-    }, [user, type, name, date, value, label, expenseId, group, history, resetExpenses]);
+    }, [user, type, name, date, value, label, expenseId, group, history, resetExpenses, resetLabelsWithDetails]);
 
     const handleCancel = useCallback(() => {
         history.push(MyRoute.EXPENSE);

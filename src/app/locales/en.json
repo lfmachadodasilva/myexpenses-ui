@@ -106,5 +106,8 @@
         "CANCEL": "Cancel",
         "DELETE_TITLE": "Delete",
         "DELETE_BODY": "Are you sure you want to delete this item?"
+    },
+    "ALL": {
+        "NO_DATA": "No data to display"
     }
 }

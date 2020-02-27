@@ -67,12 +67,9 @@ const LabelAllPage: React.FC = () => {
             new LabelService(user)
                 .delete(id)
                 .then(() => {
-                    console.log('deleted');
                     doIt = true;
                 })
-                .catch(() => {
-                    console.log('delete with error');
-                })
+                .catch(() => {})
                 .finally(() => {
                     setLoadingDelete('');
                     if (doIt) {
@@ -234,7 +231,9 @@ const LabelAllPage: React.FC = () => {
                                     </p>
                                     <p className='d-flex flex-column justify-content-center text-wrap mb-0'>
                                         <small className='text-center'>{t('LABEL.LAST_VALUE')}</small>
-                                        <Badge variant={label.currentValue > label.lastMonthValue ? 'danger' : 'success'}>
+                                        <Badge
+                                            variant={label.currentValue > label.lastMonthValue ? 'danger' : 'success'}
+                                        >
                                             {t('CURRENCY') + ' ' + label.lastMonthValue.toFixed(2)}
                                         </Badge>
                                     </p>
@@ -251,60 +250,65 @@ const LabelAllPage: React.FC = () => {
 
                     <hr></hr>
 
-                    {data.datasets[0].data.length > 0 && (
-                        <div className='mb-4'>
-                            <div className='d-flex justify-content-around'>
-                                <ToggleButtonGroup
-                                    size='sm'
-                                    onChange={(value: any) => setLabelValueType(value)}
+                    <div className='mb-4'>
+                        <div className='d-flex justify-content-around'>
+                            <ToggleButtonGroup
+                                size='sm'
+                                onChange={(value: any) => setLabelValueType(value)}
+                                type='radio'
+                                name='radio'
+                            >
+                                <ToggleButton
                                     type='radio'
                                     name='radio'
+                                    value={LabelValueType.CURRENT_VALUE}
+                                    variant='light'
+                                    defaultChecked
                                 >
-                                    <ToggleButton
-                                        type='radio'
-                                        name='radio'
-                                        value={LabelValueType.CURRENT_VALUE}
-                                        variant='light'
-                                        defaultChecked
-                                    >
-                                        {labelValueType === LabelValueType.CURRENT_VALUE ? (
-                                            <FaCheckSquare className='mr-1' size={16} />
-                                        ) : (
-                                            <FaRegSquare className='mr-1' size={16} />
-                                        )}
-                                        {t('LABEL.LAST_VALUE')}
-                                    </ToggleButton>
-                                    <ToggleButton
-                                        type='radio'
-                                        name='radio'
-                                        value={LabelValueType.LAST_VALUE}
-                                        variant='light'
-                                    >
-                                        {labelValueType === LabelValueType.LAST_VALUE ? (
-                                            <FaCheckSquare className='mr-1' size={16} />
-                                        ) : (
-                                            <FaRegSquare className='mr-1' size={16} />
-                                        )}
-                                        {t('LABEL.LAST_VALUE')}
-                                    </ToggleButton>
-                                    <ToggleButton
-                                        type='radio'
-                                        name='radio'
-                                        value={LabelValueType.AVERAGE_VALUE}
-                                        variant='light'
-                                    >
-                                        {labelValueType === LabelValueType.AVERAGE_VALUE ? (
-                                            <FaCheckSquare className='mr-1' size={16} />
-                                        ) : (
-                                            <FaRegSquare className='mr-1' size={16} />
-                                        )}
-                                        {t('LABEL.AVERAGE_VALUE')}
-                                    </ToggleButton>
-                                </ToggleButtonGroup>
-                            </div>
-                            <Pie data={data} options={options} />
+                                    {labelValueType === LabelValueType.CURRENT_VALUE ? (
+                                        <FaCheckSquare className='mr-1' size={16} />
+                                    ) : (
+                                        <FaRegSquare className='mr-1' size={16} />
+                                    )}
+                                    {t('LABEL.LAST_VALUE')}
+                                </ToggleButton>
+                                <ToggleButton
+                                    type='radio'
+                                    name='radio'
+                                    value={LabelValueType.LAST_VALUE}
+                                    variant='light'
+                                >
+                                    {labelValueType === LabelValueType.LAST_VALUE ? (
+                                        <FaCheckSquare className='mr-1' size={16} />
+                                    ) : (
+                                        <FaRegSquare className='mr-1' size={16} />
+                                    )}
+                                    {t('LABEL.LAST_VALUE')}
+                                </ToggleButton>
+                                <ToggleButton
+                                    type='radio'
+                                    name='radio'
+                                    value={LabelValueType.AVERAGE_VALUE}
+                                    variant='light'
+                                >
+                                    {labelValueType === LabelValueType.AVERAGE_VALUE ? (
+                                        <FaCheckSquare className='mr-1' size={16} />
+                                    ) : (
+                                        <FaRegSquare className='mr-1' size={16} />
+                                    )}
+                                    {t('LABEL.AVERAGE_VALUE')}
+                                </ToggleButton>
+                            </ToggleButtonGroup>
                         </div>
-                    )}
+                        {data.datasets[0].data.length > 0 && <Pie data={data} options={options} />}
+                        {data.datasets[0].data.length === 0 && (
+                            <div className='d-flex justify-content-center'>
+                                <Alert key='NotLoaded' variant='info' className='mt-4 col-4 justify-content-center'>
+                                    {t('ALL.NO_DATA')}
+                                </Alert>
+                            </div>
+                        )}
+                    </div>
                 </>
             )}
 
