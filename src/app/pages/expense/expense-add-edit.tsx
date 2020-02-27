@@ -280,10 +280,10 @@ const ExpenseAddEditPage: React.FC = () => {
                                         &nbsp;
                                     </>
                                 )}
-                                {t(isAdd.current ? 'EXPENSE.ADD' : 'EXPENSE.EDIT')}
+                                {t(isAdd.current ? 'ADD' : 'EDIT')}
                             </Button>
                             <Button variant='secondary' onClick={handleCancel} size='sm'>
-                                {t('ADD_EDIT.CANCEL')}
+                                {t('CANCEL')}
                             </Button>
                         </Form>
 

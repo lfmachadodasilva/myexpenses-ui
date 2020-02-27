@@ -66,7 +66,7 @@ const LabelAddEditPage: React.FC = () => {
             .finally(() => {
                 setLoading(false);
             });
-    }, [history, user, name, group, resetLabelsWithDetails]);
+    }, [history, user, name, group, resetLabelsWithDetails, resetLabels]);
 
     const handleEdit = useCallback(() => {
         setLoading(true);
@@ -83,7 +83,7 @@ const LabelAddEditPage: React.FC = () => {
             .finally(() => {
                 setLoading(false);
             });
-    }, [history, user, name, currentLabel, resetLabelsWithDetails]);
+    }, [history, user, name, currentLabel, resetLabelsWithDetails, resetLabels]);
 
     const handleCancel = useCallback(() => {
         history.push(MyRoute.LABEL);
@@ -153,10 +153,10 @@ const LabelAddEditPage: React.FC = () => {
                                         &nbsp;
                                     </>
                                 )}
-                                {t(isAdd.current ? 'LABEL.ADD_EDIT.ADD' : 'LABEL.ADD_EDIT.EDIT')}
+                                {t(isAdd.current ? 'ADD' : 'EDIT')}
                             </Button>
                             <Button variant='secondary' onClick={handleCancel} size='sm'>
-                                {t('ADD_EDIT.CANCEL')}
+                                {t('CANCEL')}
                             </Button>
                         </Form>
 

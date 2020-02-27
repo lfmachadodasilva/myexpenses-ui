@@ -2,7 +2,7 @@
     "CURRENCY": "£",
     "HEADER": {
         "BRAND": "MyExpenses",
-        "GROUPS": "Groups {{count}}",
+        "GROUPS": "Groups",
         "LABELS": "Labels",
         "EXPENSES": "Expenses",
         "LOGIN_REGISTER": "Login / Register",
@@ -26,7 +26,6 @@
         "GROUP": "Group",
         "MONTH": "Month",
         "YEAR": "Year",
-        "EXPAND": "Click me!",
         "SEARCH": "Search",
         "MONTHS": {
             "1": "January",
@@ -43,6 +42,15 @@
             "12": "December"
         }
     },
+    "ADD": "Add",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "CANCEL": "Cancel",
+    "DELETE_TITLE": "Delete",
+    "DELETE_BODY": "Are you sure you want to delete this item?",
+
+    "NO_DATA": "No data to display",
+
     "LABEL": {
         "ADD": "Add new label",
         "NOT_LOADED": "Not loaded yet",
@@ -106,8 +114,5 @@
         "CANCEL": "Cancel",
         "DELETE_TITLE": "Delete",
         "DELETE_BODY": "Are you sure you want to delete this item?"
-    },
-    "ALL": {
-        "NO_DATA": "No data to display"
     }
 }

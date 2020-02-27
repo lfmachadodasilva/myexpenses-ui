@@ -253,10 +253,10 @@ const GroupAddEditPage: React.FC = () => {
                                         &nbsp;
                                     </>
                                 )}
-                                {t(isAdd.current ? 'GROUP.ADD_EDIT.ADD' : 'GROUP.ADD_EDIT.EDIT')}
+                                {t(isAdd.current ? 'ADD' : 'EDIT')}
                             </Button>
                             <Button variant='secondary' onClick={handleCancel} size='sm'>
-                                {t('ADD_EDIT.CANCEL')}
+                                {t('CANCEL')}
                             </Button>
                         </Form>
 

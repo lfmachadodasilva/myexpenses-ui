@@ -2,19 +2,7 @@ import React, { useContext, useState, useCallback, useEffect } from 'react';
 import { userContext } from '../../contexts/user-context';
 import { useTranslation } from 'react-i18next';
 import { FetchStatus } from '../../services/fetch-status';
-import {
-    Alert,
-    Row,
-    Col,
-    Spinner,
-    Button,
-    ListGroup,
-    Badge,
-    OverlayTrigger,
-    Popover,
-    Image,
-    Modal
-} from 'react-bootstrap';
+import { Alert, Row, Col, Spinner, Button, ListGroup, Badge, OverlayTrigger, Popover, Image } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaRegWindowClose, FaUserAlt } from 'react-icons/fa';
 
 import { MyRoute } from '../../route';
@@ -22,6 +10,7 @@ import { GroupService } from '../../services/group/group-service';
 import { useHistory } from 'react-router';
 import { User } from '../../models/user';
 import { globalContext } from '../../contexts/global-context';
+import ModalComponent from '../../components/modal/modal';
 
 const GroupAllPage: React.FC = () => {
     const { user } = useContext(userContext);
@@ -105,7 +94,7 @@ const GroupAllPage: React.FC = () => {
             >
                 <FaPlus size={16} />
                 &nbsp;
-                {t('GROUP.ADD')}
+                {t('ADD')}
             </Button>
 
             {groups.status === FetchStatus.Ready && (
@@ -197,20 +186,24 @@ const GroupAllPage: React.FC = () => {
                 </>
             )}
 
-            <Modal show={showDeleteModal} onHide={handleOnCloseDeleteModel} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>{t('ADD_EDIT.DELETE_TITLE')}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>{t('ADD_EDIT.DELETE_BODY')}</Modal.Body>
-                <Modal.Footer>
-                    <Button variant='danger' onClick={() => handleDelete(loadingDelete)}>
-                        {t('ADD_EDIT.DELETE')}
-                    </Button>
-                    <Button variant='secondary' onClick={handleOnCloseDeleteModel}>
-                        {t('ADD_EDIT.CANCEL')}
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <ModalComponent
+                show={showDeleteModal}
+                onClose={handleOnCloseDeleteModel}
+                title={t('DELETE_TITLE')}
+                body={t('DELETE_BODY')}
+                buttons={[
+                    {
+                        label: t('DELETE'),
+                        variant: 'danger',
+                        onClick: () => handleDelete(loadingDelete)
+                    },
+                    {
+                        label: t('CANCEL'),
+                        variant: 'secondary',
+                        onClick: handleOnCloseDeleteModel
+                    }
+                ]}
+            />
         </div>
     );
 };

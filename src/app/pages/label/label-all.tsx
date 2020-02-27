@@ -1,18 +1,7 @@
-import {
-    ListGroup,
-    Button,
-    Row,
-    Col,
-    Spinner,
-    Badge,
-    Alert,
-    Modal,
-    ToggleButtonGroup,
-    ToggleButton
-} from 'react-bootstrap';
+import { Button, Row, Col, Spinner, Alert } from 'react-bootstrap';
 import React, { useContext, useState, useCallback, useEffect, useMemo } from 'react';
 import { useHistory } from 'react-router';
-import { FaPlus, FaEdit, FaRegWindowClose, FaRegSquare, FaCheckSquare } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { Pie } from 'react-chartjs-2';
 import 'chartjs-plugin-colorschemes';
@@ -25,6 +14,8 @@ import { userContext } from '../../contexts/user-context';
 import { FetchStatus } from '../../services/fetch-status';
 import { MyRoute } from '../../route';
 import { hasValue } from '../../helpers/util-helper';
+import ListComponent from '../../components/list/list';
+import RadioButtonComponent from '../../components/radio-button/radio-button';
 
 enum LabelValueType {
     CURRENT_VALUE = 0,
@@ -38,52 +29,48 @@ const LabelAllPage: React.FC = () => {
     const { t } = useTranslation();
     const history = useHistory();
 
-    const { labelReducer, groupReducer, expenseReducer, loadingBase } = global;
+    const {
+        labelReducer: { state: labelState, getLabelsWithDetails },
+        groupReducer: {
+            state: { groups }
+        },
+        expenseReducer: {
+            state: { years }
+        },
+        loadingBase,
+        group,
+        month,
+        year
+    } = global;
 
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [loadingDelete, setLoadingDelete] = useState('');
     const [labelValueType, setLabelValueType] = useState(LabelValueType.CURRENT_VALUE);
 
-    const { state: labelState, getLabelsWithDetails } = labelReducer;
     const { labelsWithDetails: labels } = labelState;
     useEffect(() => {
-        if (
-            loadingBase ||
-            (labels && labels.status !== FetchStatus.Ready) ||
-            !hasValue(global.group) ||
-            !hasValue(global.month)
-        ) {
+        if (loadingBase || (labels && labels.status !== FetchStatus.Ready) || !hasValue(group) || !hasValue(month)) {
             return;
         }
 
-        getLabelsWithDetails(global.group, global.month, global.year);
-    }, [labels, getLabelsWithDetails, loadingBase, global.group, global.month, global.year]);
+        getLabelsWithDetails(group, month, year);
+    }, [labels, getLabelsWithDetails, loadingBase, group, month, year]);
 
     const handleDelete = useCallback(
         (id: string) => {
             let doIt = false;
-            setLoadingDelete(id);
-            setShowDeleteModal(false);
-            new LabelService(user)
+            return new LabelService(user)
                 .delete(id)
                 .then(() => {
                     doIt = true;
                 })
                 .catch(() => {})
                 .finally(() => {
-                    setLoadingDelete('');
                     if (doIt) {
-                        getLabelsWithDetails(global.group, global.month, global.year);
+                        getLabelsWithDetails(group, month, year);
                     }
                 });
         },
-        [user, getLabelsWithDetails, global.group, global.month, global.year]
+        [user, getLabelsWithDetails, group, month, year]
     );
-
-    const handleOnCloseDeleteModel = useCallback(() => {
-        setShowDeleteModal(false);
-        setLoadingDelete('');
-    }, []);
 
     const handleOnSearch = (group: string, month: number, year: number) => {
         LocalStorageHelper.setGroup(group);
@@ -138,13 +125,13 @@ const LabelAllPage: React.FC = () => {
     };
 
     return (
-        <div key='LabelAllPage'>
+        <div key='label-all'>
             <SearchComponent
-                group={global.group}
-                groups={groupReducer.state.groups}
-                month={global.month}
-                year={global.year}
-                years={expenseReducer.state.years}
+                group={group}
+                groups={groups}
+                month={month}
+                year={year}
+                years={years}
                 onSearch={handleOnSearch}
             />
 
@@ -160,7 +147,7 @@ const LabelAllPage: React.FC = () => {
             >
                 <FaPlus size={16} />
                 &nbsp;
-                {t('LABEL.ADD')}
+                {t('ADD')}
             </Button>
 
             {labels.status === FetchStatus.Ready && (
@@ -183,122 +170,56 @@ const LabelAllPage: React.FC = () => {
                 </Alert>
             )}
             {labels.status === FetchStatus.Loaded && labels.data && labels.data.length > 0 && (
-                <>
-                    <ListGroup className='mt-3 mb-3'>
-                        {labels.data.map(label => (
-                            <ListGroup.Item key={JSON.stringify(label)} className='p-2'>
-                                <div className='d-flex justify-content-between'>
-                                    <h6 className='m-0'>{label.name}</h6>
-                                    <div className='d-flex justify-content-end'>
-                                        <FaEdit
-                                            className='mr-3'
-                                            size={16}
-                                            style={{ cursor: 'pointer' }}
-                                            onClick={() => history.push(MyRoute.LABEL + `/${label.id}`)}
-                                        />
-                                        {loadingDelete === label.id && (
-                                            <>
-                                                <Spinner
-                                                    as='span'
-                                                    animation='border'
-                                                    size='sm'
-                                                    role='status'
-                                                    aria-hidden='true'
-                                                />
-                                            </>
-                                        )}
-                                        {loadingDelete !== label.id && (
-                                            <FaRegWindowClose
-                                                size={16}
-                                                style={{ cursor: 'pointer' }}
-                                                onClick={() => {
-                                                    setLoadingDelete(label.id);
-                                                    setShowDeleteModal(true);
-                                                }}
-                                            />
-                                        )}
-                                    </div>
-                                </div>
-
-                                <hr className='m-1'></hr>
-
-                                <div className='d-flex justify-content-around'>
-                                    <p className='d-flex flex-column justify-content-center text-wrap mb-0'>
-                                        <small className='text-center'>{t('LABEL.CURRENT_VALUE')}</small>
-                                        <Badge variant='info'>
-                                            {t('CURRENCY') + ' ' + label.currentValue.toFixed(2)}
-                                        </Badge>
-                                    </p>
-                                    <p className='d-flex flex-column justify-content-center text-wrap mb-0'>
-                                        <small className='text-center'>{t('LABEL.LAST_VALUE')}</small>
-                                        <Badge
-                                            variant={label.currentValue > label.lastMonthValue ? 'danger' : 'success'}
-                                        >
-                                            {t('CURRENCY') + ' ' + label.lastMonthValue.toFixed(2)}
-                                        </Badge>
-                                    </p>
-                                    <p className='d-flex flex-column justify-content-center text-wrap mb-0'>
-                                        <small className='text-center'>{t('LABEL.AVERAGE_VALUE')}</small>
-                                        <Badge variant={label.currentValue > label.averageValue ? 'danger' : 'success'}>
-                                            {t('CURRENCY') + ' ' + label.averageValue.toFixed(2)}
-                                        </Badge>
-                                    </p>
-                                </div>
-                            </ListGroup.Item>
-                        ))}
-                    </ListGroup>
+                <div className='mt-3'>
+                    <ListComponent
+                        items={labels.data.map(label => {
+                            return {
+                                id: label.id,
+                                title: label.name,
+                                onEdit: (id: string) => Promise.resolve(history.push(MyRoute.LABEL + `/${id}`)),
+                                onDelete: handleDelete,
+                                badges: [
+                                    {
+                                        title: t('LABEL.CURRENT_VALUE'),
+                                        value: t('CURRENCY') + ' ' + label.currentValue.toFixed(2)
+                                    },
+                                    {
+                                        title: t('LABEL.LAST_VALUE'),
+                                        variant: label.currentValue > label.lastMonthValue ? 'danger' : 'success',
+                                        value: t('CURRENCY') + ' ' + label.lastMonthValue.toFixed(2)
+                                    },
+                                    {
+                                        title: t('LABEL.AVERAGE_VALUE'),
+                                        variant: label.currentValue > label.averageValue ? 'danger' : 'success',
+                                        value: t('CURRENCY') + ' ' + label.averageValue.toFixed(2)
+                                    }
+                                ]
+                            };
+                        })}
+                    />
 
                     <hr></hr>
 
                     <div className='mb-4'>
                         <div className='d-flex justify-content-around'>
-                            <ToggleButtonGroup
-                                size='sm'
-                                onChange={(value: any) => setLabelValueType(value)}
-                                type='radio'
-                                name='radio'
-                            >
-                                <ToggleButton
-                                    type='radio'
-                                    name='radio'
-                                    value={LabelValueType.CURRENT_VALUE}
-                                    variant='light'
-                                    defaultChecked
-                                >
-                                    {labelValueType === LabelValueType.CURRENT_VALUE ? (
-                                        <FaCheckSquare className='mr-1' size={16} />
-                                    ) : (
-                                        <FaRegSquare className='mr-1' size={16} />
-                                    )}
-                                    {t('LABEL.LAST_VALUE')}
-                                </ToggleButton>
-                                <ToggleButton
-                                    type='radio'
-                                    name='radio'
-                                    value={LabelValueType.LAST_VALUE}
-                                    variant='light'
-                                >
-                                    {labelValueType === LabelValueType.LAST_VALUE ? (
-                                        <FaCheckSquare className='mr-1' size={16} />
-                                    ) : (
-                                        <FaRegSquare className='mr-1' size={16} />
-                                    )}
-                                    {t('LABEL.LAST_VALUE')}
-                                </ToggleButton>
-                                <ToggleButton
-                                    type='radio'
-                                    name='radio'
-                                    value={LabelValueType.AVERAGE_VALUE}
-                                    variant='light'
-                                >
-                                    {labelValueType === LabelValueType.AVERAGE_VALUE ? (
-                                        <FaCheckSquare className='mr-1' size={16} />
-                                    ) : (
-                                        <FaRegSquare className='mr-1' size={16} />
-                                    )}
-                                    {t('LABEL.AVERAGE_VALUE')}
-                                </ToggleButton>
-                            </ToggleButtonGroup>
+                            <RadioButtonComponent
+                                defaultButton={labelValueType}
+                                onChange={(value: any) => setLabelValueType(value as LabelValueType)}
+                                buttons={[
+                                    {
+                                        id: LabelValueType.CURRENT_VALUE,
+                                        label: t('LABEL.CURRENT_VALUE')
+                                    },
+                                    {
+                                        id: LabelValueType.LAST_VALUE,
+                                        label: t('LABEL.LAST_VALUE')
+                                    },
+                                    {
+                                        id: LabelValueType.AVERAGE_VALUE,
+                                        label: t('LABEL.AVERAGE_VALUE')
+                                    }
+                                ]}
+                            />
                         </div>
                         {data.datasets[0].data.length > 0 && <Pie data={data} options={options} />}
                         {data.datasets[0].data.length === 0 && (
@@ -309,23 +230,8 @@ const LabelAllPage: React.FC = () => {
                             </div>
                         )}
                     </div>
-                </>
+                </div>
             )}
-
-            <Modal show={showDeleteModal} onHide={handleOnCloseDeleteModel} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>{t('ADD_EDIT.DELETE_TITLE')}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>{t('ADD_EDIT.DELETE_BODY')}</Modal.Body>
-                <Modal.Footer>
-                    <Button variant='danger' onClick={() => handleDelete(loadingDelete)}>
-                        {t('ADD_EDIT.DELETE')}
-                    </Button>
-                    <Button variant='secondary' onClick={handleOnCloseDeleteModel}>
-                        {t('ADD_EDIT.CANCEL')}
-                    </Button>
-                </Modal.Footer>
-            </Modal>
         </div>
     );
 };

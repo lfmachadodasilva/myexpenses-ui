@@ -131,7 +131,7 @@ const ExpenseAllPage: React.FC = () => {
             >
                 <FaPlus size={16} />
                 &nbsp;
-                {t('EXPENSE.ADD')}
+                {t('ADD')}
             </Button>
 
             {hasValue(expenses) && expenses.status === FetchStatus.Ready && (
