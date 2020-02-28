@@ -203,7 +203,7 @@ const LabelAllPage: React.FC = () => {
                     <div className='mb-4'>
                         <div className='d-flex justify-content-around'>
                             <RadioButtonComponent
-                                defaultButton={labelValueType}
+                                value={labelValueType}
                                 onChange={(value: any) => setLabelValueType(value as LabelValueType)}
                                 buttons={[
                                     {

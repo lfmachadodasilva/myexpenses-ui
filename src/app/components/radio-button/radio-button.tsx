@@ -9,7 +9,7 @@ interface ButtonComponentProps {
 
 interface RadioButtonComponentProps {
     onChange: (value: any) => void;
-    defaultButton: any;
+    value: any;
     buttons: ButtonComponentProps[];
 }
 
@@ -17,11 +17,18 @@ const RadioButtonComponent: React.FC<RadioButtonComponentProps> = (props: RadioB
     return (
         <ToggleButtonGroup size='sm' onChange={props.onChange} type='radio' name='radio'>
             {props.buttons.map(button => (
-                <ToggleButton type='radio' name='radio' value={button.id} variant='light' defaultChecked>
-                    {props.defaultButton === button.id ? (
-                        <FaCheckSquare className='mr-1' size={16} />
+                <ToggleButton
+                    key={JSON.stringify(button)}
+                    type='radio'
+                    name='radio'
+                    value={button.id}
+                    variant='light'
+                    defaultChecked
+                >
+                    {props.value === button.id ? (
+                        <FaCheckSquare className='mr-1 checked' size={16} />
                     ) : (
-                        <FaRegSquare className='mr-1' size={16} />
+                        <FaRegSquare className='mr-1 unchecked' size={16} />
                     )}
                     {button.label}
                 </ToggleButton>
