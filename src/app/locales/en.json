@@ -50,37 +50,22 @@
     "DELETE_BODY": "Are you sure you want to delete this item?",
 
     "NO_DATA": "No data to display",
+    "NOT_LOADED": "Not loaded yet",
 
     "LABEL": {
-        "ADD": "Add new label",
-        "NOT_LOADED": "Not loaded yet",
-        "EMPTY": "Empty list",
         "CURRENT_VALUE": "Current",
         "LAST_VALUE": "Last",
         "AVERAGE_VALUE": "Average",
-        "ADD_EDIT": {
-            "ADD": "Add",
-            "EDIT": "Edit",
-            "ADD_TITLE": "Add new label",
-            "EDIT_TITLE": "Edit label",
-            "NAME": "Name",
-            "NAME_PLACEHOLDER": "Enter name"
-        }
+
+        "NAME": "Name",
+        "NAME_PLACEHOLDER": "Enter name"
     },
     "GROUP": {
-        "ADD": "Add new label",
-        "NOT_LOADED": "Not loaded yet",
-        "EMPTY": "Empty list",
-        "ADD_EDIT": {
-            "ADD": "Add",
-            "EDIT": "Edit",
-            "ADD_TITLE": "Add new group",
-            "EDIT_TITLE": "Edit group",
-            "NAME": "Name",
-            "NAME_PLACEHOLDER": "Enter name",
-            "USERS": "Users",
-            "USERS_PLACEHOLDER": "Select users"
-        }
+        "NAME": "Name",
+        "NAME_PLACEHOLDER": "Enter name",
+
+        "USERS": "Users",
+        "USERS_PLACEHOLDER": "Select users"
     },
     "EXPENSE": {
         "TYPE": "Type",
@@ -107,12 +92,5 @@
 
         "TOTAL_USED": "Total used",
         "TOTAL_LEFT": "Total left"
-    },
-    "ADD_EDIT": {
-        "ADD": "Add",
-        "DELETE": "Delete",
-        "CANCEL": "Cancel",
-        "DELETE_TITLE": "Delete",
-        "DELETE_BODY": "Are you sure you want to delete this item?"
     }
 }

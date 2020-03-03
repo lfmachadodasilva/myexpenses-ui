@@ -188,12 +188,12 @@ const GroupAddEditPage: React.FC = () => {
             {!loadingBase && (
                 <Row>
                     <Col sm={12} md={6}>
-                        <h4>{t(isAdd.current ? 'GROUP.ADD_EDIT.ADD_TITLE' : 'GROUP.ADD_EDIT.EDIT_TITLE')}</h4>
+                        <h4>{t(isAdd.current ? 'ADD' : 'EDIT')}</h4>
 
                         <hr></hr>
                         <Form>
                             <Form.Group controlId='formLabelName'>
-                                <Form.Label>{t('GROUP.ADD_EDIT.NAME')}</Form.Label>
+                                <Form.Label>{t('GROUP.NAME')}</Form.Label>
                                 {!isAdd.current && loadingGroup && (
                                     <>
                                         &nbsp;
@@ -209,7 +209,7 @@ const GroupAddEditPage: React.FC = () => {
                                 )}
                                 <Form.Control
                                     type='text'
-                                    placeholder={t('GROUP.ADD_EDIT.NAME_PLACEHOLDER')}
+                                    placeholder={t('GROUP.NAME_PLACEHOLDER')}
                                     value={name}
                                     onChange={(value: any) => {
                                         setName(value.target.value);
@@ -220,13 +220,13 @@ const GroupAddEditPage: React.FC = () => {
                             </Form.Group>
 
                             <Form.Group controlId='formLabelName'>
-                                <Form.Label>{t('GROUP.ADD_EDIT.USERS')}</Form.Label>
+                                <Form.Label>{t('GROUP.USERS')}</Form.Label>
                                 <Select
                                     value={selected}
                                     onChange={(selectedOptions: any) => setSelected(selectedOptions)}
                                     options={options}
                                     isMulti={true}
-                                    placeholder={t('GROUP.ADD_EDIT.USERS_PLACEHOLDER')}
+                                    placeholder={t('GROUP.USERS_PLACEHOLDER')}
                                     styles={styles}
                                     isClearable={false}
                                     isLoading={loadingUsers || loadingGroup}

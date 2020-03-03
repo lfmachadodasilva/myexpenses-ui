@@ -10,12 +10,12 @@ import { LocalStorageHelper } from '../../helpers/localStorage-helper';
 import { FetchStatus } from '../../services/fetch-status';
 import { MyRoute } from '../../route';
 import { ExpenseType, ExpenseWithDetails } from '../../models/expense';
-import ExpenseList from './expense-list';
-import { FetchData } from '../../services/fetch-data';
 import { userContext } from '../../contexts/user-context';
 import { ExpenseService } from '../../services/expense/expense-service';
 import { sumBy } from 'lodash';
 import { hasValue } from '../../helpers/util-helper';
+import ListComponent from '../../components/list/list';
+import { format } from 'date-fns';
 
 const ExpenseAllPage: React.FC = () => {
     const global = useContext(globalContext);
@@ -54,15 +54,15 @@ const ExpenseAllPage: React.FC = () => {
         getExpenses(global.group, global.month, global.year);
     }, [expenses, getExpenses, loadingBase, global.group, global.month, global.year]);
 
-    const handleOnEdit = useCallback(
-        (id: string): Promise<void> => {
-            return new Promise(resolve => {
-                history.push(MyRoute.EXPENSE + `/${id}`);
-                resolve();
-            });
-        },
-        [history]
-    );
+    // const handleOnEdit = useCallback(
+    //     (id: string): Promise<void> => {
+    //         return new Promise(resolve => {
+    //             history.push(MyRoute.EXPENSE + `/${id}`);
+    //             resolve();
+    //         });
+    //     },
+    //     [history]
+    // );
 
     const handleOnDelete = useCallback(
         (id: string): Promise<void> => {
@@ -107,6 +107,43 @@ const ExpenseAllPage: React.FC = () => {
         ];
     }, [expenses]);
 
+    const showListOfExpenses = useCallback(
+        (data: ExpenseWithDetails[], expenseType: ExpenseType) => {
+            return (
+                <ListComponent
+                    items={data
+                        .filter(expense => expense.type === expenseType)
+                        .map(expense => {
+                            const badges = [
+                                {
+                                    title: t('EXPENSE.DATE'),
+                                    value: format(expense.date, 'dd/MM/yyyy')
+                                },
+                                {
+                                    title: t('EXPENSE.VALUE'),
+                                    value: t('CURRENCY') + ' ' + expense.value.toFixed(2)
+                                }
+                            ];
+                            if (hasValue(expense.label)) {
+                                badges.push({
+                                    title: t('EXPENSE.LABEL'),
+                                    value: expense.label.name
+                                });
+                            }
+                            return {
+                                id: expense.id,
+                                title: expense.name,
+                                onEdit: (id: string) => Promise.resolve(history.push(MyRoute.EXPENSE + `/${id}`)),
+                                onDelete: handleOnDelete,
+                                badges: badges
+                            };
+                        })}
+                />
+            );
+        },
+        [handleOnDelete, history, t]
+    );
+
     return (
         <div key='ExpenseAllPage'>
             <SearchComponent
@@ -150,7 +187,7 @@ const ExpenseAllPage: React.FC = () => {
                     <Card body className='mb-4'>
                         <Row>
                             <Col>
-                                <h6>{t('EXPENSE.TOTAL_USED')} </h6>
+                                <p className='font-weight-bold mb-0'>{t('EXPENSE.TOTAL_USED')}</p>
                             </Col>
                             <Col>
                                 <Badge variant={totalLeft >= 0 ? 'success' : 'danger'}>
@@ -165,7 +202,7 @@ const ExpenseAllPage: React.FC = () => {
                         </Row>
                         <Row>
                             <Col>
-                                <h6> {t('EXPENSE.TOTAL_LEFT')}</h6>
+                                <p className='font-weight-bold mb-0'>{t('EXPENSE.TOTAL_LEFT')}</p>
                             </Col>
                             <Col>
                                 <Badge variant={totalLeft >= 0 ? 'success' : 'danger'}>
@@ -180,39 +217,17 @@ const ExpenseAllPage: React.FC = () => {
                         </Row>
                     </Card>
                     <Row>
-                        <Col sm={12} md={12} lg={6}>
+                        <Col sm={12} md={12} lg={6} className='mb-3'>
                             <h6>{t('EXPENSE.OUTCOMING')}</h6>
-                            {expenses && expenses.status === FetchStatus.Loaded && (
-                                <ExpenseList
-                                    expenses={
-                                        {
-                                            data: expenses.data.filter(
-                                                expense => expense.type === ExpenseType.Outcoming
-                                            ),
-                                            status: expenses.status
-                                        } as FetchData<ExpenseWithDetails[]>
-                                    }
-                                    onEdit={handleOnEdit}
-                                    onDelete={handleOnDelete}
-                                />
-                            )}
+                            {expenses.status === FetchStatus.Loaded &&
+                                hasValue(expenses.data) &&
+                                showListOfExpenses(expenses.data, ExpenseType.Outcoming)}
                         </Col>
-                        <Col sm={12} md={12} lg={6}>
+                        <Col sm={12} md={12} lg={6} className='mb-3'>
                             <h6>{t('EXPENSE.INCOMING')}</h6>
-                            {expenses && expenses.status === FetchStatus.Loaded && (
-                                <ExpenseList
-                                    expenses={
-                                        {
-                                            data: expenses.data.filter(
-                                                expense => expense.type === ExpenseType.Incoming
-                                            ),
-                                            status: expenses.status
-                                        } as FetchData<ExpenseWithDetails[]>
-                                    }
-                                    onEdit={handleOnEdit}
-                                    onDelete={handleOnDelete}
-                                />
-                            )}
+                            {expenses.status === FetchStatus.Loaded &&
+                                hasValue(expenses.data) &&
+                                showListOfExpenses(expenses.data, ExpenseType.Incoming)}
                         </Col>
                     </Row>
                 </>

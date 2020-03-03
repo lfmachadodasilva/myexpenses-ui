@@ -152,7 +152,7 @@ const LabelAllPage: React.FC = () => {
 
             {labels.status === FetchStatus.Ready && (
                 <Alert key='NotLoaded' variant='info' className='mt-4'>
-                    {t('LABEL.NOT_LOADED')}
+                    {t('NOT_LOADED')}
                 </Alert>
             )}
             {labels.status === FetchStatus.Loading && (
@@ -166,7 +166,7 @@ const LabelAllPage: React.FC = () => {
             )}
             {labels.status === FetchStatus.Loaded && labels.data.length === 0 && (
                 <Alert key='EmptyLabel' variant='warning' className='mt-4'>
-                    {t('LABEL.EMPTY')}
+                    {t('NO_DATA')}
                 </Alert>
             )}
             {labels.status === FetchStatus.Loaded && labels.data && labels.data.length > 0 && (
@@ -225,7 +225,7 @@ const LabelAllPage: React.FC = () => {
                         {data.datasets[0].data.length === 0 && (
                             <div className='d-flex justify-content-center'>
                                 <Alert key='NotLoaded' variant='info' className='mt-4 col-4 justify-content-center'>
-                                    {t('ALL.NO_DATA')}
+                                    {t('NO_DATA')}
                                 </Alert>
                             </div>
                         )}

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { ListGroup, Spinner, Badge } from 'react-bootstrap';
+import { ListGroup, Spinner, Badge, OverlayTrigger } from 'react-bootstrap';
 import { FaEdit, FaRegWindowClose } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
@@ -7,8 +7,9 @@ import { hasValue } from '../../helpers/util-helper';
 import ModalComponent from '../modal/modal';
 
 interface ListItemBadgeProps {
-    title: string;
+    title?: string;
     value: string;
+    showToolTip?: () => JSX.Element;
     variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'light' | 'dark';
 }
 
@@ -112,14 +113,29 @@ const ListComponent: React.FC<ListComponentProps> = (props: ListComponentProps) 
                                 <hr className='m-1' />
 
                                 <div className='d-flex justify-content-around'>
-                                    {item.badges.map(badges => (
-                                        <p className='d-flex flex-column justify-content-center text-wrap mb-0'>
-                                            <small className='text-center'>{badges.title}</small>
-                                            <Badge variant={hasValue(badges.variant) ? badges.variant : 'info'}>
-                                                {badges.value}
-                                            </Badge>
-                                        </p>
-                                    ))}
+                                    {item.badges.map(badge => {
+                                        const item = (
+                                            <p className='d-flex flex-column justify-content-center text-wrap mb-0'>
+                                                {hasValue(badge.title) && (
+                                                    <small className='text-center'>{badge.title}</small>
+                                                )}
+                                                <Badge variant={hasValue(badge.variant) ? badge.variant : 'info'}>
+                                                    {badge.value}
+                                                </Badge>
+                                            </p>
+                                        );
+                                        return hasValue(badge.showToolTip) ? (
+                                            <OverlayTrigger
+                                                key={'overlaytrigger-' + JSON.stringify(badge)}
+                                                placement='top'
+                                                overlay={badge.showToolTip()}
+                                            >
+                                                {item}
+                                            </OverlayTrigger>
+                                        ) : (
+                                            item
+                                        );
+                                    })}
                                 </div>
                             </>
                         )}

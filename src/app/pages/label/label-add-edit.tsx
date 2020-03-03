@@ -103,12 +103,12 @@ const LabelAddEditPage: React.FC = () => {
             {!loadingBase && (
                 <Row>
                     <Col sm={12} md={6}>
-                        <h4>{t(isAdd.current ? 'LABEL.ADD_EDIT.ADD_TITLE' : 'LABEL.ADD_EDIT.EDIT_TITLE')}</h4>
+                        <h4>{t(isAdd.current ? 'ADD' : 'EDIT')}</h4>
 
                         <hr></hr>
                         <Form>
                             <Form.Group controlId='formLabelName'>
-                                <Form.Label>{t('LABEL.ADD_EDIT.NAME')}</Form.Label>
+                                <Form.Label>{t('LABEL.NAME')}</Form.Label>
                                 {!isAdd.current && loadingLabel && (
                                     <>
                                         &nbsp;
@@ -124,7 +124,7 @@ const LabelAddEditPage: React.FC = () => {
                                 )}
                                 <Form.Control
                                     type='text'
-                                    placeholder={t('LABEL.ADD_EDIT.NAME_PLACEHOLDER')}
+                                    placeholder={t('LABEL.NAME_PLACEHOLDER')}
                                     value={name}
                                     onChange={(value: any) => {
                                         setName(value.target.value);
