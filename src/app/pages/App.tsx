@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from 'firebase/app';
+import firebase from 'firebase/app';
 
 import HeaderComponent, { HeaderSimpleComponent } from '../components/header/header';
 import { userContext } from '../contexts/user-context';
@@ -18,7 +18,7 @@ import { firebaseApp } from '../..';
 const App: React.FC = () => {
     const currentYear = new Date().getFullYear();
 
-    const [user, initialising] = useAuthState(auth(firebaseApp));
+    const [user, initialising] = useAuthState(firebase.auth(firebaseApp));
     const groupReducer = useGroupReducer(user);
 
     const { state, getGroups } = groupReducer;

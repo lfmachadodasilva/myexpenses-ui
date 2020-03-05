@@ -1,4 +1,5 @@
-import { User, database } from 'firebase/app';
+import firebase from 'firebase/app';
+import 'firebase/database'; // If using Firebase database
 import { orderBy } from 'lodash';
 
 import { IGroupService } from './group-service';
@@ -6,14 +7,14 @@ import { Group } from '../../models/group';
 import { UserService } from '../user/user.service';
 
 export class GroupServiceFirebase implements IGroupService {
-    user: User;
+    user: firebase.User;
     collection = 'groups/';
-    db: database.Database = database();
+    db: firebase.database.Database = firebase.database();
 
     /**
      * Constructor
      */
-    constructor(user: User) {
+    constructor(user: firebase.User) {
         this.user = user;
     }
 
@@ -84,7 +85,7 @@ export class GroupServiceFirebase implements IGroupService {
         const group = await this.get(obj.id);
         return new Promise((resolve, reject) => {
             if ((group.users as string[]).some(x => x === this.user.uid)) {
-                const refUser = database().ref(this.collection + obj.id);
+                const refUser = this.db.ref(this.collection + obj.id);
                 return refUser.update(obj).finally(() => {
                     refUser.off();
                     resolve();

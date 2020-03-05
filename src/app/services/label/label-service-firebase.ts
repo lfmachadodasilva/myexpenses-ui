@@ -1,6 +1,7 @@
 import { sumBy, meanBy, orderBy } from 'lodash';
 import { addMonths, addDays, compareAsc } from 'date-fns';
-import { User, database } from 'firebase/app';
+import firebase from 'firebase/app';
+import 'firebase/database'; // If using Firebase database
 
 import { ILabelService } from './label-service';
 
@@ -10,10 +11,10 @@ import { Expense } from '../../models/expense';
 
 export class LabelServiceFirebase implements ILabelService {
     collection = 'labels/';
-    db: database.Database = database();
-    user: User;
+    db: firebase.database.Database = firebase.database();
+    user: firebase.User;
 
-    constructor(user: User) {
+    constructor(user: firebase.User) {
         this.user = user;
     }
 
@@ -111,13 +112,13 @@ export class LabelServiceFirebase implements ILabelService {
         });
     }
     update(obj: Label): Promise<void> {
-        const ref = database().ref(this.collection + obj.id);
+        const ref = this.db.ref(this.collection + obj.id);
         return ref.update(obj).finally(() => {
             ref.off();
         });
     }
     delete(id: string): Promise<void> {
-        const ref = database().ref(this.collection + id);
+        const ref = this.db.ref(this.collection + id);
         return ref.remove().finally(() => {
             ref.off();
         });

@@ -1,16 +1,18 @@
+import firebase from 'firebase/app';
+import 'firebase/database'; // If using Firebase database
 import { intersectionWith, map } from 'lodash';
 import { User } from '../../models/user';
 
 import { IUserService } from './user.service';
 import { ConfigurationManager } from '../../../configuration/manager';
-import { database } from 'firebase';
 
 export class UserServiceFirebase implements IUserService {
     config = ConfigurationManager.get();
     collection = 'users/';
+    db: firebase.database.Database = firebase.database();
 
     getAll(): Promise<User[]> {
-        const refUser = database().ref(this.collection);
+        const refUser = this.db.ref(this.collection);
         return refUser
             .once('value')
             .then((value: any) => {
@@ -26,7 +28,7 @@ export class UserServiceFirebase implements IUserService {
             });
     }
     get(users: string[]): Promise<User[]> {
-        const refUser = database().ref(this.collection);
+        const refUser = this.db.ref(this.collection);
         return refUser
             .once('value')
             .then((value: any) => {
@@ -39,7 +41,7 @@ export class UserServiceFirebase implements IUserService {
             });
     }
     saveOrUpdate(user: User): Promise<void> {
-        const refUser = database().ref('users/' + user.id);
+        const refUser = this.db.ref('users/' + user.id);
         return refUser
             .once('value')
             .then(value => {

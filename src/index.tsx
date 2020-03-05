@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { initializeApp } from 'firebase/app';
+import firebase from 'firebase/app';
 
 import './i18n';
 import './index.css';
@@ -16,7 +16,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // SameSite cookies explained: https://web.dev/samesite-cookies-explained/
 document.cookie = 'SameSite=None; Secure';
 
-export const firebaseApp = initializeApp({
+export const firebaseApp = firebase.initializeApp({
     ...firebaseConfig,
     apiKey: getValueOrDefault(process.env.REACT_APP_FIREBASE_APIKEY, firebaseConfig.apiKey),
     authDomain: getValueOrDefault(process.env.REACT_APP_FIREBASE_AUTHDOMAIN, firebaseConfig.authDomain),

@@ -1,6 +1,7 @@
 import { uniq, orderBy } from 'lodash';
 import { format, parse } from 'date-fns';
-import { User, database } from 'firebase/app';
+import firebase from 'firebase/app';
+import 'firebase/database'; // If using Firebase database
 
 import { IExpenseService } from './expense-service';
 
@@ -11,13 +12,13 @@ export class ExpenseServiceFirebase implements IExpenseService {
     dateFormat = 'yyyyMMdd';
     orderFields = ['date', 'name', 'value'];
     collection = 'expenses/';
-    db: database.Database = database();
-    user: User;
+    db: firebase.database.Database = firebase.database();
+    user: firebase.User;
 
     /**
      *
      */
-    constructor(user: User) {
+    constructor(user: firebase.User) {
         this.user = user;
     }
 
@@ -82,7 +83,7 @@ export class ExpenseServiceFirebase implements IExpenseService {
                             expense =>
                                 expense.groupId === groupId &&
                                 expense.date.getMonth() + 1 === month &&
-                                expense.date.getFullYear()
+                                expense.date.getFullYear() === year
                         )
                         .map(expense => {
                             return {

@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import { useContext } from 'react';
 
 import { userContext } from '../contexts/user-context';
-import { User } from 'firebase/app';
-import { auth } from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth'; // If using Firebase auth
 
 export const useAuth = () => {
     const [state, setState] = useState(() => {
-        const user = auth().currentUser;
+        const user = firebase.auth().currentUser;
         return { initialising: !user, user };
     });
 
-    function onChange(user: User) {
+    function onChange(user: firebase.User) {
         setState({ initialising: false, user });
     }
 
     React.useEffect(() => {
         // listen for auth state changes
-        const unsubscribe = auth().onAuthStateChanged(onChange);
+        const unsubscribe = firebase.auth().onAuthStateChanged(onChange);
         // unsubscribe to the listener when unmounting
         return () => unsubscribe();
     }, []);
@@ -52,11 +52,11 @@ export const useSession = () => {
 //     }
 // };
 
-const facebook = new auth.FacebookAuthProvider();
+const facebook = new firebase.auth.FacebookAuthProvider();
 
 export const loginWithFacebook = async () => {
     try {
-        return await auth().signInWithPopup(facebook);
+        return await firebase.auth().signInWithPopup(facebook);
     } catch (err) {
         console.error(err);
         throw err;
@@ -65,7 +65,7 @@ export const loginWithFacebook = async () => {
 
 export const loginWithEmail = async (email: string, password: string) => {
     try {
-        await auth().signInWithEmailAndPassword(email, password);
+        await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (err) {
         console.error(err);
         throw err;
@@ -74,7 +74,7 @@ export const loginWithEmail = async (email: string, password: string) => {
 
 export const createUserWithEmail = async (email: string, password: string) => {
     try {
-        await auth().createUserWithEmailAndPassword(email, password);
+        await firebase.auth().createUserWithEmailAndPassword(email, password);
     } catch (err) {
         console.error(err);
         throw err;
@@ -83,11 +83,11 @@ export const createUserWithEmail = async (email: string, password: string) => {
 
 export const resetPassword = async (email: string) => {
     try {
-        await auth().sendPasswordResetEmail(email);
+        await firebase.auth().sendPasswordResetEmail(email);
     } catch (err) {
         console.error(err);
         throw err;
     }
 };
 
-export const signOut = () => auth().signOut();
+export const signOut = () => firebase.auth().signOut();
