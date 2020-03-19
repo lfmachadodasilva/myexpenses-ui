@@ -108,6 +108,7 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                         <Form.Label>{t('SEARCH.GROUP')}</Form.Label>
                                         {showLoading(groups.status)}
                                         <Form.Control
+                                            key='form-group'
                                             as='select'
                                             value={groupSelected}
                                             disabled={groups.status !== FetchStatus.Loaded}
@@ -133,8 +134,9 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                         <Form.Label>{t('SEARCH.MONTH')} </Form.Label>
                                         {loadingGroupOrYear && showLoading()}
                                         <Form.Control
+                                            key='form-month'
                                             as='select'
-                                            defaultValue={monthSelected}
+                                            value={monthSelected.toString()}
                                             disabled={loadingGroupOrYear}
                                             onChange={(value: any) => {
                                                 setMonthSelected(+value.target.value);
@@ -156,8 +158,9 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                         <Form.Label>{t('SEARCH.YEAR')}</Form.Label>
                                         {loadingGroupOrYear && showLoading()}
                                         <Form.Control
+                                            key='form-year'
                                             as='select'
-                                            defaultValue={yearSelected}
+                                            value={yearSelected.toString()}
                                             disabled={loadingGroupOrYear}
                                             onChange={(value: any) => {
                                                 setYearSelected(+value.target.value);

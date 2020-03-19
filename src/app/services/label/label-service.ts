@@ -4,6 +4,7 @@ import { ConfigurationManager } from '../../../configuration/manager';
 import { AppConfig } from '../../../configuration/app-config';
 import { LabelServiceFake } from './label-service-fake';
 import { LabelServiceFirebase } from './label-service-firebase';
+import { ServiceBase } from '../service-base';
 
 export interface ILabelService {
     getAll(groupId: string): Promise<Label[]>;
@@ -15,14 +16,15 @@ export interface ILabelService {
     delete(id: string): Promise<void>;
 }
 
-export class LabelService implements ILabelService {
-    user: User;
+export class LabelService extends ServiceBase implements ILabelService {
     config: AppConfig;
 
     /**
      * Constructor
      */
-    constructor(user: User) {
+    constructor(private user: User) {
+        super((user as any).ma);
+
         this.user = user;
         this.config = ConfigurationManager.get();
     }
@@ -31,6 +33,9 @@ export class LabelService implements ILabelService {
      * Get all labels
      */
     async getAll(groupId: string): Promise<Label[]> {
+        // var value = await this.getWithParams('api/label', {});
+        // console.log(value);
+
         if (this.config.enableFakeDatabase) {
             const service = new LabelServiceFake();
             return service.getAll(groupId);
@@ -49,6 +54,9 @@ export class LabelService implements ILabelService {
      * Get all labels with details
      */
     async getAllWithDetails(groupId: string, month: number, year: number): Promise<LabelWithDetails[]> {
+        // var value = await this.getWithParams('api/label', {});
+        // console.log(value);
+
         if (this.config.enableFakeDatabase) {
             const service = new LabelServiceFake();
             return service.getAllWithDetails(groupId);

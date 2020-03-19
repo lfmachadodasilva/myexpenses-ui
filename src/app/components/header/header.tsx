@@ -2,7 +2,7 @@ import React, { useContext, useMemo, useCallback } from 'react';
 import { Navbar, Nav, Image, Container, Row, Spinner, Col, OverlayTrigger, Popover } from 'react-bootstrap';
 import { FaUserAlt } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { userContext } from '../../contexts/user-context';
 import { MyRoute } from '../../route';
@@ -14,6 +14,7 @@ const HeaderComponent: React.FC = () => {
     const { t } = useTranslation();
     const { user } = useContext(userContext);
     const history = useHistory();
+    const location = useLocation();
 
     const { hasUser, displayName, email, photo } = useMemo(() => {
         const hasUser = user !== null;
@@ -44,13 +45,13 @@ const HeaderComponent: React.FC = () => {
         history.push(MyRoute.HOME);
     };
     const handleOnClickGroup = () => {
-        history.push(MyRoute.GROUP);
+        history.push(MyRoute.GROUP + location.search);
     };
     const handleOnClickLabel = () => {
-        history.push(MyRoute.LABEL);
+        history.push(MyRoute.LABEL + location.search);
     };
     const handleOnClickExpense = () => {
-        history.push(MyRoute.EXPENSE);
+        history.push(MyRoute.EXPENSE + location.search);
     };
     const handleOnClickLogout = () => {
         history.push(MyRoute.LOGOUT);

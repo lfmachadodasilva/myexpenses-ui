@@ -72,6 +72,7 @@ export class ExpenseServiceFirebase implements IExpenseService {
             const labels = await labelsPromise;
 
             const data = value.val();
+            console.log(data);
             if (data !== null && data !== undefined) {
                 const expenses = Object.keys(data).map(i => {
                     return { ...data[i], date: parse(data[i].date.toString(), this.dateFormat, new Date()) };
@@ -83,7 +84,7 @@ export class ExpenseServiceFirebase implements IExpenseService {
                             expense =>
                                 expense.groupId === groupId &&
                                 expense.date.getMonth() + 1 === month &&
-                                expense.date.getFullYear() === year
+                                expense.date.getFullYear() === +year
                         )
                         .map(expense => {
                             return {

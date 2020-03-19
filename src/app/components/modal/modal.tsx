@@ -45,7 +45,7 @@ const ModalComponent: React.FC<ModalComponentProps> = (props: ModalComponentProp
             {hasValue(props.buttons) && (
                 <Modal.Footer>
                     {props.buttons.map(button => (
-                        <Button variant={button.variant} onClick={button.onClick}>
+                        <Button key={button.label} variant={button.variant} onClick={button.onClick}>
                             {button.label}
                         </Button>
                     ))}

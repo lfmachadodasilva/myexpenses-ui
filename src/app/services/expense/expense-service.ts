@@ -63,6 +63,7 @@ export class ExpenseService implements IExpenseService {
     }
 
     getAllWithDetails(groupId: string, month: number, year: number): Promise<ExpenseWithDetails[]> {
+        console.log(groupId, month, year, this.config);
         if (this.config.enableFakeDatabase) {
             const service = new ExpenseServiceFake();
             return service.getAllWithDetails(groupId, month, year);

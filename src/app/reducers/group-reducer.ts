@@ -14,7 +14,7 @@ enum GroupActionType {
     LOADED_WITH_DETAILS = 'GROUP_WITH_DETAILS_LOADED',
     LOADING_WITH_DETAILS = 'GROUP_WITH_DETAILS_LOADING',
     ERROR_WITH_DETAILS = 'GROUP_WITH_DETAILS_ERROR',
-    RESET_WITH_DETAILS = 'RESET_WITH_DETAILS'
+    RESET_WITH_DETAILS = 'RESET_WITH_DETAILS',
 }
 
 interface GroupActionLoaded {
@@ -50,12 +50,12 @@ export const useGroupReducer = (user: User): GroupReducer => {
     const initialState = {
         groups: {
             status: FetchStatus.Ready,
-            data: null
+            data: null,
         },
         groupsWithDetails: {
             status: FetchStatus.Ready,
-            data: null
-        }
+            data: null,
+        },
     } as GroupState;
 
     function reducer(state: GroupState = initialState, action: GroupAction) {
@@ -66,58 +66,58 @@ export const useGroupReducer = (user: User): GroupReducer => {
                     ...state,
                     groups: {
                         status: FetchStatus.Loading,
-                        data: [] as Group[]
-                    }
+                        data: [] as Group[],
+                    },
                 };
             case GroupActionType.LOADED:
                 return {
                     ...state,
                     groups: {
                         status: FetchStatus.Loaded,
-                        data: action.payload
-                    }
+                        data: action.payload,
+                    },
                 };
             case GroupActionType.ERROR:
                 return {
                     ...state,
                     groups: {
                         status: FetchStatus.Error,
-                        data: null
-                    }
+                        data: null,
+                    },
                 };
             case GroupActionType.RESET:
                 return {
                     ...state,
-                    groups: initialState.groups
+                    groups: initialState.groups,
                 };
             case GroupActionType.LOADING_WITH_DETAILS:
                 return {
                     ...state,
                     groupsWithDetails: {
                         status: FetchStatus.Loading,
-                        data: [] as Group[]
-                    }
+                        data: [] as Group[],
+                    },
                 };
             case GroupActionType.LOADED_WITH_DETAILS:
                 return {
                     ...state,
                     groupsWithDetails: {
                         status: FetchStatus.Loaded,
-                        data: action.payload
-                    }
+                        data: action.payload,
+                    },
                 };
             case GroupActionType.ERROR_WITH_DETAILS:
                 return {
                     ...state,
                     groupsWithDetails: {
                         status: FetchStatus.Error,
-                        data: null
-                    }
+                        data: null,
+                    },
                 };
             case GroupActionType.RESET_WITH_DETAILS:
                 return {
                     ...state,
-                    groupsWithDetails: initialState.groupsWithDetails
+                    groupsWithDetails: initialState.groupsWithDetails,
                 };
             default:
                 return initialState;
@@ -127,8 +127,9 @@ export const useGroupReducer = (user: User): GroupReducer => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const getGroups = useCallback(async () => {
+        console.log('getGroups...');
         dispatch({
-            type: GroupActionType.LOADING
+            type: GroupActionType.LOADING,
         } as GroupAction);
 
         return new GroupService(user)
@@ -136,14 +137,14 @@ export const useGroupReducer = (user: User): GroupReducer => {
             .then(data => {
                 dispatch({
                     type: GroupActionType.LOADED,
-                    payload: data
+                    payload: data,
                 });
                 return data;
             })
             .catch(e => {
                 dispatch({
                     type: GroupActionType.ERROR,
-                    payload: e.toString()
+                    payload: e.toString(),
                 });
                 return [] as Group[];
             });
@@ -151,7 +152,7 @@ export const useGroupReducer = (user: User): GroupReducer => {
 
     const getGroupsWithDetails = useCallback(async () => {
         dispatch({
-            type: GroupActionType.LOADING_WITH_DETAILS
+            type: GroupActionType.LOADING_WITH_DETAILS,
         } as GroupAction);
 
         return new GroupService(user)
@@ -159,14 +160,14 @@ export const useGroupReducer = (user: User): GroupReducer => {
             .then(data => {
                 dispatch({
                     type: GroupActionType.LOADED_WITH_DETAILS,
-                    payload: data
+                    payload: data,
                 });
                 return data;
             })
             .catch(e => {
                 dispatch({
                     type: GroupActionType.ERROR_WITH_DETAILS,
-                    payload: e.toString()
+                    payload: e.toString(),
                 });
                 return [] as Group[];
             });
@@ -174,7 +175,7 @@ export const useGroupReducer = (user: User): GroupReducer => {
 
     const resetGroupsWithDetails = useCallback(async () => {
         dispatch({
-            type: GroupActionType.RESET_WITH_DETAILS
+            type: GroupActionType.RESET_WITH_DETAILS,
         } as GroupAction);
     }, [dispatch]);
 

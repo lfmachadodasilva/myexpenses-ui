@@ -59,14 +59,18 @@ interface ExpenseState {
 
 export type ExpenseReducer = {
     state: ExpenseState;
-    getExpensesYears: () => Promise<number[]>;
+    getExpensesYears: (groupId: string) => Promise<number[]>;
     getExpenses: (groupId: string, month: number, year: number) => Promise<ExpenseWithDetails[]>;
     resetExpenses: () => void;
 };
 
-export const useExpenseReducer = (user: User, groupId: string): ExpenseReducer => {
+export const useExpenseReducer = (user: User): ExpenseReducer => {
     const initialState = {
         years: {
+            status: FetchStatus.Ready,
+            data: null
+        },
+        expenses: {
             status: FetchStatus.Ready,
             data: null
         }
@@ -137,55 +141,56 @@ export const useExpenseReducer = (user: User, groupId: string): ExpenseReducer =
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const getExpensesYears = useCallback(async () => {
-        if (groupId !== null && groupId !== null) {
-            dispatch({
-                type: YearActionType.LOADING
-            } as ExpenseAction);
-
-            return new ExpenseService(user)
-                .getAllYears(groupId)
-                .then(data => {
-                    dispatch({
-                        type: YearActionType.LOADED,
-                        payload: data
-                    });
-                    return data;
-                })
-                .catch(e => {
-                    dispatch({
-                        type: YearActionType.ERROR,
-                        payload: e.toString()
-                    });
-                    return [];
-                });
-        }
-    }, [user, dispatch, groupId]);
-
-    const getExpenses = useCallback(
-        async (groupId: string, month: number, year: number) => {
+    const getExpensesYears = useCallback(
+        async (groupId: string) => {
             if (groupId !== null && groupId !== null) {
                 dispatch({
-                    type: ExpenseActionType.LOADING
+                    type: YearActionType.LOADING
                 } as ExpenseAction);
 
                 return new ExpenseService(user)
-                    .getAllWithDetails(groupId, month, year)
+                    .getAllYears(groupId)
                     .then(data => {
                         dispatch({
-                            type: ExpenseActionType.LOADED,
+                            type: YearActionType.LOADED,
                             payload: data
                         });
                         return data;
                     })
                     .catch(e => {
                         dispatch({
-                            type: ExpenseActionType.ERROR,
+                            type: YearActionType.ERROR,
                             payload: e.toString()
                         });
                         return [];
                     });
             }
+        },
+        [user, dispatch]
+    );
+
+    const getExpenses = useCallback(
+        async (groupId: string, month: number, year: number) => {
+            dispatch({
+                type: ExpenseActionType.LOADING
+            } as ExpenseAction);
+
+            return new ExpenseService(user)
+                .getAllWithDetails(groupId, month, year)
+                .then(data => {
+                    dispatch({
+                        type: ExpenseActionType.LOADED,
+                        payload: data
+                    });
+                    return data;
+                })
+                .catch(e => {
+                    dispatch({
+                        type: ExpenseActionType.ERROR,
+                        payload: e.toString()
+                    });
+                    return [];
+                });
         },
         [user, dispatch]
     );

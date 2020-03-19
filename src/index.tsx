@@ -36,6 +36,7 @@ const config: AppConfig = new AppConfig();
 
 ConfigurationManager.set({
     ...config,
+    apiUrl: getValueOrDefault(process.env.REACT_APP_API_URL, config.apiUrl),
     enableFirebaseDatabase: hasValue(process.env.REACT_APP_DATABASE)
         ? process.env.REACT_APP_DATABASE === 'firebase'
         : config.enableFirebaseDatabase,

@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useCallback, useMemo } from 'react';
+import React, { useContext, useEffect, useCallback, useMemo, useState } from 'react';
 import { Row, Col, Button, Alert, Badge, Card } from 'react-bootstrap';
 import { FaPlus } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
+import queryString from 'query-string';
 
 import SearchComponent from '../../components/search/search';
 import { useHistory } from 'react-router-dom';
@@ -23,46 +24,55 @@ const ExpenseAllPage: React.FC = () => {
     const { t } = useTranslation();
     const history = useHistory();
 
-    // const { search: searchParams } = useLocation();
-    // const queryParams = new URLSearchParams(searchParams);
-    // console.log(searchParams, queryParams.has('group'), queryParams.get('group'));
+    const {
+        loadingBase,
+        expenseReducer: {
+            state: { years, expenses },
+            getExpenses,
+            resetExpenses
+        },
+        groupReducer: {
+            state: { groups }
+        }
+    } = global;
 
-    const { loadingBase, expenseReducer, groupReducer } = global;
+    const [group, setGroup] = useState(global.group);
+    const [month, setMonth] = useState(global.month);
+    const [year, setYear] = useState(global.year);
 
-    const handleOnSearch = async (group: string, month: number, year: number) => {
-        LocalStorageHelper.setGroup(group);
-
-        global.group = group;
-        global.month = month;
-        global.year = year;
-
-        getExpenses(group, month, year);
-    };
-
-    const { state: expenseState, getExpenses, resetExpenses } = expenseReducer;
-    const { expenses } = expenseState;
     useEffect(() => {
-        if (
-            loadingBase ||
-            (hasValue(expenses) && expenses.status !== FetchStatus.Ready) ||
-            !hasValue(global.group) ||
-            !hasValue(global.year)
-        ) {
+        setGroup(global.group);
+        setMonth(global.month);
+        setYear(global.year);
+    }, [global.group, global.month, global.year]);
+
+    useEffect(() => {
+        console.log(loadingBase, expenses, group, year, month);
+        if (loadingBase || expenses.status !== FetchStatus.Ready || !hasValue(group) || !hasValue(year)) {
             return;
         }
 
-        getExpenses(global.group, global.month, global.year);
-    }, [expenses, getExpenses, loadingBase, global.group, global.month, global.year]);
+        getExpenses(group, month, year).then(value => console.log);
+    }, [expenses, getExpenses, loadingBase, group, month, year]);
 
-    // const handleOnEdit = useCallback(
-    //     (id: string): Promise<void> => {
-    //         return new Promise(resolve => {
-    //             history.push(MyRoute.EXPENSE + `/${id}`);
-    //             resolve();
-    //         });
-    //     },
-    //     [history]
-    // );
+    const handleOnSearch = (group: string, month: number, year: number) => {
+        LocalStorageHelper.setGroup(group);
+
+        setGroup(group);
+        setMonth(month);
+        setYear(year);
+
+        history.push({
+            pathname: history.location.pathname,
+            search: queryString.stringify({
+                group: group,
+                month: month,
+                year: year
+            })
+        });
+
+        resetExpenses();
+    };
 
     const handleOnDelete = useCallback(
         (id: string): Promise<void> => {
@@ -147,11 +157,11 @@ const ExpenseAllPage: React.FC = () => {
     return (
         <div key='ExpenseAllPage'>
             <SearchComponent
-                group={global.group}
-                groups={groupReducer.state.groups}
-                month={global.month}
-                year={global.year}
-                years={expenseReducer.state.years}
+                group={group}
+                groups={groups}
+                month={month}
+                year={year}
+                years={years}
                 onSearch={handleOnSearch}
             />
 
@@ -173,12 +183,12 @@ const ExpenseAllPage: React.FC = () => {
 
             {hasValue(expenses) && expenses.status === FetchStatus.Ready && (
                 <Alert key='NotLoaded' variant='info' className='mt-4'>
-                    {t('LABEL.NOT_LOADED')}
+                    {t('NOT_LOADED')}
                 </Alert>
             )}
             {hasValue(expenses) && expenses.status === FetchStatus.Loaded && expenses.data.length === 0 && (
                 <Alert key='EmptyLabel' variant='warning' className='mt-4'>
-                    {t('LABEL.EMPTY')}
+                    {t('NO_DATA')}
                 </Alert>
             )}
 

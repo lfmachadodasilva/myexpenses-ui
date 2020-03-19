@@ -113,9 +113,12 @@ const ListComponent: React.FC<ListComponentProps> = (props: ListComponentProps) 
                                 <hr className='m-1' />
 
                                 <div className='d-flex justify-content-around'>
-                                    {item.badges.map(badge => {
+                                    {item.badges.map((badge, index) => {
                                         const item = (
-                                            <p className='d-flex flex-column justify-content-center text-wrap mb-0'>
+                                            <p
+                                                key={index}
+                                                className='d-flex flex-column justify-content-center text-wrap mb-0'
+                                            >
                                                 {hasValue(badge.title) && (
                                                     <small className='text-center'>{badge.title}</small>
                                                 )}

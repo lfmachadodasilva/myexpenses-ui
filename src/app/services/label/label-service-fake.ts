@@ -1,10 +1,9 @@
 import { Label, LabelWithDetails } from '../../models/label';
 import { ConfigurationManager } from '../../../configuration/manager';
 import { AppConfig } from '../../../configuration/app-config';
-import { IService } from '../service-base';
 import { hasValue } from '../../helpers/util-helper';
 
-export class LabelServiceFake implements IService<Label> {
+export class LabelServiceFake {
     config: AppConfig = ConfigurationManager.get();
     labels: Label[];
     collection = 'labels';

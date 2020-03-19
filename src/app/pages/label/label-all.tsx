@@ -5,15 +5,17 @@ import { FaPlus } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import { Pie } from 'react-chartjs-2';
 import 'chartjs-plugin-colorschemes';
+import queryString from 'query-string';
 
 import { globalContext } from '../../contexts/global-context';
-import SearchComponent from '../../components/search/search';
 import { LocalStorageHelper } from '../../helpers/localStorage-helper';
 import { LabelService } from '../../services/label/label-service';
 import { userContext } from '../../contexts/user-context';
 import { FetchStatus } from '../../services/fetch-status';
 import { MyRoute } from '../../route';
 import { hasValue } from '../../helpers/util-helper';
+
+import SearchComponent from '../../components/search/search';
 import ListComponent from '../../components/list/list';
 import RadioButtonComponent from '../../components/radio-button/radio-button';
 
@@ -30,24 +32,31 @@ const LabelAllPage: React.FC = () => {
     const history = useHistory();
 
     const {
-        labelReducer: { state: labelState, getLabelsWithDetails },
+        labelReducer: { state: labelState, getLabelsWithDetails, resetLabelsWithDetails },
         groupReducer: {
             state: { groups }
         },
         expenseReducer: {
             state: { years }
         },
-        loadingBase,
-        group,
-        month,
-        year
+        loadingBase
     } = global;
+
+    const [group, setGroup] = useState(global.group);
+    const [month, setMonth] = useState(global.month);
+    const [year, setYear] = useState(global.year);
 
     const [labelValueType, setLabelValueType] = useState(LabelValueType.CURRENT_VALUE);
 
+    useEffect(() => {
+        setGroup(global.group);
+        setMonth(global.month);
+        setYear(global.year);
+    }, [global.group, global.month, global.year]);
+
     const { labelsWithDetails: labels } = labelState;
     useEffect(() => {
-        if (loadingBase || (labels && labels.status !== FetchStatus.Ready) || !hasValue(group) || !hasValue(month)) {
+        if (loadingBase || labels.status !== FetchStatus.Ready || !hasValue(group) || !hasValue(month)) {
             return;
         }
 
@@ -75,12 +84,20 @@ const LabelAllPage: React.FC = () => {
     const handleOnSearch = (group: string, month: number, year: number) => {
         LocalStorageHelper.setGroup(group);
 
-        // update global context
-        global.group = group;
-        global.month = month;
-        global.year = year;
+        setGroup(group);
+        setMonth(month);
+        setYear(year);
 
-        getLabelsWithDetails(group, month, year);
+        history.push({
+            pathname: history.location.pathname,
+            search: queryString.stringify({
+                group: group,
+                month: month,
+                year: year
+            })
+        });
+
+        resetLabelsWithDetails();
     };
 
     const data = useMemo(() => {
@@ -142,7 +159,7 @@ const LabelAllPage: React.FC = () => {
                 size='sm'
                 disabled={labels.status !== FetchStatus.Loaded}
                 onClick={() => {
-                    history.push(MyRoute.LABEL_ADD);
+                    history.push(MyRoute.LABEL_ADD + history.location.search);
                 }}
             >
                 <FaPlus size={16} />

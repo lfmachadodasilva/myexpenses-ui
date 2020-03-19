@@ -1,6 +1,6 @@
 export class AppConfig {
     /** api backend url */
-    apiUrl: string = '';
+    apiUrl: string = 'https://localhost:5001/';
     /** enable fake database */
     enableFakeDatabase: boolean = false;
     /** enable fake database timeout */
