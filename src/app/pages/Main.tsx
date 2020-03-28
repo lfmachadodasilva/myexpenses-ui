@@ -43,7 +43,7 @@ const Main: React.FC = () => {
                 <Route exact path='/'>
                     <>
                         <h1> HOME </h1>
-                        <h3> myexpenses home page </h3>
+                        <h3> TODO </h3>
                     </>
                 </Route>
                 <Route path='*'>

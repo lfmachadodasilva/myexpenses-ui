@@ -1,4 +1,4 @@
-# MyExpenses [![Build Status](https://travis-ci.com/lfmachadodasilva/myexpenses-ui.svg?branch=master)](https://travis-ci.com/lfmachadodasilva/myexpenses-ui) [![codecov](https://codecov.io/gh/lfmachadodasilva/myexpenses-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/lfmachadodasilva/myexpenses-ui)
+# MyExpenses ![node-ci](https://github.com/lfmachadodasilva/myexpenses-ui/workflows/node-ci/badge.svg) [![codecov](https://codecov.io/gh/lfmachadodasilva/myexpenses-ui/branch/master/graph/badge.svg)](https://codecov.io/gh/lfmachadodasilva/myexpenses-ui)
 
 ### Available Scripts
 
