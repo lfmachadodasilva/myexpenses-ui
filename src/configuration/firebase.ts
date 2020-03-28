@@ -5,9 +5,7 @@ const firebaseConfig = {
     databaseURL: 'https://myexpenses-6e402.firebaseio.com',
     projectId: 'myexpenses-6e402',
     storageBucket: 'myexpenses-6e402',
-    messagingSenderId: 'my-sender-id',
-    ALGOLIA_APP_ID: 'my-app-id',
-    ALGOLIA_USER_SEARCH_KEY: 'my-user-search-key'
+    messagingSenderId: 'my-sender-id'
 };
 
 export default firebaseConfig;
