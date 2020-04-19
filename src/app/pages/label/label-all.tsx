@@ -22,7 +22,7 @@ import RadioButtonComponent from '../../components/radio-button/radio-button';
 enum LabelValueType {
     CURRENT_VALUE = 0,
     LAST_VALUE,
-    AVERAGE_VALUE
+    AVERAGE_VALUE,
 }
 
 const LabelAllPage: React.FC = () => {
@@ -34,12 +34,12 @@ const LabelAllPage: React.FC = () => {
     const {
         labelReducer: { state: labelState, getLabelsWithDetails, resetLabelsWithDetails },
         groupReducer: {
-            state: { groups }
+            state: { groups },
         },
         expenseReducer: {
-            state: { years }
+            state: { years },
         },
-        loadingBase
+        loadingBase,
     } = global;
 
     const [group, setGroup] = useState(global.group);
@@ -93,8 +93,8 @@ const LabelAllPage: React.FC = () => {
             search: queryString.stringify({
                 group: group,
                 month: month,
-                year: year
-            })
+                year: year,
+            }),
         });
 
         resetLabelsWithDetails();
@@ -118,29 +118,30 @@ const LabelAllPage: React.FC = () => {
                                 : labelValueType === LabelValueType.LAST_VALUE
                                 ? x.lastMonthValue
                                 : x.averageValue
-                        )
-                    }
+                        ),
+                    },
                 ],
 
                 // These labels appear in the legend and in the tooltips when hovering different arcs
-                labels: labelsData.map(x => ' ' + x.name)
+                labels: labelsData.map(x => ' ' + x.name),
             };
         }
 
         return {
             datasets: [],
-            labels: []
+            labels: [],
         };
     }, [labels.status, labels.data, labelValueType]);
 
     const options = {
         plugins: {
             colorschemes: {
-                scheme: 'tableau.Tableau20'
-            }
-        }
+                scheme: 'tableau.Tableau20',
+            },
+        },
     };
 
+    // console.log(history);
     return (
         <div key='label-all'>
             <SearchComponent
@@ -193,24 +194,30 @@ const LabelAllPage: React.FC = () => {
                             return {
                                 id: label.id,
                                 title: label.name,
-                                onEdit: (id: string) => Promise.resolve(history.push(MyRoute.LABEL + `/${id}`)),
+                                onEdit: (id: string) =>
+                                    Promise.resolve(
+                                        history.push({
+                                            pathname: MyRoute.LABEL + `/${id}`,
+                                            search: history.location.search,
+                                        })
+                                    ),
                                 onDelete: handleDelete,
                                 badges: [
                                     {
                                         title: t('LABEL.CURRENT_VALUE'),
-                                        value: t('CURRENCY') + ' ' + label.currentValue.toFixed(2)
+                                        value: t('CURRENCY') + ' ' + label.currentValue.toFixed(2),
                                     },
                                     {
                                         title: t('LABEL.LAST_VALUE'),
                                         variant: label.currentValue > label.lastMonthValue ? 'danger' : 'success',
-                                        value: t('CURRENCY') + ' ' + label.lastMonthValue.toFixed(2)
+                                        value: t('CURRENCY') + ' ' + label.lastMonthValue.toFixed(2),
                                     },
                                     {
                                         title: t('LABEL.AVERAGE_VALUE'),
                                         variant: label.currentValue > label.averageValue ? 'danger' : 'success',
-                                        value: t('CURRENCY') + ' ' + label.averageValue.toFixed(2)
-                                    }
-                                ]
+                                        value: t('CURRENCY') + ' ' + label.averageValue.toFixed(2),
+                                    },
+                                ],
                             };
                         })}
                     />
@@ -225,16 +232,16 @@ const LabelAllPage: React.FC = () => {
                                 buttons={[
                                     {
                                         id: LabelValueType.CURRENT_VALUE,
-                                        label: t('LABEL.CURRENT_VALUE')
+                                        label: t('LABEL.CURRENT_VALUE'),
                                     },
                                     {
                                         id: LabelValueType.LAST_VALUE,
-                                        label: t('LABEL.LAST_VALUE')
+                                        label: t('LABEL.LAST_VALUE'),
                                     },
                                     {
                                         id: LabelValueType.AVERAGE_VALUE,
-                                        label: t('LABEL.AVERAGE_VALUE')
-                                    }
+                                        label: t('LABEL.AVERAGE_VALUE'),
+                                    },
                                 ]}
                             />
                         </div>

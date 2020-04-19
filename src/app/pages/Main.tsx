@@ -59,14 +59,12 @@ const Main: React.FC = () => {
         if (!hasValue(user)) {
             return;
         }
-        console.log('loading groups');
         getGroups();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const searchParms = useMemo(() => {
         const jsonString = JSON.stringify(queryString.parse(location.search));
-        console.log('url changed ', JSON.parse(jsonString) as Search);
         return JSON.parse(jsonString) as Search;
     }, [location.search]);
 
@@ -111,12 +109,10 @@ const Main: React.FC = () => {
             });
         }
         setGroup(selectedGroup);
-        console.log('set group', selectedGroup);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [groups.status, groups.data, searchParms.group]);
 
     useEffect(() => {
-        // console.log('set month', groups.status, group, searchParms);
         if (groups.status !== FetchStatus.Loaded || !hasValue(group)) {
             return;
         }
@@ -125,18 +121,6 @@ const Main: React.FC = () => {
             setMonth(searchParms.month);
             return;
         }
-
-        console.log(
-            'set month',
-            hasValue(searchParms.month) && searchParms.month > 0 && searchParms.month <= 12,
-            month,
-            group,
-            year,
-            groups.status,
-            history,
-            searchParms.group,
-            searchParms.month
-        );
 
         const currentMonth = hasValue(searchParms.month) ? searchParms.month : new Date().getMonth() + 1;
         setMonth(currentMonth);
@@ -150,23 +134,9 @@ const Main: React.FC = () => {
                 }),
             });
         }
+        console.log('selected month');
 
-        // if (hasValue(searchParms.month) && searchParms.month > 0 && searchParms.month <= 12 && hasValue(month)) {
-        //     setMonth(searchParms.month);
-        // } else {
-        //     console.log('set month', month, groups.status, history, searchParms.group, searchParms.month);
-
-        //     const currentMonth = new Date().getMonth() + 1;
-        //     setMonth(currentMonth);
-        //     history.push({
-        //         pathname: location.pathname,
-        //         search: queryString.stringify({
-        //             group: searchParms.group,
-        //             month: currentMonth,
-        //             year: searchParms.year,
-        //         }),
-        //     });
-        // }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [group, month, groups.status, history, searchParms.group, searchParms.month]);
 
     useEffect(() => {
@@ -180,8 +150,6 @@ const Main: React.FC = () => {
         if (years.status !== FetchStatus.Loaded) {
             return;
         }
-
-        console.log('selected years');
 
         let selectedYear = new Date().getFullYear();
 

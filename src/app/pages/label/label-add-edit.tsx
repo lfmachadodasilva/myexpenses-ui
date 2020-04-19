@@ -51,6 +51,13 @@ const LabelAddEditPage: React.FC = () => {
             });
     }, [user, isAdd, label]);
 
+    const handleCancel = useCallback(() => {
+        history.push({
+            pathname: MyRoute.LABEL,
+            search: history.location.search,
+        });
+    }, [history]);
+
     const handleAdd = useCallback(() => {
         setLoading(true);
         new LabelService(user)
@@ -58,7 +65,7 @@ const LabelAddEditPage: React.FC = () => {
             .then(() => {
                 resetLabels();
                 resetLabelsWithDetails();
-                history.push(MyRoute.LABEL);
+                handleCancel();
             })
             .catch(e => {
                 setError(e.toString());
@@ -66,7 +73,7 @@ const LabelAddEditPage: React.FC = () => {
             .finally(() => {
                 setLoading(false);
             });
-    }, [history, user, name, group, resetLabelsWithDetails, resetLabels]);
+    }, [user, name, group, resetLabelsWithDetails, resetLabels, handleCancel]);
 
     const handleEdit = useCallback(() => {
         setLoading(true);
@@ -75,7 +82,7 @@ const LabelAddEditPage: React.FC = () => {
             .then(() => {
                 resetLabels();
                 resetLabelsWithDetails();
-                history.push(MyRoute.LABEL);
+                handleCancel();
             })
             .catch(e => {
                 setError(e.toString());
@@ -83,11 +90,7 @@ const LabelAddEditPage: React.FC = () => {
             .finally(() => {
                 setLoading(false);
             });
-    }, [history, user, name, currentLabel, resetLabelsWithDetails, resetLabels]);
-
-    const handleCancel = useCallback(() => {
-        history.push(MyRoute.LABEL);
-    }, [history]);
+    }, [user, name, currentLabel, resetLabelsWithDetails, resetLabels, handleCancel]);
 
     return (
         <div className='mt-4'>
