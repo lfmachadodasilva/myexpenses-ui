@@ -44,7 +44,7 @@ const Main: React.FC = () => {
 
     const [loadingBase, setLoadingBase] = useState(true);
     const [group, setGroup] = useState<string>();
-    const [month, setMonth] = useState(initalGlobalContext.month);
+    const [month, setMonth] = useState<number>();
     const [year, setYear] = useState(initalGlobalContext.year);
 
     const expenseReducer = useExpenseReducer(user);
@@ -59,12 +59,14 @@ const Main: React.FC = () => {
         if (!hasValue(user)) {
             return;
         }
+        console.log('loading groups');
         getGroups();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const searchParms = useMemo(() => {
         const jsonString = JSON.stringify(queryString.parse(location.search));
+        console.log('url changed ', JSON.parse(jsonString) as Search);
         return JSON.parse(jsonString) as Search;
     }, [location.search]);
 
@@ -72,6 +74,8 @@ const Main: React.FC = () => {
         if (groups.status !== FetchStatus.Loaded) {
             return;
         }
+
+        console.log('set group');
 
         setLoadingBase(true);
 
@@ -113,15 +117,29 @@ const Main: React.FC = () => {
     }, [groups.status, groups.data, searchParms.group]);
 
     useEffect(() => {
-        if (groups.status !== FetchStatus.Loaded) {
+        // console.log('set month', groups.status, group, searchParms);
+        if (groups.status !== FetchStatus.Loaded && !hasValue(group)) {
             return;
         }
 
         if (hasValue(searchParms.month) && searchParms.month > 0 && searchParms.month <= 12) {
             setMonth(searchParms.month);
-        } else {
-            const currentMonth = new Date().getMonth() + 1;
-            setMonth(currentMonth);
+            return;
+        }
+
+        console.log(
+            'set month',
+            hasValue(searchParms.month) && searchParms.month > 0 && searchParms.month <= 12,
+            month,
+            groups.status,
+            history,
+            searchParms.group,
+            searchParms.month
+        );
+
+        const currentMonth = hasValue(searchParms.month) ? searchParms.month : new Date().getMonth() + 1;
+        setMonth(currentMonth);
+        if (searchParms.month !== currentMonth) {
             history.push({
                 pathname: location.pathname,
                 search: queryString.stringify({
@@ -131,11 +149,28 @@ const Main: React.FC = () => {
                 }),
             });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [month, searchParms.month]);
+
+        // if (hasValue(searchParms.month) && searchParms.month > 0 && searchParms.month <= 12 && hasValue(month)) {
+        //     setMonth(searchParms.month);
+        // } else {
+        //     console.log('set month', month, groups.status, history, searchParms.group, searchParms.month);
+
+        //     const currentMonth = new Date().getMonth() + 1;
+        //     setMonth(currentMonth);
+        //     history.push({
+        //         pathname: location.pathname,
+        //         search: queryString.stringify({
+        //             group: searchParms.group,
+        //             month: currentMonth,
+        //             year: searchParms.year,
+        //         }),
+        //     });
+        // }
+    }, [group, month, groups.status, history, searchParms.group, searchParms.month]);
 
     useEffect(() => {
         if (hasValue(group)) {
+            console.log('loading years');
             setLoadingBase(true);
             // console.log('loading years');
             getExpensesYears(group);
@@ -146,6 +181,8 @@ const Main: React.FC = () => {
         if (years.status !== FetchStatus.Loaded) {
             return;
         }
+
+        console.log('selected years');
 
         let selectedYear = new Date().getFullYear();
 
@@ -177,10 +214,10 @@ const Main: React.FC = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [years.data, years.status, searchParms.year]);
 
-    useEffect(() => {
-        if (hasValue(group)) {
-        }
-    }, [group]);
+    // useEffect(() => {
+    //     if (hasValue(group)) {
+    //     }
+    // }, [group]);
 
     return (
         <globalContext.Provider

@@ -45,6 +45,7 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
         setGroupSelected(group);
         setMonthSelected(month);
         setYearSelected(year);
+        console.log('search', group, month, year);
     }, [group, month, year]);
 
     const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -136,7 +137,7 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                         <Form.Control
                                             key='form-month'
                                             as='select'
-                                            value={monthSelected.toString()}
+                                            value={hasValue(monthSelected) && monthSelected.toString()}
                                             disabled={loadingGroupOrYear}
                                             onChange={(value: any) => {
                                                 setMonthSelected(+value.target.value);
