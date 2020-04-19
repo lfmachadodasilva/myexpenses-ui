@@ -127,7 +127,6 @@ export const useGroupReducer = (user: User): GroupReducer => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     const getGroups = useCallback(async () => {
-        console.log('getGroups...');
         dispatch({
             type: GroupActionType.LOADING,
         } as GroupAction);

@@ -75,8 +75,6 @@ const Main: React.FC = () => {
             return;
         }
 
-        console.log('set group');
-
         setLoadingBase(true);
 
         let selectedGroup: string;
@@ -113,12 +111,13 @@ const Main: React.FC = () => {
             });
         }
         setGroup(selectedGroup);
+        console.log('set group', selectedGroup);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [groups.status, groups.data, searchParms.group]);
 
     useEffect(() => {
         // console.log('set month', groups.status, group, searchParms);
-        if (groups.status !== FetchStatus.Loaded && !hasValue(group)) {
+        if (groups.status !== FetchStatus.Loaded || !hasValue(group)) {
             return;
         }
 
@@ -131,6 +130,8 @@ const Main: React.FC = () => {
             'set month',
             hasValue(searchParms.month) && searchParms.month > 0 && searchParms.month <= 12,
             month,
+            group,
+            year,
             groups.status,
             history,
             searchParms.group,
@@ -170,9 +171,7 @@ const Main: React.FC = () => {
 
     useEffect(() => {
         if (hasValue(group)) {
-            console.log('loading years');
             setLoadingBase(true);
-            // console.log('loading years');
             getExpensesYears(group);
         }
     }, [group, getExpensesYears]);
@@ -213,11 +212,6 @@ const Main: React.FC = () => {
         setLoadingBase(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [years.data, years.status, searchParms.year]);
-
-    // useEffect(() => {
-    //     if (hasValue(group)) {
-    //     }
-    // }, [group]);
 
     return (
         <globalContext.Provider

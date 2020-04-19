@@ -45,7 +45,6 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
         setGroupSelected(group);
         setMonthSelected(month);
         setYearSelected(year);
-        console.log('search', group, month, year);
     }, [group, month, year]);
 
     const months = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
@@ -144,13 +143,15 @@ const SearchComponent: React.FC<SearchProps> = (props: SearchProps) => {
                                             }}
                                             size='sm'
                                         >
-                                            {months.map(month => {
-                                                return (
-                                                    <option key={month} value={month}>
-                                                        {t('SEARCH.MONTHS.' + month)}
-                                                    </option>
-                                                );
-                                            })}
+                                            {!loadingGroupOrYear &&
+                                                hasValue(monthSelected) &&
+                                                months.map(month => {
+                                                    return (
+                                                        <option key={month} value={month}>
+                                                            {t('SEARCH.MONTHS.' + month)}
+                                                        </option>
+                                                    );
+                                                })}
                                         </Form.Control>
                                     </Form.Group>
                                 </Col>
