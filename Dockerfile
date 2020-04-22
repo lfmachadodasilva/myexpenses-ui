@@ -1,7 +1,8 @@
 #############
 ## Install ##
 #############
-FROM images.artifactory.dunnhumby.com/node:12 as install
+FROM node:12 as install
+#FROM images.artifactory.dunnhumby.com/node:12 as install
 
 WORKDIR /app
 
@@ -30,7 +31,8 @@ ENTRYPOINT ["npm", "run", "test:coverage"]
 #############
 ## Final ##
 #############
-FROM images.artifactory.dunnhumby.com/nginx:1.17 as final
+FROM nginx:1.17 as final
+#FROM images.artifactory.dunnhumby.com/nginx:1.17 as final
 
 COPY ./deploy/nginx.default.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/build/ /usr/share/nginx/html
