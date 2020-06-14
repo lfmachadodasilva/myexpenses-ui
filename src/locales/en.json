@@ -1,0 +1,13 @@
+{
+    "HEADER": {
+        "TITLE": "MyExpenses"
+    },
+    "EXPENSES": {
+        "LIST_PAGE": {
+            "TITLE": "Show all expenses"
+        },
+        "MANAGE_PAGE": {
+            "TITLE": "Manage expenses"
+        }
+    }
+}
