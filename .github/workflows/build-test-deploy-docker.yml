@@ -17,7 +17,12 @@ jobs:
             - name: Test 🔌
               run: |
                   docker build . --target test -t test:$GITHUB_RUN_NUMBER --cache-from build:$GITHUB_RUN_NUMBER
-                  docker run --rm -i test:$GITHUB_RUN_NUMBER
+                  docker run --rm -i -v $PWD/coverage:/app/coverage test:$GITHUB_RUN_NUMBER
+            - name: Publish Codecov 📈
+              uses: codecov/codecov-action@v1
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  file: coverage/*
             - name: Final 📦
               run: docker build . --target final -t lfmachadodasilva/myexpenses-ui:$GITHUB_RUN_NUMBER --cache-from build:$GITHUB_RUN_NUMBER
             - name: Deploy to heroku (dev) 🚀
