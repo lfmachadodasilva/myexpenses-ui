@@ -1,4 +1,5 @@
 import React, { memo, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -13,6 +14,7 @@ import { LabelService } from '../../services/labelService';
 import { hasValue } from '../../helpers/utilHelper';
 
 export const LabelsPage: React.FC = memo(() => {
+    const [t] = useTranslation();
     const [isLoading, setLoading] = useState<boolean>(false);
     const [data, setData] = useState<LabelModel[]>([]);
     const [config] = useState<AppConfig>(ConfigurationManager.get());
@@ -34,7 +36,7 @@ export const LabelsPage: React.FC = memo(() => {
 
     return (
         <>
-            <Typography variant="h4">List of labels:</Typography>
+            <Typography variant="h4">{t('LABELS.LIST.TITLE')}</Typography>
             {isLoading && <CircularProgress />}
             {!isLoading && <Typography variant="h6">#{data.length}</Typography>}
 

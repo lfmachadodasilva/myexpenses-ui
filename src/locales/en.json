@@ -1,9 +1,43 @@
 {
     "HEADER": {
-        "TITLE": "MyExpenses"
+        "TITLE": "MyExpenses",
+        "GROUPS": "Groups",
+        "LABELS": "Labels",
+        "EXPENSES": "Expenses",
+        "LOGOUT": "Logout",
+        "LOGIN_REGISTER": "Login/Register"
+    },
+    "AUTH": {
+        "EMAIL": "Email",
+        "PASSWORD": "Password",
+        "FACEBOOK": {
+            "BUTTON": "Facebook"
+        },
+        "LOGIN": {
+            "TITLE": "Login by email",
+            "BUTTON": "Login"
+        },
+        "REGISTER": {
+            "TITLE": "Register by email",
+            "BUTTON": "Register"
+        },
+        "RESET": {
+            "TITLE": "Reset password",
+            "BUTTON": "Reset"
+        }
+    },
+    "GROUPS": {
+        "LIST": {
+            "TITLE": "Show all groups"
+        }
+    },
+    "LABELS": {
+        "LIST": {
+            "TITLE": "Show all labels"
+        }
     },
     "EXPENSES": {
-        "LIST_PAGE": {
+        "LIST": {
             "TITLE": "Show all expenses"
         },
         "MANAGE_PAGE": {

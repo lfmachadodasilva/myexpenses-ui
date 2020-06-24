@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { initializeApp } from 'firebase/app';
 
 import './index.scss';
 import './configurations/i18n';
@@ -7,8 +8,12 @@ import './configurations/i18n';
 import { App } from './pages/App';
 import * as serviceWorker from './serviceWorker';
 import { setConfiguration } from './configurations/configurationManager';
+import firebaseConfig from './configurations/firebase';
 
 setConfiguration();
+
+// initialize firebase
+initializeApp({ ...firebaseConfig });
 
 ReactDOM.render(
     <React.StrictMode>

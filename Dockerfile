@@ -28,7 +28,7 @@ RUN ["npm", "run", "build"]
 ##########
 FROM source as test
 VOLUME ["/app/coverage", "/app/logs"]
-ENTRYPOINT ["npm", "run", "test"]
+ENTRYPOINT ["npm", "run", "test:coverage"]
 
 #############
 ## Final ##

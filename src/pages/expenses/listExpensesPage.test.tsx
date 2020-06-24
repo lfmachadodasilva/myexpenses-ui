@@ -5,7 +5,7 @@ import { ListExpensesPage } from './listExpensesPage';
 describe('<ListExpensesPage />', () => {
     test('renders', () => {
         const { getByText } = render(<ListExpensesPage />);
-        const linkElement = getByText(/EXPENSES.LIST_PAGE.TITLE/i);
+        const linkElement = getByText(/EXPENSES.LIST.TITLE/i);
         expect(linkElement).toBeInTheDocument();
     });
 });
