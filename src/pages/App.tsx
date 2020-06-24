@@ -44,10 +44,8 @@ const Application: React.FC = memo(() => {
         }
 
         if (hasValue(user)) {
-            axios.defaults.baseURL = ConfigurationManager.get().apiUrl;
             user.getIdTokenResult().then((value: any) => {
-                axios.defaults.headers.common['Authorization'] = value.token;
-                axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+                axios.defaults.headers.common.Authorization = value.token;
                 new UserService(config).addOrUpdate({
                     id: user.uid,
                     email: user.email,

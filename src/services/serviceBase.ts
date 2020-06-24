@@ -28,7 +28,8 @@ export class ServiceBase {
                 baseURL: this.config.apiUrl,
                 withCredentials: process.env.NODE_ENV !== 'test',
                 headers: {
-                    Accept: 'application/json; charset=utf=8'
+                    Accept: 'application/json; charset=utf=8',
+                    Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization
                 },
                 params
             });
@@ -44,7 +45,8 @@ export class ServiceBase {
                 baseURL: this.config.apiUrl,
                 withCredentials: process.env.NODE_ENV !== 'test',
                 headers: {
-                    Accept: 'application/json; charset=utf=8'
+                    Accept: 'application/json; charset=utf=8',
+                    Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization
                 }
             });
             return response.data as Promise<TResponse>;
@@ -59,7 +61,8 @@ export class ServiceBase {
                 baseURL: this.config.apiUrl,
                 withCredentials: process.env.NODE_ENV !== 'test',
                 headers: {
-                    Accept: 'application/json; charset=utf=8'
+                    Accept: 'application/json; charset=utf=8',
+                    Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization
                 }
             });
             return response.data as Promise<TResponse>;
