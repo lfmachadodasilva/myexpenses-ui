@@ -7,6 +7,8 @@ import { userContext } from '../../contexts/userContext';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
 
 import { AppConfig } from '../../configurations/appConfig';
 import { ConfigurationManager } from '../../configurations/configurationManager';
@@ -28,23 +30,8 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(2),
         marginLeft: 0
     },
-    avatar: {
-        width: theme.spacing(3),
-        height: theme.spacing(3),
-        marginRight: theme.spacing(1)
-    },
-    cards: {
-        maxWidth: 345
-    },
-    item: {
-        paddingRight: theme.spacing(2),
-        paddingLeft: theme.spacing(1)
-    },
-    person: {
-        display: 'flex',
-        alignItems: 'center',
-        marginBottom: theme.spacing(1),
-        marginRight: theme.spacing(2)
+    list: {
+        width: '100%'
     }
 }));
 
@@ -64,7 +51,7 @@ export const GroupsPage: React.FC<GroupsProps> = React.memo(() => {
     const [error, setError] = React.useState<string>('');
 
     const handleEdit = React.useCallback(
-        async (id: number) => {
+        async (id: number | string) => {
             setGroup(data.find(x => x.id === id));
             setShow(true);
             return Promise.resolve();
@@ -73,8 +60,8 @@ export const GroupsPage: React.FC<GroupsProps> = React.memo(() => {
     );
 
     const handleDelete = React.useCallback(
-        async (id: number) => {
-            return new GroupService(config).remove(id).then(() => {
+        async (id: number | string) => {
+            return new GroupService(config).remove(id as number).then(() => {
                 setReload(true);
             });
         },
@@ -131,21 +118,26 @@ export const GroupsPage: React.FC<GroupsProps> = React.memo(() => {
             </Grid>
             <Grid container justify="flex-start" alignItems="center" className={classes.root} spacing={1}>
                 <LoadingComponent showLoading={isLoading || !isReady} error={error}>
-                    {data.map(group => (
-                        <ItemComponent
-                            key={group.id}
-                            id={group.id}
-                            title={group.name}
-                            onEdit={handleEdit}
-                            onDelete={handleDelete}
-                        >
-                            <Grid container justify="flex-start" alignItems="center">
-                                {group.users.map(u => (
-                                    <AvatarChipComponent key={`groups-page-${u.id}`} user={u} />
-                                ))}
-                            </Grid>
-                        </ItemComponent>
-                    ))}
+                    <List className={classes.list}>
+                        {data.map(group => (
+                            <>
+                                <ItemComponent
+                                    key={group.id}
+                                    id={group.id}
+                                    title={group.name}
+                                    onEdit={handleEdit}
+                                    onDelete={handleDelete}
+                                >
+                                    <Grid container justify="flex-start" alignItems="center">
+                                        {group.users.map(u => (
+                                            <AvatarChipComponent key={`groups-page-${u.id}`} user={u} />
+                                        ))}
+                                    </Grid>
+                                </ItemComponent>
+                                <Divider />
+                            </>
+                        ))}
+                    </List>
                 </LoadingComponent>
             </Grid>
             <GroupsManageDialog group={group} show={show} onAction={handleAction} onClose={handleClose} />

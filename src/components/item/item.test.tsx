@@ -1,10 +1,10 @@
-import { fireEvent, wait } from '@testing-library/react';
+import { wait } from '@testing-library/react';
 import { ItemPageObject } from './item.pageTest';
 
 describe('<ItemComponent />', () => {
     test('should show the title', async () => {
         const page = new ItemPageObject();
-        await page.initialiseComponent({ title: 'Title' });
+        await page.initialiseComponent({ id: 1, title: 'Title' });
         expect(page.getElement('Title')).toBeInTheDocument();
     });
 
@@ -30,7 +30,7 @@ describe('<ItemComponent />', () => {
         const editMock = jest.fn().mockImplementation(waitFunction);
         const deleteMock = jest.fn().mockImplementation(waitFunction);
         const page = new ItemPageObject();
-        await page.initialiseComponent({ title: 'Title', onEdit: editMock, onDelete: deleteMock });
+        await page.initialiseComponent({ id: 1, title: 'Title', onEdit: editMock, onDelete: deleteMock });
 
         page.clickEdit();
         expect(editMock).toBeCalled();

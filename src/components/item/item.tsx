@@ -1,22 +1,19 @@
-import React, { memo, useState, useCallback } from 'react';
+import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import CardContent from '@material-ui/core/CardContent';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
 
 import { hasValue } from '../../helpers/utilHelper';
 import { LoadingComponent } from '../loading/loading';
 
 const useStyles = makeStyles(theme => ({
     cards: {
-        // maxWidth: 250,
-        // margin: 5,
         flex: 1
     },
     header: {
@@ -34,33 +31,33 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export interface ItemProps {
-    id: number;
+export type ItemProps = {
+    id: number | string;
     title: string;
-    onEdit?: (id: number) => Promise<void>;
-    onDelete?: (id: number) => Promise<void>;
-}
+    onEdit?: (id: number | string) => Promise<void>;
+    onDelete?: (id: number | string) => Promise<void>;
+};
 
-export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = memo(
+export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = React.memo(
     (props: React.PropsWithChildren<ItemProps>) => {
         const classes = useStyles();
-        const [isLoadingEdit, setLoadingEdit] = useState<boolean>(false);
-        const [isLoadingDelete, setLoadingDelete] = useState<boolean>(false);
+        const [isLoadingEdit, setLoadingEdit] = React.useState<boolean>(false);
+        const [isLoadingDelete, setLoadingDelete] = React.useState<boolean>(false);
 
-        const handleEdit = useCallback(() => {
+        const handleEdit = React.useCallback(() => {
             setLoadingEdit(true);
             if (hasValue(props.onEdit)) {
-                const action = props.onEdit as (id: number) => Promise<void>;
+                const action = props.onEdit as (id: number | string) => Promise<void>;
                 action(props.id)
                     .then(() => {})
                     .finally(() => setLoadingEdit(false));
             }
         }, [props]);
 
-        const handleDelete = useCallback(() => {
+        const handleDelete = React.useCallback(() => {
             setLoadingDelete(true);
             if (hasValue(props.onDelete)) {
-                const action = props.onDelete as (id: number) => Promise<void>;
+                const action = props.onDelete as (id: number | string) => Promise<void>;
                 action(props.id)
                     .then(() => {})
                     .finally(() => setLoadingDelete(false));
@@ -68,15 +65,11 @@ export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = memo(
         }, [props]);
 
         return (
-            <Grid item xs={12} sm={6} md={4}>
-                <Card className={classes.cards}>
-                    <Box display="flex" className={classes.header}>
-                        <Box width="100%">
-                            <Typography variant="body2" noWrap={false}>
-                                <strong>{props.title}</strong>
-                            </Typography>
-                        </Box>
-                        <Box flexShrink={1}>
+            <>
+                <ListItem>
+                    <ListItemText key={props.id} primary={props.title} secondary={props.children} />
+                    <ListItemSecondaryAction>
+                        <>
                             {hasValue(props.onEdit) && (
                                 <IconButton size="small" onClick={handleEdit} disabled={isLoadingDelete}>
                                     <LoadingComponent showLoading={isLoadingEdit} size={17}>
@@ -84,8 +77,6 @@ export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = memo(
                                     </LoadingComponent>
                                 </IconButton>
                             )}
-                        </Box>
-                        <Box flexShrink={1}>
                             {hasValue(props.onDelete) && (
                                 <IconButton
                                     size="small"
@@ -98,11 +89,11 @@ export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = memo(
                                     </LoadingComponent>
                                 </IconButton>
                             )}
-                        </Box>
-                    </Box>
-                    <CardContent className={classes.content}>{props.children}</CardContent>
-                </Card>
-            </Grid>
+                        </>
+                    </ListItemSecondaryAction>
+                </ListItem>
+                <Divider />
+            </>
         );
     }
 );
