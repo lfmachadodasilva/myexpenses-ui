@@ -59,17 +59,17 @@ export const SearchComponent: React.FC<SearchProps> = memo((props: SearchProps) 
 
     const [isExpanded, setExpanded] = React.useState<boolean>(false);
 
-    const [groups, setGroups] = React.useState<GroupModel[]>([]);
+    const [groups, setGroups] = React.useState<GroupModel[]>(props.groups ?? []);
     const [months] = React.useState<number[]>([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
-    const [years, setYears] = React.useState<number[]>([new Date().getFullYear()]);
+    const [years, setYears] = React.useState<number[]>(props.years);
 
     const [selectedGroup, setSelectedGroup] = React.useState<number | string>(props.group?.id ?? '');
     const selectedGroupName = React.useMemo<string>(() => groups.find(x => x.id === selectedGroup)?.name ?? '', [
         groups,
         selectedGroup
     ]);
-    const [selectedMonth, setSelectedMonth] = React.useState<number>(new Date().getMonth());
-    const [selectedYear, setSelectedYear] = React.useState<number>(new Date().getFullYear());
+    const [selectedMonth, setSelectedMonth] = React.useState<number>(props.month);
+    const [selectedYear, setSelectedYear] = React.useState<number>(props.year);
 
     const groupsMenuItems = React.useMemo(
         () =>
@@ -141,7 +141,11 @@ export const SearchComponent: React.FC<SearchProps> = memo((props: SearchProps) 
     return (
         <>
             <Accordion onChange={handleChangeAccordion} disabled={props.loading} expanded={isExpanded}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1c-content" id="panel1c-header">
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon data-testid="expand-element" />}
+                    aria-controls="panel1c-content"
+                    id="panel1c-header"
+                >
                     <LoadingComponent showLoading={props.loading} size={25} type={LoadingType.linear}>
                         {isExpanded && (
                             <Typography variant="h6">

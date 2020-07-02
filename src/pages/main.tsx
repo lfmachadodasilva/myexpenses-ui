@@ -81,12 +81,6 @@ export const Main: React.FC = React.memo(() => {
             }
             setYear(yearResults);
 
-            console.log(searchParams, {
-                group: groupResults?.id,
-                month: monthResults,
-                year: yearResults
-            });
-
             history.push({
                 pathname: location.pathname,
                 search: queryString.stringify({

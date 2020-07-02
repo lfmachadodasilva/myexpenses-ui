@@ -53,7 +53,7 @@ export const LoadingComponent: React.FC<React.PropsWithChildren<LoadingProps>> =
                 )}
                 {props.type === LoadingType.linear && (
                     <div className={classes.linear}>
-                        <LinearProgress />
+                        <LinearProgress data-testid="loading-element" />
                     </div>
                 )}
             </Grid>
