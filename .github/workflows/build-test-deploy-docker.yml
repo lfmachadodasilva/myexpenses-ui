@@ -24,14 +24,14 @@ jobs:
                   token: ${{ secrets.CODECOV_TOKEN }}
                   file: coverage/*
             - name: Final 📦
-              run: docker build . --target final -t lfmachadodasilva/myexpenses-ui:$GITHUB_RUN_NUMBER --cache-from build:$GITHUB_RUN_NUMBER
+              run: docker build . --target final -t $GITHUB_REPOSITORY:$GITHUB_RUN_NUMBER --cache-from build:$GITHUB_RUN_NUMBER
             - name: Deploy to github 🚀
               run: |
                   echo "${{ secrets.GH_TOKEN }}" | docker login -u lfmachadodasilva --password-stdin docker.pkg.github.com
-                  docker tag lfmachadodasilva/myexpenses-ui:$GITHUB_RUN_NUMBER docker.pkg.github.com/lfmachadodasilva/myexpenses-ui/${GITHUB_REF##*/}:$GITHUB_RUN_NUMBER
-                  docker tag lfmachadodasilva/myexpenses-ui:$GITHUB_RUN_NUMBER docker.pkg.github.com/lfmachadodasilva/myexpenses-ui/${GITHUB_REF##*/}:latest
-                  docker push docker.pkg.github.com/lfmachadodasilva/myexpenses-ui/${GITHUB_REF##*/}:$GITHUB_RUN_NUMBER
-                  docker push docker.pkg.github.com/lfmachadodasilva/myexpenses-ui/${GITHUB_REF##*/}:latest
+                  docker tag $GITHUB_REPOSITORY:$GITHUB_RUN_NUMBER docker.pkg.github.com/$GITHUB_REPOSITORY/${GITHUB_REF##*/}:$GITHUB_RUN_NUMBER
+                  docker tag $GITHUB_REPOSITORY:$GITHUB_RUN_NUMBER docker.pkg.github.com/$GITHUB_REPOSITORY/${GITHUB_REF##*/}:latest
+                  docker push docker.pkg.github.com/$GITHUB_REPOSITORY/${GITHUB_REF##*/}:$GITHUB_RUN_NUMBER
+                  docker push docker.pkg.github.com/$GITHUB_REPOSITORY/${GITHUB_REF##*/}:latest
             - name: Deploy to heroku (dev) 🚀
               env:
                   HEROKU_API_KEY: ${{ secrets.HEROKU_PASSWORD }}
@@ -43,7 +43,7 @@ jobs:
                   envsubst < util/firebase.template > src/configurations/firebase.ts
                   wget -qO- https://cli-assets.heroku.com/install.sh | sh
                   echo "${{ secrets.HEROKU_PASSWORD }}" | docker login -u "${{ secrets.HEROKU_USERNAME }}" --password-stdin registry.heroku.com
-                  docker tag lfmachadodasilva/myexpenses-ui:$GITHUB_RUN_NUMBER web
+                  docker tag $GITHUB_REPOSITORY:$GITHUB_RUN_NUMBER web
                   heroku container:push web --app ${{ secrets.HEROKU_APP_NAME }}-dev
                   heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}-dev
             - name: Deploy to heroku (prod) 🚀
@@ -58,7 +58,7 @@ jobs:
                   envsubst < util/firebase.template > src/configurations/firebase.ts
                   wget -qO- https://cli-assets.heroku.com/install.sh | sh
                   echo "${{ secrets.HEROKU_PASSWORD }}" | docker login -u "${{ secrets.HEROKU_USERNAME }}" --password-stdin registry.heroku.com
-                  docker tag lfmachadodasilva/myexpenses-ui:$GITHUB_RUN_NUMBER web
+                  docker tag $GITHUB_REPOSITORY:$GITHUB_RUN_NUMBER web
                   heroku container:push web --app ${{ secrets.HEROKU_APP_NAME }}
                   heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
             - name: Deploy to dockerhub 🚀
@@ -67,6 +67,6 @@ jobs:
                   HEROKU_API_KEY: ${{ secrets.HEROKU_PASSWORD }}
               run: |
                   echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-                  docker push lfmachadodasilva/myexpenses-ui:$GITHUB_RUN_NUMBER;
-                  docker tag lfmachadodasilva/myexpenses-ui:$GITHUB_RUN_NUMBER lfmachadodasilva/myexpenses-ui:latest
-                  docker push lfmachadodasilva/myexpenses-ui;
+                  docker push $GITHUB_REPOSITORY:$GITHUB_RUN_NUMBER;
+                  docker tag $GITHUB_REPOSITORY:$GITHUB_RUN_NUMBER $GITHUB_REPOSITORY:latest
+                  docker push $GITHUB_REPOSITORY;

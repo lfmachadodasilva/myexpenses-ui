@@ -13,9 +13,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         center: {
             textAlign: 'center'
-        },
-        actionButton: {
-            textTransform: 'none'
         }
     })
 );

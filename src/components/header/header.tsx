@@ -1,5 +1,5 @@
 import React, { memo, useState, useContext, useCallback, useMemo } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { ListItemIcon, ListItemText, Divider, Container, MenuItem, Menu, Avatar } from '@material-ui/core';
@@ -45,7 +45,6 @@ const useStyles = makeStyles(theme => ({
         cursor: 'pointer'
     },
     buttons: {
-        textTransform: 'none',
         color: 'inherit'
     },
     menu: {
@@ -89,6 +88,7 @@ export interface HeaderProps {}
 const HeaderComponent: React.FC<HeaderProps> = memo(() => {
     const { user } = useContext(userContext);
     const history = useHistory();
+    const location = useLocation();
     const [t] = useTranslation();
     const [open, setOpen] = useState<boolean>(false);
     const classes = useStyles();
@@ -115,13 +115,21 @@ const HeaderComponent: React.FC<HeaderProps> = memo(() => {
     const handleGoToLabels = useCallback(() => {
         setOpen(false);
         setAnchorEl(null);
-        history.push(Routes.labels);
-    }, [history]);
+        if (hasValue(location.search)) {
+            history.push({ pathname: Routes.labels, search: location.search });
+        } else {
+            history.push(Routes.labels);
+        }
+    }, [history, location]);
     const handleGoToExpenses = useCallback(() => {
         setOpen(false);
         setAnchorEl(null);
-        history.push(Routes.expenses);
-    }, [history]);
+        if (hasValue(location.search)) {
+            history.push({ pathname: Routes.expenses, search: location.search });
+        } else {
+            history.push(Routes.expenses);
+        }
+    }, [history, location]);
     const handleGoToAuth = useCallback(() => {
         setOpen(false);
         setAnchorEl(null);

@@ -7,8 +7,8 @@ FROM node:14.4.0 as install
 WORKDIR /app
 
 COPY ./package.json .
-COPY ./package-lock.json .
-RUN ["npm", "ci"]
+# COPY ./package-lock.json .
+RUN ["npm", "install"]
 RUN ["npm", "rebuild", "node-sass"]
 
 #################

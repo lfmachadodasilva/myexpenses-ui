@@ -55,6 +55,22 @@ export class ServiceBase {
         }
     }
 
+    protected async put<TResponse>(url: string, data: any): Promise<TResponse> {
+        try {
+            const response = await axios.put(url, data, {
+                baseURL: this.config.apiUrl,
+                withCredentials: process.env.NODE_ENV !== 'test',
+                headers: {
+                    Accept: 'application/json; charset=utf=8',
+                    Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization
+                }
+            });
+            return response.data as Promise<TResponse>;
+        } catch (error) {
+            return handleError(error);
+        }
+    }
+
     protected async delete<TResponse>(url: string): Promise<TResponse> {
         try {
             const response = await axios.delete(url, {

@@ -30,9 +30,6 @@ const useStyles = makeStyles((theme: Theme) =>
                 margin: theme.spacing(1),
                 width: '25ch'
             }
-        },
-        actionButton: {
-            textTransform: 'none'
         }
     })
 );
@@ -142,7 +139,6 @@ export const LoginPage: React.FC<LoginProps> = memo((props: LoginProps) => {
                         endIcon={isLoading && <CircularProgress size={12} />}
                         disabled={isLoading || disableAction}
                         onClick={handleAction}
-                        className={classes.actionButton}
                     >
                         {button}
                     </Button>

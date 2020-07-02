@@ -1,5 +1,5 @@
-import { GroupModel } from './labelModel';
-import { LabelModel } from './groupModel';
+import { GroupModel } from './group';
+import { LabelModel } from './label';
 
 export interface ExpenseModel {
     id: number;

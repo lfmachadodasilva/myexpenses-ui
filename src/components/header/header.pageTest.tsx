@@ -30,7 +30,7 @@ export class HeaderPageObject extends BasePage<HeaderProps> {
     }
 
     checkPage(page: string) {
-        expect(this.historyMock.push).toBeCalledWith(page); 
+        expect(this.historyMock.push).toBeCalledWith(page);
     }
 
     mockClear() {
@@ -40,12 +40,13 @@ export class HeaderPageObject extends BasePage<HeaderProps> {
 
     protected initialiseSubComponents(): void {}
 
-    protected render(props: HeaderProps, user: any = null, initialising: boolean = false) {
+    protected render(props: HeaderProps) {
         return (
             <userContext.Provider
                 value={{
-                    user: user,
-                    initialising: initialising
+                    user: null,
+                    initialising: false,
+                    isReady: true
                 }}
             >
                 <Router history={this.historyMock as any}>

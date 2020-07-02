@@ -29,6 +29,14 @@
     "GROUPS": {
         "LIST": {
             "TITLE": "Show all groups"
+        },
+        "MANAGE": {
+            "ADD": {
+                "TITLE": "Add new group"
+            },
+            "EDIT": {
+                "TITLE": "Edit group"
+            }
         }
     },
     "LABELS": {
@@ -43,5 +51,39 @@
         "MANAGE_PAGE": {
             "TITLE": "Manage expenses"
         }
+    },
+    "SEARCH": {
+        "TITLE": "Search",
+        "BUTTON": "Search",
+        "MONTHS": {
+            "1": "January",
+            "2": "February",
+            "3": "March",
+            "4": "April",
+            "5": "May",
+            "6": "June",
+            "7": "July",
+            "8": "August",
+            "9": "September",
+            "10": "October",
+            "11": "November",
+            "12": "December"
+        }
+    },
+    "COMMON": {
+        "YOU": "You",
+        "NAME": "Name",
+        "ADD": "Add",
+        "EDIT": "Edit",
+        "YEAR": "Year",
+        "MONTH": "Month",
+        "GROUP": "Group",
+        "MODEL": {
+            "GROUP": {
+                "USERS": "Users"
+            }
+        },
+
+        "ERROR": "An error occurred. Please try again later."
     }
 }

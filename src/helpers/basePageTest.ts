@@ -31,6 +31,9 @@ export abstract class BaseTestTool {
     protected queryByTestId(text: Matcher, options?: SelectorMatcherOptions) {
         return this.wrapper.queryByTestId(text, options);
     }
+    protected queryByLabelText(text: Matcher, options?: SelectorMatcherOptions) {
+        return this.wrapper.queryByLabelText(text, options);
+    }
 }
 
 export abstract class BasePage<T> extends BaseTestTool {
@@ -44,7 +47,7 @@ export abstract class BasePage<T> extends BaseTestTool {
         initialising: boolean = false
     ) {
         const fullProps = this.setupParams(props);
-        this.wrapper = await this.renderComponent(fullProps, user, initialising);
+        this.wrapper = await this.renderComponent(fullProps);
         this.initialiseSubComponents();
     }
 
@@ -56,9 +59,9 @@ export abstract class BasePage<T> extends BaseTestTool {
         this.wrapper.debug();
     }
 
-    async rerender(props: Partial<T> = {}, user: any = null, initialising: boolean = false) {
+    async rerender(props: Partial<T> = {}) {
         await act(async () => {
-            this.wrapper.rerender(this.render(props, user, initialising));
+            this.wrapper.rerender(this.render(props));
         });
     }
 
@@ -66,7 +69,7 @@ export abstract class BasePage<T> extends BaseTestTool {
         await waitForDomChange(this.wrapper);
     }
 
-    private async renderComponent(props: Partial<T>, user: any = null, initialising: boolean = false) {
+    private async renderComponent(props: Partial<T>) {
         cleanup(); // Ensures the document body is clean before a render
         let component!: RenderResult;
 
@@ -76,7 +79,7 @@ export abstract class BasePage<T> extends BaseTestTool {
 
         // eslint-disable-next-line @typescript-eslint/require-await
         await act(async () => {
-            component = render(this.render(props, user, initialising));
+            component = render(this.render(props));
         });
 
         return component;
@@ -88,6 +91,6 @@ export abstract class BasePage<T> extends BaseTestTool {
         return params;
     }
 
-    protected abstract render(props: Partial<T>, user: any, initialising: boolean): React.ReactElement;
+    protected abstract render(props: Partial<T>): React.ReactElement;
     protected abstract initialiseSubComponents(): void;
 }

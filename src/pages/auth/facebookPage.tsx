@@ -2,7 +2,6 @@ import React, { memo, useCallback, useState } from 'react';
 import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import FacebookIcon from '@material-ui/icons/Facebook';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
@@ -11,20 +10,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import { loginWithFacebook } from '../../services/authService';
 import { Routes } from '../routes';
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        actionButton: {
-            textTransform: 'none'
-        }
-    })
-);
-
-export interface FacebookProps {}
+export type FacebookProps = {};
 
 export const FacebookPage: React.FC<FacebookProps> = memo(() => {
     const [t] = useTranslation();
     const history = useHistory();
-    const classes = useStyles();
 
     const [isLoading, setLoading] = useState<boolean>(false);
     const [hasError, setError] = useState<boolean>(false);
@@ -57,7 +47,6 @@ export const FacebookPage: React.FC<FacebookProps> = memo(() => {
                     </>
                 }
                 disabled={isLoading}
-                className={classes.actionButton}
             >
                 {t('AUTH.FACEBOOK.BUTTON')}
             </Button>
