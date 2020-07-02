@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/myexpenses-ui/static/css/main.843892a3.chunk.css",
-    "main.js": "/myexpenses-ui/static/js/main.62ee0697.chunk.js",
-    "main.js.map": "/myexpenses-ui/static/js/main.62ee0697.chunk.js.map",
+    "main.js": "/myexpenses-ui/static/js/main.8967592e.chunk.js",
+    "main.js.map": "/myexpenses-ui/static/js/main.8967592e.chunk.js.map",
     "runtime-main.js": "/myexpenses-ui/static/js/runtime-main.342f53ef.js",
     "runtime-main.js.map": "/myexpenses-ui/static/js/runtime-main.342f53ef.js.map",
     "static/js/2.c8a01fe6.chunk.js": "/myexpenses-ui/static/js/2.c8a01fe6.chunk.js",
     "static/js/2.c8a01fe6.chunk.js.map": "/myexpenses-ui/static/js/2.c8a01fe6.chunk.js.map",
     "index.html": "/myexpenses-ui/index.html",
-    "precache-manifest.ffcc7ccfb91746d3c8d4b7fcc87947d9.js": "/myexpenses-ui/precache-manifest.ffcc7ccfb91746d3c8d4b7fcc87947d9.js",
+    "precache-manifest.d9aacce687cd081a8d762ed2f06f0f36.js": "/myexpenses-ui/precache-manifest.d9aacce687cd081a8d762ed2f06f0f36.js",
     "service-worker.js": "/myexpenses-ui/service-worker.js",
     "static/css/main.843892a3.chunk.css.map": "/myexpenses-ui/static/css/main.843892a3.chunk.css.map",
     "static/js/2.c8a01fe6.chunk.js.LICENSE.txt": "/myexpenses-ui/static/js/2.c8a01fe6.chunk.js.LICENSE.txt"
@@ -17,6 +17,6 @@
     "static/js/runtime-main.342f53ef.js",
     "static/js/2.c8a01fe6.chunk.js",
     "static/css/main.843892a3.chunk.css",
-    "static/js/main.62ee0697.chunk.js"
+    "static/js/main.8967592e.chunk.js"
   ]
 }
