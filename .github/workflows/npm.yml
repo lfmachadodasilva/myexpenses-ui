@@ -29,6 +29,7 @@ jobs:
                   FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY_DEV }}
                   FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT_DEV }}
               run: |
+                  scripts/add-homepage.sh package.json
                   envsubst < util/.env.template > .env
                   envsubst < util/firebase.template > src/configurations/firebase.ts
 
@@ -36,7 +37,7 @@ jobs:
               run: npm install
 
             - name: Build 📦
-              run: npm run build
+              run: npm run build:github
 
             - name: Test 🔌
               run: npm run test:coverage

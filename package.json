@@ -6,6 +6,7 @@
     "scripts": {
         "start": "cross-env HTTPS=true react-scripts start",
         "build": "react-scripts build",
+        "build:github": "react-scripts build --base-href https://lfmachadodasilva.github.io/myexpenses-ui/",
         "test": "react-scripts test",
         "test:coverage": "cross-env CI=true react-scripts test --coverage"
     },
