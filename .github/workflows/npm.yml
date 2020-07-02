@@ -29,7 +29,21 @@ jobs:
                   FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY_DEV }}
                   FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT_DEV }}
               run: |
-                  scripts/add-homepage.sh package.json
+                  jsonFile=package.json
+                  node > out_${jsonFile} <<EOF
+                  //Read data
+                  var data = require('./${jsonFile}');
+
+                  //Manipulate data
+                  data.homepage = 'https://lfmachadodasilva.github.io/myexpenses-ui';
+
+                  //Output data
+                  console.log(JSON.stringify(data));
+
+                  EOF
+
+                  mv out_${jsonFile} ${jsonFile}
+
                   envsubst < util/.env.template > .env
                   envsubst < util/firebase.template > src/configurations/firebase.ts
 
