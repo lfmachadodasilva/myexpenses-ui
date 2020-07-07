@@ -42,6 +42,14 @@
     "LABELS": {
         "LIST": {
             "TITLE": "Show all labels"
+        },
+        "MANAGE": {
+            "ADD": {
+                "TITLE": "Add new label"
+            },
+            "EDIT": {
+                "TITLE": "Edit label"
+            }
         }
     },
     "EXPENSES": {

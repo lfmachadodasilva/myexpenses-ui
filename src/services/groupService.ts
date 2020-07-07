@@ -18,11 +18,11 @@ export class GroupService extends ServiceBase {
     }
 
     async add(group: GroupFullModel): Promise<GroupFullModel> {
-        return await this.post<GroupFullModel>(this.baseUrl, group);
+        return await this.post<GroupFullModel>(this.baseUrl, {}, group);
     }
 
     async update(group: GroupFullModel): Promise<void> {
-        return await this.put<void>(this.baseUrl, group);
+        return await this.put<void>(this.baseUrl, {}, group);
     }
 
     async remove(groupId: number): Promise<void> {

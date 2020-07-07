@@ -50,14 +50,17 @@ export const Main: React.FC = React.memo(() => {
             let yearResults: number;
 
             try {
-                groupsResults = await new GroupService(config).getFullAll();
+                groupsResults = await new GroupService(config).getAll();
             } catch {
                 groupsResults = [];
             }
 
+            const lastGroup = localStorage.getItem('group') as string;
             setGroups(groupsResults);
-            if (hasValue(searchParams.group) && groupsResults.some(x => x.id === searchParams.group)) {
-                groupResults = groupsResults.find(x => x.id === searchParams.group) as GroupModel;
+            if (hasValue(searchParams.group) && groupsResults.some(x => x.id === +searchParams.group)) {
+                groupResults = groupsResults.find(x => x.id === +searchParams.group) as GroupModel;
+            } else if (hasValue(lastGroup) && groupsResults.some(x => x.id === +lastGroup)) {
+                groupResults = groupsResults.find(x => x.id === +lastGroup) as GroupModel;
             } else if (hasValue(groupsResults)) {
                 groupResults = groupsResults[0];
             } else {
@@ -65,21 +68,30 @@ export const Main: React.FC = React.memo(() => {
                 // show error - does not have groups loaded
             }
             setGroup(groupResults);
+            localStorage.setItem('group', groupResults?.id.toString() as string);
 
+            const lastMonth = localStorage.getItem('month') as string;
             if (hasValue(searchParams.month) && searchParams.month >= 1 && searchParams.month <= 12) {
                 monthResults = searchParams.month;
+            } else if (hasValue(lastMonth) && +lastMonth >= 1 && +lastMonth <= 12) {
+                monthResults = +lastMonth;
             } else {
                 monthResults = new Date().getMonth();
             }
             setMonth(monthResults);
+            localStorage.setItem('month', monthResults.toString());
 
             // TODO get years from expenses
+            const lastYear = localStorage.getItem('year') as string;
             if (hasValue(searchParams.year)) {
                 yearResults = searchParams.year;
+            } else if (hasValue(lastYear)) {
+                yearResults = +lastYear;
             } else {
                 yearResults = new Date().getFullYear();
             }
             setYear(yearResults);
+            localStorage.setItem('year', yearResults.toString());
 
             history.push({
                 pathname: location.pathname,

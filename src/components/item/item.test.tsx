@@ -1,16 +1,17 @@
 import { wait } from '@testing-library/react';
 import { ItemPageObject } from './item.pageTest';
+import { ItemType } from './item';
 
 describe('<ItemComponent />', () => {
     test('should show the title', async () => {
         const page = new ItemPageObject();
-        await page.initialiseComponent({ id: 1, title: 'Title' });
+        await page.initialiseComponent({ id: 1, title: 'Title', type: ItemType.Column });
         expect(page.getElement('Title')).toBeInTheDocument();
     });
 
     test('should show/hide edit and delete elements', async () => {
         const page = new ItemPageObject();
-        await page.initialiseComponent({ title: 'Title' });
+        await page.initialiseComponent({ title: 'Title', type: ItemType.Column });
 
         expect(page.editElement).not.toBeInTheDocument();
         expect(page.deleteElement).not.toBeInTheDocument();
@@ -30,7 +31,13 @@ describe('<ItemComponent />', () => {
         const editMock = jest.fn().mockImplementation(waitFunction);
         const deleteMock = jest.fn().mockImplementation(waitFunction);
         const page = new ItemPageObject();
-        await page.initialiseComponent({ id: 1, title: 'Title', onEdit: editMock, onDelete: deleteMock });
+        await page.initialiseComponent({
+            id: 1,
+            title: 'Title',
+            type: ItemType.Column,
+            onEdit: editMock,
+            onDelete: deleteMock
+        });
 
         page.clickEdit();
         expect(editMock).toBeCalled();

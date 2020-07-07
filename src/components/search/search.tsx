@@ -6,8 +6,6 @@ import { useHistory, useLocation } from 'react-router';
 import { Theme, makeStyles, createStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
 import Grid from '@material-ui/core/Grid';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
@@ -21,6 +19,7 @@ import Divider from '@material-ui/core/Divider';
 
 import { GroupModel } from '../../models/group';
 import { LoadingComponent, LoadingType } from '../loading/loading';
+import NativeSelect from '@material-ui/core/NativeSelect';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -74,9 +73,9 @@ export const SearchComponent: React.FC<SearchProps> = memo((props: SearchProps) 
     const groupsMenuItems = React.useMemo(
         () =>
             groups.map(group => (
-                <MenuItem key={group.id} value={group.id}>
+                <option key={group.id} value={group.id}>
                     {group.name}
-                </MenuItem>
+                </option>
             )),
         [groups]
     );
@@ -84,9 +83,9 @@ export const SearchComponent: React.FC<SearchProps> = memo((props: SearchProps) 
     const monthsMenuItems = React.useMemo(
         () =>
             months.map(month => (
-                <MenuItem key={month} value={month}>
+                <option key={month} value={month}>
                     {t('SEARCH.MONTHS.' + month)}
-                </MenuItem>
+                </option>
             )),
         [months, t]
     );
@@ -94,9 +93,9 @@ export const SearchComponent: React.FC<SearchProps> = memo((props: SearchProps) 
     const yearsMenuItems = React.useMemo(
         () =>
             years.map(year => (
-                <MenuItem key={year} value={year}>
+                <option key={year} value={year}>
                     {year}
-                </MenuItem>
+                </option>
             )),
         [years]
     );
@@ -118,6 +117,8 @@ export const SearchComponent: React.FC<SearchProps> = memo((props: SearchProps) 
     }, []);
 
     const handleAction = React.useCallback(() => {
+        setExpanded(false);
+
         history.push({
             pathname: location.pathname,
             search: queryString.stringify({
@@ -126,7 +127,6 @@ export const SearchComponent: React.FC<SearchProps> = memo((props: SearchProps) 
                 year: selectedYear
             })
         });
-        setExpanded(false);
     }, [history, location, selectedGroup, selectedMonth, selectedYear]);
 
     React.useEffect(() => {
@@ -169,44 +169,41 @@ export const SearchComponent: React.FC<SearchProps> = memo((props: SearchProps) 
                     <Grid container justify="center" spacing={2}>
                         <Grid item xs={12} sm={4}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel id="group-select-label">{t('COMMON.GROUP')}</InputLabel>
-                                <Select
-                                    labelId="group-select-label"
+                                <InputLabel htmlFor="group-select">{t('COMMON.GROUP')}</InputLabel>
+                                <NativeSelect
                                     id="group-select"
                                     defaultValue=""
                                     value={selectedGroup}
                                     onChange={handleChangeGroup}
                                 >
                                     {groupsMenuItems}
-                                </Select>
+                                </NativeSelect>
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} sm={4}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel id="month-select-label">{t('COMMON.MONTH')}</InputLabel>
-                                <Select
-                                    labelId="month-select-label"
+                                <InputLabel htmlFor="month-label">{t('COMMON.MONTH')}</InputLabel>
+                                <NativeSelect
                                     id="month-select"
                                     defaultValue=""
                                     value={selectedMonth}
                                     onChange={handleChangeMonth}
                                 >
                                     {monthsMenuItems}
-                                </Select>
+                                </NativeSelect>
                             </FormControl>
                         </Grid>
                         <Grid item xs={12} sm={4}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel id="year-select-label">{t('COMMON.YEAR')}</InputLabel>
-                                <Select
-                                    labelId="year-select-label"
+                                <InputLabel htmlFor="year-select">{t('COMMON.YEAR')}</InputLabel>
+                                <NativeSelect
                                     id="year-select"
                                     defaultValue=""
                                     value={selectedYear}
                                     onChange={handleChangeYear}
                                 >
                                     {yearsMenuItems}
-                                </Select>
+                                </NativeSelect>
                             </FormControl>
                         </Grid>
                     </Grid>

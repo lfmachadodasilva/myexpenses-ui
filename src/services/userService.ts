@@ -12,6 +12,6 @@ export class UserService extends ServiceBase {
     }
 
     async addOrUpdate(user: UserModel): Promise<UserModel> {
-        return await this.post<UserModel>('/api/user', user);
+        return await this.post<UserModel>('/api/user', {}, user);
     }
 }

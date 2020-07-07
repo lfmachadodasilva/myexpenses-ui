@@ -39,7 +39,7 @@ export class ServiceBase {
         }
     }
 
-    protected async post<TResponse>(url: string, data: any): Promise<TResponse> {
+    protected async post<TResponse>(url: string, params?: { [key: string]: any }, data?: any): Promise<TResponse> {
         try {
             const response = await axios.post(url, data, {
                 baseURL: this.config.apiUrl,
@@ -47,7 +47,8 @@ export class ServiceBase {
                 headers: {
                     Accept: 'application/json; charset=utf=8',
                     Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization
-                }
+                },
+                params
             });
             return response.data as Promise<TResponse>;
         } catch (error) {
@@ -55,7 +56,7 @@ export class ServiceBase {
         }
     }
 
-    protected async put<TResponse>(url: string, data: any): Promise<TResponse> {
+    protected async put<TResponse>(url: string, params?: { [key: string]: any }, data?: any): Promise<TResponse> {
         try {
             const response = await axios.put(url, data, {
                 baseURL: this.config.apiUrl,
@@ -63,7 +64,8 @@ export class ServiceBase {
                 headers: {
                     Accept: 'application/json; charset=utf=8',
                     Authorization: 'Bearer ' + axios.defaults.headers.common.Authorization
-                }
+                },
+                params
             });
             return response.data as Promise<TResponse>;
         } catch (error) {

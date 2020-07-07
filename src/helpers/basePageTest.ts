@@ -41,11 +41,7 @@ export abstract class BasePage<T> extends BaseTestTool {
 
     abstract defaultParams: Partial<T>;
 
-    async initialiseComponent(
-        props: Partial<T> = {},
-        user: firebase.User | null = null,
-        initialising: boolean = false
-    ) {
+    async initialiseComponent(props: Partial<T> = {}) {
         const fullProps = this.setupParams(props);
         this.wrapper = await this.renderComponent(fullProps);
         this.initialiseSubComponents();

@@ -14,7 +14,7 @@ import { AppConfig } from '../../configurations/appConfig';
 import { ConfigurationManager } from '../../configurations/configurationManager';
 import { GroupService } from '../../services/groupService';
 import { GroupFullModel } from '../../models/group';
-import { ItemComponent } from '../../components/item/item';
+import { ItemComponent, ItemType } from '../../components/item/item';
 import { LoadingComponent } from '../../components/loading/loading';
 import { GroupsManageDialog } from './groupsManage';
 import { AvatarChipComponent } from '../../components/avatar/avatar';
@@ -61,11 +61,14 @@ export const GroupsPage: React.FC<GroupsProps> = React.memo(() => {
 
     const handleDelete = React.useCallback(
         async (id: number | string) => {
-            return new GroupService(config).remove(id as number).then(() => {
-                setReload(true);
-            });
+            return new GroupService(config)
+                .remove(id as number)
+                .then(() => {
+                    setReload(true);
+                })
+                .catch(() => setError(t('COMMON.ERROR')));
         },
-        [config]
+        [config, t]
     );
 
     const handleAdd = React.useCallback(() => {
@@ -125,6 +128,7 @@ export const GroupsPage: React.FC<GroupsProps> = React.memo(() => {
                                     key={group.id}
                                     id={group.id}
                                     title={group.name}
+                                    type={ItemType.Menu}
                                     onEdit={handleEdit}
                                     onDelete={handleDelete}
                                 >

@@ -170,7 +170,7 @@ const Application: React.FC = React.memo(() => {
                         isReady: isReady
                     }}
                 >
-                    <BrowserRouter>
+                    <BrowserRouter basename={process.env.PUBLIC_URL ?? undefined}>
                         <Header />
                         <Container maxWidth="md" className={classes.container}>
                             <LoadingComponent showLoading={initialising}>
