@@ -169,7 +169,7 @@ export const SearchComponent: React.FC<SearchProps> = memo((props: SearchProps) 
                     <Grid container justify="center" spacing={2}>
                         <Grid item xs={12} sm={4}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel htmlFor="group-select">{t('COMMON.GROUP')}</InputLabel>
+                                <InputLabel htmlFor="group-select">{t('SEARCH.GROUP')}</InputLabel>
                                 <NativeSelect
                                     id="group-select"
                                     defaultValue=""
@@ -182,7 +182,7 @@ export const SearchComponent: React.FC<SearchProps> = memo((props: SearchProps) 
                         </Grid>
                         <Grid item xs={12} sm={4}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel htmlFor="month-label">{t('COMMON.MONTH')}</InputLabel>
+                                <InputLabel htmlFor="month-label">{t('SEARCH.MONTH')}</InputLabel>
                                 <NativeSelect
                                     id="month-select"
                                     defaultValue=""
@@ -195,7 +195,7 @@ export const SearchComponent: React.FC<SearchProps> = memo((props: SearchProps) 
                         </Grid>
                         <Grid item xs={12} sm={4}>
                             <FormControl className={classes.formControl}>
-                                <InputLabel htmlFor="year-select">{t('COMMON.YEAR')}</InputLabel>
+                                <InputLabel htmlFor="year-select">{t('SEARCH.YEAR')}</InputLabel>
                                 <NativeSelect
                                     id="year-select"
                                     defaultValue=""

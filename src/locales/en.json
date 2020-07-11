@@ -36,12 +36,16 @@
             },
             "EDIT": {
                 "TITLE": "Edit group"
-            }
+            },
+            "USERS": "Users"
         }
     },
     "LABELS": {
         "LIST": {
-            "TITLE": "Show all labels"
+            "TITLE": "Show all labels",
+            "CURRENT_VALUE": "Value",
+            "LAST_VALUE": "Last",
+            "AVERAGE_VALUE": "Average"
         },
         "MANAGE": {
             "ADD": {
@@ -54,11 +58,27 @@
     },
     "EXPENSES": {
         "LIST": {
-            "TITLE": "Show all expenses"
+            "TITLE": "Show all expenses",
+            "TOTAL": "Total",
+            "TOTAL_INCOMING": "Total incoming",
+            "TOTAL_OUTCOMING": "Total outcoming",
+            "TOTAL_LEFT": "Total left"
         },
-        "MANAGE_PAGE": {
-            "TITLE": "Manage expenses"
-        }
+        "MANAGE": {
+            "ADD": {
+                "TITLE": "Add new expense"
+            },
+            "EDIT": {
+                "TITLE": "Edit expense"
+            },
+            "TYPE": "Type",
+            "LABEL": "Label",
+            "VALUE": "Value",
+            "DATE": "Date",
+            "COMMENTS": "Comments"
+        },
+        "INCOMING": "Incoming",
+        "OUTCOMING": "Outcoming"
     },
     "SEARCH": {
         "TITLE": "Search",
@@ -76,22 +96,21 @@
             "10": "October",
             "11": "November",
             "12": "December"
-        }
+        },
+        "GROUP": "Group",
+        "YEAR": "Year",
+        "MONTH": "Month"
     },
     "COMMON": {
+        "DATE_FORMAT": "dd/MM/yy",
         "YOU": "You",
+        "SUMMARY": "Summary",
         "NAME": "Name",
         "ADD": "Add",
         "EDIT": "Edit",
-        "YEAR": "Year",
-        "MONTH": "Month",
-        "GROUP": "Group",
-        "MODEL": {
-            "GROUP": {
-                "USERS": "Users"
-            }
-        },
-
-        "ERROR": "An error occurred. Please try again later."
+        "ERROR_TITLE": "Error",
+        "ERROR": "An error occurred. Please try again later.",
+        "INFO_TITLE": "Info",
+        "EMPTY": "Empty list. Please create new item."
     }
 }

@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Grid from '@material-ui/core/Grid';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -18,6 +19,7 @@ export type LoadingProps = {
     showLoading: boolean;
     size?: number;
     error?: string;
+    info?: string;
     type?: LoadingType;
 };
 
@@ -35,13 +37,24 @@ const useStyles = makeStyles((theme: Theme) =>
 export const LoadingComponent: React.FC<React.PropsWithChildren<LoadingProps>> = memo(
     (props: React.PropsWithChildren<LoadingProps>) => {
         const classes = useStyles();
+        const [t] = useTranslation();
 
         if (hasValue(props.error)) {
             return (
                 <Grid container justify="center" alignItems="center">
                     <Alert severity="error">
-                        <AlertTitle>Error</AlertTitle>
+                        <AlertTitle>{t('COMMON.ERROR_TITLE')}</AlertTitle>
                         {props.error}
+                    </Alert>
+                </Grid>
+            );
+        }
+        if (hasValue(props.info)) {
+            return (
+                <Grid container justify="center" alignItems="center">
+                    <Alert severity="info">
+                        <AlertTitle>{t('COMMON.INFO_TITLE')}</AlertTitle>
+                        {props.info}
                     </Alert>
                 </Grid>
             );

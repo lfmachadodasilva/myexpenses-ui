@@ -5,18 +5,18 @@ import { ItemType } from './item';
 describe('<ItemComponent />', () => {
     test('should show the title', async () => {
         const page = new ItemPageObject();
-        await page.initialiseComponent({ id: 1, title: 'Title', type: ItemType.Column });
+        await page.initialiseComponent({ id: 1, title: 'Title', type: ItemType.Row });
         expect(page.getElement('Title')).toBeInTheDocument();
     });
 
     test('should show/hide edit and delete elements', async () => {
         const page = new ItemPageObject();
-        await page.initialiseComponent({ title: 'Title', type: ItemType.Column });
+        await page.initialiseComponent({ title: 'Title', type: ItemType.Row });
 
         expect(page.editElement).not.toBeInTheDocument();
         expect(page.deleteElement).not.toBeInTheDocument();
 
-        await page.rerender({ title: 'Title', onEdit: jest.fn(), onDelete: jest.fn() });
+        await page.rerender({ title: 'Title', type: ItemType.Row, onEdit: jest.fn(), onDelete: jest.fn() });
         expect(page.editElement).toBeInTheDocument();
         expect(page.deleteElement).toBeInTheDocument();
     });

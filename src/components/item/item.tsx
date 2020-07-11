@@ -7,7 +7,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { hasValue } from '../../helpers/utilHelper';
@@ -16,6 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import './item.scss';
 
 const useStyles = makeStyles(theme => ({
     cards: {
@@ -53,7 +53,7 @@ export enum ItemType {
 
 export type ItemProps = {
     id: number | string;
-    type: ItemType;
+    type?: ItemType;
     title?: string;
     onEdit?: (id: number | string) => Promise<void>;
     onDelete?: (id: number | string) => Promise<void>;
@@ -99,10 +99,10 @@ export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = React
 
         return (
             <>
-                <ListItem divider disableGutters>
+                <ListItem divider dense disableGutters>
                     <ListItemText key={props.id} primary={props.title} secondary={props.children} />
                     <ListItemSecondaryAction>
-                        {props.type === ItemType.Menu && (
+                        {(hasValue(props.onEdit) || hasValue(props.onDelete)) && props.type === ItemType.Menu && (
                             <>
                                 <IconButton onClick={handleClick} disableRipple className={classes.moreButton}>
                                     <MoreVertIcon fontSize="inherit" className={classes.moreButton} />
@@ -114,23 +114,27 @@ export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = React
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}
                                 >
-                                    <MenuItem onClick={handleEdit}>
-                                        <ListItemIcon>
-                                            <EditIcon fontSize="small" />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Edit" />
-                                    </MenuItem>
-                                    <MenuItem onClick={handleDelete}>
-                                        <ListItemIcon>
-                                            <DeleteIcon fontSize="small" />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Delete" />
-                                    </MenuItem>
+                                    {hasValue(props.onEdit) && (
+                                        <MenuItem onClick={handleEdit}>
+                                            <ListItemIcon>
+                                                <EditIcon fontSize="small" />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Edit" />
+                                        </MenuItem>
+                                    )}
+                                    {hasValue(props.onDelete) && (
+                                        <MenuItem onClick={handleDelete}>
+                                            <ListItemIcon>
+                                                <DeleteIcon fontSize="small" />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Delete" />
+                                        </MenuItem>
+                                    )}
                                 </Menu>
                             </>
                         )}
 
-                        {props.type !== ItemType.Menu && (
+                        {hasValue(props.type) && props.type !== ItemType.Menu && (
                             <Grid
                                 container
                                 direction={props.type === ItemType.Row ? 'row' : 'column'}
@@ -159,7 +163,6 @@ export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = React
                         )}
                     </ListItemSecondaryAction>
                 </ListItem>
-                <Divider />
             </>
         );
     }

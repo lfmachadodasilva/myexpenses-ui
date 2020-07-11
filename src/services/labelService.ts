@@ -9,8 +9,8 @@ export class LabelService extends ServiceBase {
         super(config);
     }
 
-    async getAll(): Promise<LabelModel[]> {
-        return await this.get<LabelModel[]>(this.baseUrl);
+    async getAll(group: number): Promise<LabelModel[]> {
+        return await this.get<LabelModel[]>(this.baseUrl, { group });
     }
 
     async getFullAll(group: number, month: number, year: number): Promise<LabelFullModel[]> {

@@ -49,6 +49,7 @@ export const GroupsPage: React.FC<GroupsProps> = React.memo(() => {
     const [group, setGroup] = React.useState<GroupFullModel>();
     const [reload, setReload] = React.useState<boolean>(true);
     const [error, setError] = React.useState<string>('');
+    const [info, setInfo] = React.useState<string>('');
 
     const handleEdit = React.useCallback(
         async (id: number | string) => {
@@ -97,11 +98,16 @@ export const GroupsPage: React.FC<GroupsProps> = React.memo(() => {
             return;
         }
 
+        setError('');
+        setInfo('');
         setLoading(true);
         new GroupService(config)
             .getFullAll()
             .then(value => {
                 setData(value);
+                if (value.length === 0) {
+                    setInfo(t('COMMON.EMPTY'));
+                }
             })
             .catch(() => setError(t('COMMON.ERROR')))
             .finally(() => {
@@ -110,7 +116,7 @@ export const GroupsPage: React.FC<GroupsProps> = React.memo(() => {
     }, [config, isReady, reload, t]);
 
     return (
-        <>
+        <div key={'GroupComponent'}>
             <Grid container justify="space-between" alignItems="center" className={classes.root} spacing={1}>
                 <Typography variant="h5" className={classes.title}>
                     {t('GROUPS.LIST.TITLE')}
@@ -120,7 +126,7 @@ export const GroupsPage: React.FC<GroupsProps> = React.memo(() => {
                 </Button>
             </Grid>
             <Grid container justify="flex-start" alignItems="center" className={classes.root} spacing={1}>
-                <LoadingComponent showLoading={isLoading || !isReady} error={error}>
+                <LoadingComponent showLoading={isLoading || !isReady} error={error} info={info}>
                     <List className={classes.list}>
                         {data.map(group => (
                             <>
@@ -145,6 +151,6 @@ export const GroupsPage: React.FC<GroupsProps> = React.memo(() => {
                 </LoadingComponent>
             </Grid>
             <GroupsManageDialog group={group} show={show} onAction={handleAction} onClose={handleClose} />
-        </>
+        </div>
     );
 });

@@ -18,6 +18,8 @@ import { AppConfig } from '../configurations/appConfig';
 import { ConfigurationManager } from '../configurations/configurationManager';
 import { hasValue } from '../helpers/utilHelper';
 import { userContext } from '../contexts/userContext';
+import { LabelModel } from '../models/label';
+import { LabelService } from '../services/labelService';
 
 export const Main: React.FC = React.memo(() => {
     const { isReady } = React.useContext(userContext);
@@ -29,6 +31,7 @@ export const Main: React.FC = React.memo(() => {
 
     const [groups, setGroups] = React.useState<GroupModel[]>([]);
     const [years] = React.useState<number[]>([new Date().getFullYear()]);
+    const [labels, setLabels] = React.useState<LabelModel[]>([]);
     const [group, setGroup] = React.useState<GroupModel>();
     const [month, setMonth] = React.useState<number>(new Date().getMonth());
     const [year, setYear] = React.useState<number>(new Date().getFullYear());
@@ -45,14 +48,19 @@ export const Main: React.FC = React.memo(() => {
 
         const setup = async () => {
             let groupsResults: GroupModel[];
+            let labelsResults: LabelModel[];
             let groupResults: GroupModel | undefined;
             let monthResults: number;
             let yearResults: number;
 
-            try {
-                groupsResults = await new GroupService(config).getAll();
-            } catch {
-                groupsResults = [];
+            if (groups.length > 0) {
+                groupsResults = groups;
+            } else {
+                try {
+                    groupsResults = await new GroupService(config).getAll();
+                } catch {
+                    groupsResults = [];
+                }
             }
 
             const lastGroup = localStorage.getItem('group') as string;
@@ -67,6 +75,17 @@ export const Main: React.FC = React.memo(() => {
                 // groupResults = {} as Partial<GroupModel>;
                 // show error - does not have groups loaded
             }
+
+            if (groupResults !== group) {
+                // group changes, need o reload labels
+                try {
+                    labelsResults = await new LabelService(config).getAll(groupResults?.id as number);
+                } catch {
+                    labelsResults = [];
+                }
+                setLabels(labelsResults);
+            }
+
             setGroup(groupResults);
             localStorage.setItem('group', groupResults?.id.toString() as string);
 
@@ -114,6 +133,7 @@ export const Main: React.FC = React.memo(() => {
                 value={{
                     isLoading: isLoading,
                     groups: groups,
+                    labels: labels,
                     years: years,
                     group: group,
                     month: month,
@@ -121,18 +141,18 @@ export const Main: React.FC = React.memo(() => {
                 }}
             >
                 <Switch>
-                    <PrivateRoute path={Routes.groups} component={GroupsPage} />
-                    <PrivateRoute path={Routes.labels} component={LabelsPage} />
-                    <PrivateRoute path={Routes.expenses} component={ExpensesPage} />
+                    <PrivateRoute key={Routes.groups} path={Routes.groups} component={GroupsPage} />
+                    <PrivateRoute key={Routes.labels} path={Routes.labels} component={LabelsPage} />
+                    <PrivateRoute key={Routes.expenses} path={Routes.expenses} component={ExpensesPage} />
 
-                    <Route path={Routes.auth} component={AuthPage} />
-                    <Route exact path={Routes.home}>
+                    <Route key={Routes.auth} path={Routes.auth} component={AuthPage} />
+                    <Route key={Routes.home} exact path={Routes.home}>
                         <>
                             <Typography variant="h3">HOME</Typography>
                             <Typography variant="h6">Build Version: {config.buildVersion}</Typography>
                         </>
                     </Route>
-                    <Route path="*">
+                    <Route key={'*'} path="*">
                         <h1> 404 </h1>
                     </Route>
                 </Switch>

@@ -197,7 +197,7 @@ export const GroupsManageDialog: React.FC<GroupsManageProps> = React.memo((props
                     </Grid>
                     <Grid item xs={12}>
                         <FormControl fullWidth>
-                            <InputLabel id="mutiple-users-label">{t('COMMON.MODEL.GROUP.USERS')}</InputLabel>
+                            <InputLabel id="mutiple-users-label">{t('GROUPS.MANAGE.USERS')}</InputLabel>
                             <LoadingComponent showLoading={isLoadingUsers} error={errorUsers}>
                                 <Select
                                     labelId="mutiple-users-label"

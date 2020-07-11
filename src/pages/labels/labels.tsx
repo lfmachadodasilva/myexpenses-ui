@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { useTranslation } from 'react-i18next';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import List from '@material-ui/core/List';
-import Badge from '@material-ui/core/Badge';
 
 import { SearchComponent } from '../../components/search/search';
 import { globalContext } from '../../contexts/globalContext';
@@ -22,6 +20,11 @@ import { ItemComponent, ItemType } from '../../components/item/item';
 import { userContext } from '../../contexts/userContext';
 import { LabelsManagePage } from './labelsManage';
 import { hasValue } from '../../helpers/utilHelper';
+import Chip from '@material-ui/core/Chip';
+import Tooltip from '@material-ui/core/Tooltip';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
+import ExposureIcon from '@material-ui/icons/Exposure';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -59,6 +62,7 @@ export const LabelsPage: React.FC<LabelsProps> = React.memo(() => {
     const [data, setData] = React.useState<LabelFullModel[]>([]);
     const [reload, setReload] = React.useState<boolean>(true);
     const [error, setError] = React.useState<string>('');
+    const [info, setInfo] = React.useState<string>('');
     const [label, setLabel] = React.useState<LabelFullModel>();
     const [show, setShow] = React.useState<boolean>(false);
 
@@ -109,20 +113,74 @@ export const LabelsPage: React.FC<LabelsProps> = React.memo(() => {
         //     return;
         // }
 
-        console.log(global.group?.id as number, global.month, global.year);
-
+        setError('');
+        setInfo('');
         setLoading(true);
         new LabelService(config)
             .getFullAll(global.group?.id as number, global.month, global.year)
             .then(value => {
                 setData(value);
+                if (value.length === 0) {
+                    setInfo(t('COMMON.EMPTY'));
+                }
             })
             .catch(() => setError(t('COMMON.ERROR')))
             .finally(() => setLoading(false));
     }, [isReady, config, reload, t, global.isLoading, global.group, global.month, global.year]);
 
+    const dataElements = React.useMemo(
+        () =>
+            data.map(label => (
+                <>
+                    <ItemComponent
+                        key={label.id}
+                        id={label.id}
+                        title={label.name}
+                        type={ItemType.Menu}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                    >
+                        <Grid container justify="space-around" alignItems="center" className={classes.gridItem}>
+                            <Tooltip title="Current value">
+                                <Chip
+                                    icon={<PlayArrowIcon />}
+                                    size="small"
+                                    label={label.currValue.toFixed(2)}
+                                    clickable
+                                    color={
+                                        label.currValue >= label.lastValue || label.currValue >= label.avgValue
+                                            ? 'primary'
+                                            : 'secondary'
+                                    }
+                                />
+                            </Tooltip>
+                            <Tooltip title="Last value" aria-label="add">
+                                <Chip
+                                    icon={<SkipPreviousIcon />}
+                                    size="small"
+                                    label={label.lastValue.toFixed(2)}
+                                    clickable
+                                    color={label.lastValue >= label.avgValue ? 'primary' : 'secondary'}
+                                />
+                            </Tooltip>
+                            <Tooltip title="Average value" aria-label="add">
+                                <Chip
+                                    icon={<ExposureIcon />}
+                                    size="small"
+                                    label={label.avgValue.toFixed(2)}
+                                    clickable
+                                    color="primary"
+                                />
+                            </Tooltip>
+                        </Grid>
+                    </ItemComponent>
+                </>
+            )),
+        [data, classes.gridItem, handleEdit, handleDelete]
+    );
+
     return (
-        <>
+        <div key={'LabelComponent'}>
             <SearchComponent
                 loading={global.isLoading}
                 groups={global.groups}
@@ -136,63 +194,31 @@ export const LabelsPage: React.FC<LabelsProps> = React.memo(() => {
                 <Typography variant="h5" className={classes.title}>
                     {t('LABELS.LIST.TITLE')}
                 </Typography>
-                <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={handleAdd}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<AddIcon />}
+                    onClick={handleAdd}
+                    disabled={isLoading || !isReady || global.isLoading}
+                >
                     {t('COMMON.ADD')}
                 </Button>
             </Grid>
             <Grid container justify="flex-start" alignItems="center" className={classes.root} spacing={1}>
-                <LoadingComponent showLoading={isLoading || !isReady} error={error}>
+                <LoadingComponent showLoading={isLoading || !isReady} error={error} info={info}>
                     <List className={classes.list}>
-                        {data.map(label => (
-                            <>
-                                <ItemComponent
-                                    key={label.id}
-                                    id={label.id}
-                                    title={label.name}
-                                    type={ItemType.Menu}
-                                    onEdit={handleEdit}
-                                    onDelete={handleDelete}
-                                >
-                                    <Grid
-                                        container
-                                        justify="space-around"
-                                        alignItems="center"
-                                        className={classes.gridItem}
-                                    >
-                                        <Badge
-                                            color={label.currValue >= 0 ? 'primary' : 'secondary'}
-                                            max={9999}
-                                            badgeContent={label.currValue.toFixed(0)}
-                                            className={classes.badge}
-                                        >
-                                            <Typography variant="caption">Value</Typography>
-                                        </Badge>
-                                        <Divider orientation="vertical" flexItem />
-
-                                        <Badge
-                                            color={label.lastValue >= 0 ? 'primary' : 'secondary'}
-                                            max={9999}
-                                            badgeContent={label.lastValue.toFixed(0)}
-                                        >
-                                            <Typography variant="caption">Last</Typography>
-                                        </Badge>
-                                        <Divider orientation="vertical" flexItem />
-
-                                        <Badge
-                                            color={label.avgValue >= 0 ? 'primary' : 'secondary'}
-                                            max={9999}
-                                            badgeContent={label.avgValue.toFixed(0)}
-                                        >
-                                            <Typography variant="caption">Average</Typography>
-                                        </Badge>
-                                    </Grid>
-                                </ItemComponent>
-                            </>
-                        ))}
+                        <ItemComponent key={0} id={0}>
+                            <Grid container justify="space-around" alignItems="center" className={classes.gridItem}>
+                                <Typography variant="subtitle1">{t('LABELS.LIST.CURRENT_VALUE')}</Typography>
+                                <Typography variant="subtitle1">{t('LABELS.LIST.LAST_VALUE')}</Typography>
+                                <Typography variant="subtitle1">{t('LABELS.LIST.AVERAGE_VALUE')}</Typography>
+                            </Grid>
+                        </ItemComponent>
+                        {dataElements}
                     </List>
                 </LoadingComponent>
             </Grid>
             <LabelsManagePage label={label} show={show} onAction={handleAction} onClose={handleClose} />
-        </>
+        </div>
     );
 });
