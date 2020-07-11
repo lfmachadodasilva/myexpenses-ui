@@ -44,8 +44,10 @@
         "LIST": {
             "TITLE": "Show all labels",
             "CURRENT_VALUE": "Value",
-            "LAST_VALUE": "Last",
-            "AVERAGE_VALUE": "Average"
+            "LAST_VALUE": "Last Month",
+            "AVERAGE_VALUE": "Average",
+            "ITEMS_TAB": "Items",
+            "GRAPH_TAB": "Graph"
         },
         "MANAGE": {
             "ADD": {

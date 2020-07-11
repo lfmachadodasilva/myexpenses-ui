@@ -29,27 +29,7 @@ import { ExpensesManagePage } from './expensesManage';
 import { LoadingComponent } from '../../components/loading/loading';
 import { ItemType, ItemComponent } from '../../components/item/item';
 import Chip from '@material-ui/core/Chip';
-
-interface TabPanelProps {
-    children?: React.ReactNode;
-    index: any;
-    value: any;
-}
-function TabPanel(props: TabPanelProps) {
-    const { children, value, index, ...other } = props;
-
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`scrollable-auto-tabpanel-${index}`}
-            aria-labelledby={`scrollable-auto-tab-${index}`}
-            {...other}
-        >
-            {value === index && <>{children}</>}
-        </div>
-    );
-}
+import { TabPanel } from '../../components/tabPanel/tabPanel';
 
 const useStyles = makeStyles(theme => ({
     root: {
