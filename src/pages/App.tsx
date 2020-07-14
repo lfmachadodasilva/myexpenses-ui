@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, HashRouter } from 'react-router-dom';
 import axios from 'axios';
 
 import { makeStyles, Theme, createStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
@@ -79,14 +79,14 @@ const Application: React.FC = React.memo(() => {
                         isReady: isReady
                     }}
                 >
-                    <BrowserRouter basename={process.env.PUBLIC_URL ?? undefined}>
+                    <HashRouter basename="/">
                         <Header />
                         <Container key={'MainContainer'} maxWidth="md" className={classes.container}>
                             <LoadingComponent showLoading={initialising}>
                                 <Main />
                             </LoadingComponent>
                         </Container>
-                    </BrowserRouter>
+                    </HashRouter>
                 </userContext.Provider>
             </ThemeProvider>
         </>
