@@ -12,7 +12,6 @@ import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-
 import GroupIcon from '@material-ui/icons/Group';
 import HomeIcon from '@material-ui/icons/Home';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -20,6 +19,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import LabelIcon from '@material-ui/icons/Label';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import { userContext } from '../../contexts/userContext';
 import { hasValue } from '../../helpers/utilHelper';
@@ -130,6 +130,11 @@ const HeaderComponent: React.FC<HeaderProps> = memo(() => {
             history.push(Routes.expenses);
         }
     }, [history, location]);
+    const handleGoToSettings = useCallback(() => {
+        setOpen(false);
+        setAnchorEl(null);
+        history.push(Routes.settings);
+    }, [history]);
     const handleGoToAuth = useCallback(() => {
         setOpen(false);
         setAnchorEl(null);
@@ -151,17 +156,21 @@ const HeaderComponent: React.FC<HeaderProps> = memo(() => {
         handleGoToAuth();
     };
 
+    const userEmail = user?.email ?? '';
+    const userDisplayName = user?.displayName ?? '';
+    const userPhotoURL = user?.photoURL ?? '';
+
     const avatarIcon = useMemo(() => {
-        return hasValue(user?.photoURL) ? (
-            <Avatar alt={user?.email as string} src={user?.photoURL as string} className={classes.small} />
+        return hasValue(userPhotoURL) ? (
+            <Avatar alt={userEmail} src={userPhotoURL} className={classes.small} />
         ) : (
             <AccountCircle />
         );
-    }, [classes.small, user]);
+    }, [classes.small, userEmail, userPhotoURL]);
 
     const displayName = useMemo(() => {
-        return hasValue(user?.displayName) ? user?.displayName?.split(' ')[0] : user?.email;
-    }, [user]);
+        return hasValue(userDisplayName) ? userDisplayName.split(' ')[0] : userEmail;
+    }, [userDisplayName, userEmail]);
 
     return (
         <div className={classes.root}>
@@ -228,6 +237,13 @@ const HeaderComponent: React.FC<HeaderProps> = memo(() => {
                                     <ListItemIcon>{avatarIcon}</ListItemIcon>
                                     <ListItemText primary={displayName} />
                                 </MenuItem>
+                                <MenuItem onClick={handleGoToSettings}>
+                                    <ListItemIcon>
+                                        <SettingsIcon fontSize="small" />
+                                    </ListItemIcon>
+                                    <ListItemText primary={t('HEADER.SETTINGS')} />
+                                </MenuItem>
+                                <Divider />
                                 <MenuItem onClick={handleLogout}>
                                     <ListItemIcon>
                                         <ExitToAppIcon fontSize="small" />
@@ -283,6 +299,12 @@ const HeaderComponent: React.FC<HeaderProps> = memo(() => {
                             <ListItem button key="user">
                                 <ListItemIcon>{avatarIcon}</ListItemIcon>
                                 <ListItemText primary={displayName} />
+                            </ListItem>
+                            <ListItem button key="logout" onClick={handleGoToSettings}>
+                                <ListItemIcon>
+                                    <SettingsIcon />
+                                </ListItemIcon>
+                                <ListItemText primary={t('HEADER.SETTINGS')} />
                             </ListItem>
                             <ListItem button key="logout" onClick={handleLogout}>
                                 <ListItemIcon>

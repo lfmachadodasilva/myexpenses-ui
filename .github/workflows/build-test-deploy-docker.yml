@@ -40,7 +40,6 @@ jobs:
                   FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT_DEV }}
               run: |
                   envsubst < util/.env.template > .env
-                  envsubst < util/firebase.template > src/configurations/firebase.ts
                   wget -qO- https://cli-assets.heroku.com/install.sh | sh
                   echo "${{ secrets.HEROKU_PASSWORD }}" | docker login -u "${{ secrets.HEROKU_USERNAME }}" --password-stdin registry.heroku.com
                   docker tag $GITHUB_REPOSITORY:$GITHUB_RUN_NUMBER web
@@ -55,7 +54,6 @@ jobs:
                   FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT_PROD }}
               run: |
                   envsubst < util/.env.template > .env
-                  envsubst < util/firebase.template > src/configurations/firebase.ts
                   wget -qO- https://cli-assets.heroku.com/install.sh | sh
                   echo "${{ secrets.HEROKU_PASSWORD }}" | docker login -u "${{ secrets.HEROKU_USERNAME }}" --password-stdin registry.heroku.com
                   docker tag $GITHUB_REPOSITORY:$GITHUB_RUN_NUMBER web

@@ -27,7 +27,10 @@ export class AvatarChipPageObject extends BasePage<AvatarChipProps> {
                 value={{
                     user: this.user1 as User | null,
                     initialising: false,
-                    isReady: true
+                    isReady: true,
+
+                    isDarkTheme: false,
+                    setDarkTheme: jest.fn()
                 }}
             >
                 <AvatarChipComponent {...props} />
@@ -58,7 +61,10 @@ export class AvatarMenuPageObject extends BasePage<AvatarMenuProps> {
                 value={{
                     user: this.user1 as User | null,
                     initialising: false,
-                    isReady: true
+                    isReady: true,
+
+                    isDarkTheme: false,
+                    setDarkTheme: jest.fn()
                 }}
             >
                 <AvatarMenuComponent {...props} />

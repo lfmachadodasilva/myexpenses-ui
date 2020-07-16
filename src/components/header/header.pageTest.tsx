@@ -46,7 +46,10 @@ export class HeaderPageObject extends BasePage<HeaderProps> {
                 value={{
                     user: null,
                     initialising: false,
-                    isReady: true
+                    isReady: true,
+
+                    isDarkTheme: false,
+                    setDarkTheme: jest.fn()
                 }}
             >
                 <Router history={this.historyMock as any}>

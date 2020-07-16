@@ -20,6 +20,7 @@ import { hasValue } from '../helpers/utilHelper';
 import { userContext } from '../contexts/userContext';
 import { LabelModel } from '../models/label';
 import { LabelService } from '../services/labelService';
+import { SettingsPage } from './settings/settings';
 
 export const Main: React.FC = React.memo(() => {
     const { isReady } = React.useContext(userContext);
@@ -144,6 +145,7 @@ export const Main: React.FC = React.memo(() => {
                     <PrivateRoute key={Routes.groups} path={Routes.groups} component={GroupsPage} />
                     <PrivateRoute key={Routes.labels} path={Routes.labels} component={LabelsPage} />
                     <PrivateRoute key={Routes.expenses} path={Routes.expenses} component={ExpensesPage} />
+                    <PrivateRoute key={Routes.settings} path={Routes.settings} component={SettingsPage} />
 
                     <Route key={Routes.auth} path={Routes.auth} component={AuthPage} />
                     <Route key={Routes.home} exact path={Routes.home}>

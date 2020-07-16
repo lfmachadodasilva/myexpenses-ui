@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import firebase, { auth } from 'firebase/app';
 import 'firebase/auth'; // If using Firebase auth
+import { UserService } from './userService';
+import { ConfigurationManager } from '../configurations/configurationManager';
+import { UserModel } from '../models/user';
 
 export const useAuth = () => {
     const [state, setState] = useState(() => {
@@ -54,6 +57,25 @@ export const createUserWithEmail = async (email: string, password: string) => {
 export const resetPassword = async (email: string) => {
     try {
         return await firebase.auth().sendPasswordResetEmail(email);
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+export const updateUser = async (user: firebase.User | null, displayName: string) => {
+    try {
+        await user?.updateProfile({ displayName: displayName });
+
+        const config = ConfigurationManager.get();
+        const userObj = user as firebase.User;
+
+        return await new UserService(config).addOrUpdate({
+            id: userObj.uid,
+            email: userObj.email,
+            displayName: userObj.displayName,
+            photoUrl: userObj.photoURL
+        } as UserModel);
     } catch (err) {
         console.error(err);
         throw err;

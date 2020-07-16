@@ -4,6 +4,7 @@
         "GROUPS": "Groups",
         "LABELS": "Labels",
         "EXPENSES": "Expenses",
+        "SETTINGS": "Settings",
         "LOGOUT": "Logout",
         "LOGIN_REGISTER": "Login/Register"
     },
@@ -81,6 +82,12 @@
         },
         "INCOMING": "Incoming",
         "OUTCOMING": "Outcoming"
+    },
+    "SETTINGS": {
+        "DISPLAY_NAME": "Display name",
+        "EMAIL": "Email",
+        "DARK_THEME": "Dark theme",
+        "BUTTON": "Update"
     },
     "SEARCH": {
         "TITLE": "Search",

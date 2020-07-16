@@ -1,10 +1,8 @@
-const firebaseConfig = {
-    apiKey: 'AIzaSyAVfjm2M_d7mmVbD4kOwVWxp57CQZV8jqQ',
-    authDomain: 'myexpenses-6e402.firebaseapp.com',
-    databaseURL: 'https://myexpenses-6e402.firebaseio.com',
-    projectId: 'myexpenses-6e402',
-    storageBucket: 'myexpenses-6e402',
+export const getFirebaseConfig = (projectId: string, apiKey: string) => ({
+    apiKey: apiKey,
+    authDomain: `${projectId}.firebaseapp.com`,
+    databaseURL: `https://${projectId}.firebaseio.com`,
+    projectId: projectId,
+    storageBucket: projectId,
     messagingSenderId: 'my-sender-id'
-};
-
-export default firebaseConfig;
+});

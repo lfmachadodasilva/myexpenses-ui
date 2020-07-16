@@ -45,7 +45,6 @@ jobs:
                   mv out_${jsonFile} ${jsonFile}
 
                   envsubst < util/.env.template > .env
-                  envsubst < util/firebase.template > src/configurations/firebase.ts
 
             - name: Install  🛠
               run: npm install

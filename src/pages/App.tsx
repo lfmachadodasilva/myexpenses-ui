@@ -28,10 +28,21 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Application: React.FC = React.memo(() => {
+    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
     const classes = useStyles();
     const [config] = React.useState<AppConfig>(ConfigurationManager.get());
     const { user, initialising } = useAuth();
     const [isReady, setReady] = React.useState<boolean>(false);
+    const [isDarkTheme, setDarkTheme] = React.useState<boolean>();
+
+    const handleDarkTheme = React.useCallback(
+        (dark: boolean) => {
+            console.log(isDarkTheme, !isDarkTheme);
+            setDarkTheme(dark);
+        },
+        [isDarkTheme]
+    );
 
     React.useEffect(() => {
         if (initialising || !user) {
@@ -52,21 +63,32 @@ const Application: React.FC = React.memo(() => {
         }
     }, [user, initialising, config]);
 
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const theme = React.useMemo(
-        () =>
-            createMuiTheme({
-                palette: {
-                    type: prefersDarkMode ? 'dark' : 'light'
-                },
-                typography: {
-                    button: {
-                        textTransform: 'none'
-                    }
+    const theme = React.useMemo(() => {
+        let theme = prefersDarkMode;
+
+        if (hasValue(localStorage.getItem('darkTheme'))) {
+            console.log('localStorage ', hasValue(localStorage.getItem('darkTheme')));
+            theme = JSON.parse(localStorage.getItem('darkTheme') as string);
+            setDarkTheme(theme);
+        }
+
+        if (hasValue(isDarkTheme) && isDarkTheme !== theme) {
+            theme = isDarkTheme as boolean;
+            setDarkTheme(theme);
+            localStorage.setItem('darkTheme', theme.toString());
+        }
+
+        return createMuiTheme({
+            palette: {
+                type: theme ? 'dark' : 'light'
+            },
+            typography: {
+                button: {
+                    textTransform: 'none'
                 }
-            }),
-        [prefersDarkMode]
-    );
+            }
+        });
+    }, [prefersDarkMode, isDarkTheme]);
 
     return (
         <>
@@ -76,7 +98,9 @@ const Application: React.FC = React.memo(() => {
                     value={{
                         user: user,
                         initialising: initialising,
-                        isReady: isReady
+                        isReady: isReady,
+                        isDarkTheme: isDarkTheme ?? prefersDarkMode,
+                        setDarkTheme: handleDarkTheme
                     }}
                 >
                     <BrowserRouter basename={process.env.PUBLIC_URL ?? undefined}>

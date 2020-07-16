@@ -8,12 +8,17 @@ import './configurations/i18n';
 import { App } from './pages/App';
 import * as serviceWorker from './serviceWorker';
 import { setConfiguration } from './configurations/configurationManager';
-import firebaseConfig from './configurations/firebase';
+import { getFirebaseConfig } from './configurations/firebase';
 
 setConfiguration();
 
 // initialize firebase
-initializeApp({ ...firebaseConfig });
+initializeApp({
+    ...getFirebaseConfig(
+        process.env.REACT_APP_FIREBASE_PROJECT as string,
+        process.env.REACT_APP_FIREBASE_API_KEY as string
+    )
+});
 
 ReactDOM.render(
     <React.StrictMode>
