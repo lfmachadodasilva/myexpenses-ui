@@ -1,0 +1,41 @@
+{
+    "MONTHS": {
+        "1": "January",
+        "2": "February",
+        "3": "March",
+        "4": "April",
+        "5": "May",
+        "6": "June",
+        "7": "July",
+        "8": "August",
+        "9": "September",
+        "10": "October",
+        "11": "November",
+        "12": "December"
+    },
+    "HEADER": {
+        "TITLE": "MyExpenses",
+        "GROUP": "Group",
+        "LABEL": "Label",
+        "EXPENSE": "Expense",
+        "SETTINGS": "Settings",
+        "LOGOUT": "Logout",
+        "LOGIN": "Login"
+    },
+    "SEARCH": {
+        "GROUP": "Group",
+        "MONTH": "Month",
+        "YEAR": "Year"
+    },
+    "AUTH": {
+        "FACEBOOK": "Facebook",
+        "BY_FACEBOOK": "Login by Facebook",
+        "EMAIL": "Email",
+        "EMAIL_PLACEHOLDER": "Enter email",
+        "PASSWORD": "Password",
+        "PASSWORD_PLACEHOLDER": "Enter password",
+        "LOGIN": "Login",
+        "BY_EMAIL": "Login by email",
+        "ERROR": "Something went wrong. Try again later."
+    }
+}

@@ -1,0 +1,51 @@
+name: npm
+
+on:
+    push:
+        branches:
+            - main
+            - 'dev-*'
+
+jobs:
+    build-test-deploy:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node-version: [14.x]
+
+        steps:
+            - name: Install node ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+
+            - name: Checkout 🛎️
+              uses: actions/checkout@v2
+
+            - name: Install 🛠
+              run: npm install
+
+            - name: Build 📦
+              env:
+                  FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY_DEV }}
+                  FIREBASE_PROJECT: ${{ secrets.FIREBASE_PROJECT_DEV }}
+              run: |
+                  envsubst < util/.env.template > .env
+                  npm run build
+
+            - name: Test 🔌
+              run: npm run test
+
+            - name: Publish Codecov 📈
+              uses: codecov/codecov-action@v1
+              with:
+                  token: ${{ secrets.CODECOV_TOKEN }}
+                  file: coverage/*
+
+            - name: Deploy 🚀
+              uses: JamesIves/github-pages-deploy-action@releases/v3
+              with:
+                  ACCESS_TOKEN: '${{ secrets.GITHUB_PAGES }}'
+                  BRANCH: gh-pages
+                  FOLDER: build
