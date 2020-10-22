@@ -2,7 +2,8 @@ import axios, { AxiosError } from 'axios';
 import { ConfigModel } from '../models/config';
 
 export enum StatusCodes {
-    OK = 200
+    OK = 200,
+    ERROR = 500
 }
 
 const handleError = async (error: AxiosError) => {
@@ -30,7 +31,7 @@ export class ServiceBase {
         });
     }
 
-    protected async rejectMockData() {
+    protected async rejectMockData<T>(): Promise<T> {
         return new Promise((_resolve, reject) => {
             setTimeout(() => {
                 reject();

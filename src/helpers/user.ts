@@ -1,6 +1,7 @@
+import { UserModel } from '../models/user';
 import { hasValue } from './util';
 
-export const getUserDisplayName = (user: firebase.User) => {
+export const getUserDisplayName = (user: firebase.User | UserModel) => {
     if (!hasValue(user)) {
         return '';
     }

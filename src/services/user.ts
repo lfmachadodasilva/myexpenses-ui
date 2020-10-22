@@ -1,44 +1,34 @@
-import { groupsFullMockData, groupsMockData } from '../mockData/group';
+import { usersMockData } from '../mockData/user';
 import { ApiType, ConfigModel } from '../models/config';
-import { GroupFullModel, GroupModel } from '../models/group';
+import { UserModel } from '../models/user';
 import { ServiceBase } from './base';
 
-export class GroupService extends ServiceBase {
-    private baseUrl = '/api/group';
+export class UserService extends ServiceBase {
+    private baseUrl = '/api/user';
 
     constructor(protected config: ConfigModel) {
         super(config);
     }
 
-    async getAllFull(userId: string): Promise<GroupFullModel[]> {
+    async getAll(): Promise<UserModel[]> {
         if (this.config.apiUrl === ApiType.FIREBASE) {
         } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
-            return this.resolveMockData(groupsFullMockData);
-            //return this.rejectMockData();
+            return this.resolveMockData(usersMockData);
         }
-        return await this.get<GroupFullModel[]>(this.baseUrl + '/full');
+        return await this.get<UserModel[]>(this.baseUrl);
     }
 
-    async getAll(userId: string): Promise<GroupModel[]> {
+    async add(obj: Partial<UserModel>): Promise<UserModel> {
         if (this.config.apiUrl === ApiType.FIREBASE) {
         } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
-            return this.resolveMockData(groupsMockData);
+            return this.resolveMockData(usersMockData[0]);
         }
-        return await this.get<GroupModel[]>(this.baseUrl);
+        return await this.post<UserModel>(this.baseUrl, {}, obj);
     }
 
-    async add(obj: Partial<GroupModel>): Promise<GroupModel> {
-        if (this.config.apiUrl === ApiType.FIREBASE) {
-        } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
-        } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
-            return this.resolveMockData(groupsMockData[0]);
-        }
-        return await this.post<GroupModel>(this.baseUrl, {}, obj);
-    }
-
-    async update(obj: GroupModel): Promise<void> {
+    async update(obj: UserModel): Promise<void> {
         if (this.config.apiUrl === ApiType.FIREBASE) {
         } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
@@ -47,7 +37,7 @@ export class GroupService extends ServiceBase {
         return await this.put<void>(this.baseUrl, {}, obj);
     }
 
-    async remove(id: number): Promise<void> {
+    async remove(id: string): Promise<void> {
         if (this.config.apiUrl === ApiType.FIREBASE) {
         } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {

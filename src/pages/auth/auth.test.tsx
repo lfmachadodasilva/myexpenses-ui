@@ -37,20 +37,23 @@ describe('<AuthPage />', () => {
 
         const obj = await defaultInitialise();
 
-        obj.clickGetByText('Facebook');
+        obj.clickByText('Facebook');
 
         await wait(() => {
-            expect(mockLoginWithFacebook).toBeCalled();
+            expect(mockLoginWithFacebook).toHaveBeenCalled();
             expect(obj.checkPage(Routes.home));
         });
+    });
 
-        mockLoginWithFacebook.mockImplementation(() => Promise.reject());
-        obj.rerender();
+    test('fail to login by facebook', async () => {
+        mockLoginWithFacebook.mockImplementation(() => Promise.resolve());
 
-        obj.clickGetByText('Facebook');
+        const obj = await defaultInitialise();
+
+        obj.clickByText('Facebook');
 
         await wait(() => {
-            expect(mockLoginWithFacebook).toBeCalledTimes(2);
+            expect(mockLoginWithFacebook).toHaveBeenCalled();
             expect(obj.queryByText('Something went wrong. Try again later.'));
         });
     });
@@ -60,20 +63,23 @@ describe('<AuthPage />', () => {
 
         const obj = await defaultInitialise();
 
-        obj.clickGetByText('Login');
+        obj.clickByText('Login');
 
         await wait(() => {
-            expect(mockLoginWithEmail).toBeCalledTimes(1);
+            expect(mockLoginWithEmail).toHaveBeenCalled();
             expect(obj.checkPage(Routes.home));
         });
+    });
 
-        mockLoginWithEmail.mockImplementation(() => Promise.reject());
-        obj.rerender();
+    test('fail to login by email', async () => {
+        mockLoginWithEmail.mockImplementation(() => Promise.resolve());
 
-        obj.clickGetByText('Login');
+        const obj = await defaultInitialise();
+
+        obj.clickByText('Login');
 
         await wait(() => {
-            expect(mockLoginWithEmail).toBeCalledTimes(2);
+            expect(mockLoginWithEmail).toHaveBeenCalled();
             expect(obj.queryByText('Something went wrong. Try again later.'));
         });
     });

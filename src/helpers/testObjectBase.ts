@@ -14,30 +14,30 @@ export abstract class BaseTestTool {
     getByText(text: Matcher, options?: SelectorMatcherOptions) {
         return this.wrapper.getByText(text, options);
     }
-    clickGetByText(text: Matcher, options?: SelectorMatcherOptions) {
+    clickByText(text: Matcher, options?: SelectorMatcherOptions) {
         const item = this.getByText(text, options);
         fireEvent.click(item as Element);
         return item;
     }
-    protected getAllByText(text: Matcher, options?: SelectorMatcherOptions) {
+    getAllByText(text: Matcher, options?: SelectorMatcherOptions) {
         return this.wrapper.getAllByText(text, options);
     }
     queryByText(text: Matcher, options?: SelectorMatcherOptions) {
         return this.wrapper.queryByText(text, options);
     }
-    protected querySelector(selector: string) {
+    querySelector(selector: string) {
         return this.wrapper.baseElement.querySelector(selector);
     }
-    protected queryAllSelector(selector: string) {
+    queryAllSelector(selector: string) {
         return this.wrapper.baseElement.querySelectorAll(selector);
     }
-    protected getByTestId(text: Matcher, options?: SelectorMatcherOptions) {
+    getByTestId(text: Matcher, options?: SelectorMatcherOptions) {
         return this.wrapper.getByTestId(text, options);
     }
-    protected queryByTestId(text: Matcher, options?: SelectorMatcherOptions) {
+    queryByTestId(text: Matcher, options?: SelectorMatcherOptions) {
         return this.wrapper.queryByTestId(text, options);
     }
-    protected queryByLabelText(text: Matcher, options?: SelectorMatcherOptions) {
+    queryByLabelText(text: Matcher, options?: SelectorMatcherOptions) {
         return this.wrapper.queryByLabelText(text, options);
     }
 }

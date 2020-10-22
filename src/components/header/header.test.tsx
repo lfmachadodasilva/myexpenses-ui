@@ -44,23 +44,23 @@ describe('<HeaderComponent />', () => {
         const obj = await defaultInitialise();
 
         obj.mockClear();
-        obj.clickGetByText('Group');
+        obj.clickByText('Group');
         obj.checkPage(Routes.group);
 
         obj.mockClear();
-        obj.clickGetByText('Label');
+        obj.clickByText('Label');
         obj.checkPage(Routes.label);
 
         obj.mockClear();
-        obj.clickGetByText('Expense');
+        obj.clickByText('Expense');
         obj.checkPage(Routes.expense);
 
         obj.mockClear();
-        obj.clickGetByText('Login');
+        obj.clickByText('Login');
         obj.checkPage(Routes.auth);
 
         obj.mockClear();
-        obj.clickGetByText('MyExpenses');
+        obj.clickByText('MyExpenses');
         obj.checkPage(Routes.home);
     });
 
@@ -70,11 +70,11 @@ describe('<HeaderComponent />', () => {
 
         await wait(() => expect(obj.queryByText('User')).toBeInTheDocument());
 
-        obj.clickGetByText('User');
+        obj.clickByText('User');
 
         await wait(() => expect(obj.queryByText('Settings')).toBeInTheDocument());
 
-        obj.clickGetByText('Settings');
+        obj.clickByText('Settings');
 
         expect(obj.checkPage(Routes.settings));
     });
@@ -85,11 +85,11 @@ describe('<HeaderComponent />', () => {
 
         await wait(() => expect(obj.queryByText('User')).toBeInTheDocument());
 
-        obj.clickGetByText('User');
+        obj.clickByText('User');
 
         await wait(() => expect(obj.queryByText('Logout')).toBeInTheDocument());
 
-        obj.clickGetByText('Logout');
+        obj.clickByText('Logout');
 
         await wait(() => {
             expect(mockSignOut).toBeCalled();

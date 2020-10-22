@@ -1,12 +1,13 @@
 export enum ApiType {
     FIREBASE = 'FIREBASE',
     LOCAL_STORAGE = 'LOCAL_STORAGE',
-    TOTAL_FAKE = 'TOTAL_FAKE'
+    TOTAL_FAKE = 'TOTAL_FAKE',
+    TEST_API = 'TEST_API'
 }
 
 export class ConfigModel {
     /** api backend url */
-    apiUrl: string = 'localhost';
+    apiUrl: string = 'TOTAL_FAKE';
 
     /** build version */
     buildVersion: string = 'local';

@@ -1,3 +1,4 @@
+import { wait } from '@testing-library/react';
 import { setConfiguration } from '../configurations/configManager';
 import { useAuth } from '../services/auth';
 import { AppProps } from './app';
@@ -30,6 +31,14 @@ describe('<AppComponent />', () => {
 
         expect(obj.getText('MyExpenses')).toBeInTheDocument();
         expect(obj.getText('Login')).toBeInTheDocument();
+
+        // go to expense page
+        obj.clickByText('Expense');
+
+        await wait(() => {
+            expect(obj.queryByText('Login by email')).toBeInTheDocument();
+            expect(obj.queryByText('Login by Facebook')).toBeInTheDocument();
+        });
     });
 
     test('should render with user', async () => {

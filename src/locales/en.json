@@ -37,5 +37,22 @@
         "LOGIN": "Login",
         "BY_EMAIL": "Login by email",
         "ERROR": "Something went wrong. Try again later."
+    },
+    "GROUP": {
+        "TITLE": "Groups",
+        "ADD": "Add new group",
+        "ERROR": "Something went wrong. Try again later.",
+        "YOU": "You",
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "MODAL": {
+            "ADD_TITLE": "Add new group",
+            "EDIT_TITLE": "Edit group",
+            "ADD_ACTION": "Add",
+            "EDIT_ACTION": "Edit",
+            "NAME": "Name",
+            "NAME_PLACEHOLDER": "Enter name",
+            "USERS": "Users"
+        }
     }
 }

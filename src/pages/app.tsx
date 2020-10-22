@@ -15,9 +15,10 @@ import { GroupPage } from './group/group';
 import { LabelPage } from './label/label';
 import { Routes } from './routes';
 import { SettingsPage } from './settings/settings';
-import { darkTheme, lightTheme } from './theme';
+import { darkTheme } from './theme';
 import { hasValue } from '../helpers/util';
 import { userContext } from '../contexts/user';
+import { PrivateRoute } from '../helpers/privateRouter';
 
 export type AppProps = {};
 
@@ -51,7 +52,7 @@ export const AppPage: React.FC<AppProps> = React.memo((_props: AppProps) => {
 
     return (
         <>
-            <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
+            <ThemeProvider theme={isDarkMode ? darkTheme : {}}>
                 <>
                     <GlobalStyles />
                     <userContext.Provider
@@ -65,10 +66,14 @@ export const AppPage: React.FC<AppProps> = React.memo((_props: AppProps) => {
                             <HeaderComponent />
                             <Container className="mt-2">
                                 <Switch>
-                                    <Route key={Routes.group} path={Routes.group} component={GroupPage} />
-                                    <Route key={Routes.label} path={Routes.label} component={LabelPage} />
-                                    <Route key={Routes.expense} path={Routes.expense} component={ExpensePage} />
-                                    <Route key={Routes.settings} path={Routes.settings} component={SettingsPage} />
+                                    <PrivateRoute key={Routes.group} path={Routes.group} component={GroupPage} />
+                                    <PrivateRoute key={Routes.label} path={Routes.label} component={LabelPage} />
+                                    <PrivateRoute key={Routes.expense} path={Routes.expense} component={ExpensePage} />
+                                    <PrivateRoute
+                                        key={Routes.settings}
+                                        path={Routes.settings}
+                                        component={SettingsPage}
+                                    />
                                     <Route key={Routes.auth} path={Routes.auth} component={AuthPage} />
                                     <Route key={Routes.home} exact path={Routes.home}>
                                         <>

@@ -6,7 +6,8 @@
     "scripts": {
         "start": "cross-env HTTPS=true react-scripts start",
         "build": "react-scripts build",
-        "test": "cross-env CI=true react-scripts test --coverage"
+        "test": "cross-env CI=true react-scripts test",
+        "test:coverage": "cross-env CI=true react-scripts test --coverage"
     },
     "dependencies": {
         "@testing-library/jest-dom": "^4.2.4",
@@ -14,6 +15,7 @@
         "@testing-library/user-event": "^7.2.1",
         "@types/chart.js": "^2.9.25",
         "@types/jest": "^24.9.1",
+        "@types/lodash": "^4.14.162",
         "@types/node": "^12.12.67",
         "@types/react": "^16.9.52",
         "@types/react-dom": "^16.9.8",
@@ -21,12 +23,14 @@
         "@types/react-router-dom": "^5.1.6",
         "@types/styled-components": "^5.1.4",
         "axios": "^0.20.0",
+        "axios-mock-adapter": "^1.18.2",
         "bootstrap": "^4.5.3",
         "chart.js": "^2.9.3",
         "cross-env": "^7.0.2",
         "eslint-plugin-prettier": "^3.1.4",
         "firebase": "^7.23.0",
         "i18next": "^19.8.2",
+        "lodash": "^4.17.20",
         "node-sass": "^4.14.1",
         "prettier": "^2.1.2",
         "react": "^16.14.0",
@@ -36,7 +40,7 @@
         "react-i18next": "^11.7.3",
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0",
-        "react-scripts": "3.4.3",
+        "react-scripts": "^3.4.4",
         "styled-components": "^5.2.0",
         "typescript": "^3.7.5"
     },
