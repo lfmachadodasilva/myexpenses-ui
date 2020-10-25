@@ -1,6 +1,6 @@
-import { labelsMockData } from '../mockData/label';
+import { labelsFullMockData, labelsMockData } from '../mockData/label';
 import { ApiType, ConfigModel } from '../models/config';
-import { LabelModel } from '../models/label';
+import { LabelFullModel, LabelModel } from '../models/label';
 import { ServiceBase } from './base';
 
 export class LabelService extends ServiceBase {
@@ -10,7 +10,20 @@ export class LabelService extends ServiceBase {
         super(config);
     }
 
-    async getAll(): Promise<LabelModel[]> {
+    async getAllFull(group: number, month: number, year: number): Promise<LabelFullModel[]> {
+        if (this.config.apiUrl === ApiType.FIREBASE) {
+        } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
+        } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
+            return this.resolveMockData(labelsFullMockData);
+        }
+        return await this.get<LabelFullModel[]>(this.baseUrl + '/full', {
+            group: group,
+            month: month,
+            year: year
+        });
+    }
+
+    async getAll(group: number): Promise<LabelModel[]> {
         if (this.config.apiUrl === ApiType.FIREBASE) {
         } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {

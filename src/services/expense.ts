@@ -10,7 +10,7 @@ export class ExpenseService extends ServiceBase {
         super(config);
     }
 
-    async getYears(): Promise<number[]> {
+    async getYears(group: number): Promise<number[]> {
         if (this.config.apiUrl === ApiType.FIREBASE) {
         } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {

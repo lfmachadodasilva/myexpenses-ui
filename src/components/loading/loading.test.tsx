@@ -19,6 +19,6 @@ describe('<LoadingComponent />', () => {
     test('should render', async () => {
         const obj = await defaultInitialise();
 
-        expect(obj.getText('Loading Component')).toBeInTheDocument();
+        expect(obj.getByText('Loading Component')).toBeInTheDocument();
     });
 });

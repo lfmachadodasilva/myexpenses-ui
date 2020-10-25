@@ -1,6 +1,5 @@
 import React from 'react';
-import Container from 'react-bootstrap/Container';
-import { HashRouter, Route, Switch } from 'react-router-dom';
+import { HashRouter, BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import axios from 'axios';
 
@@ -8,27 +7,23 @@ import { HeaderComponent } from '../components/header/header';
 import { ConfigManager } from '../configurations/configManager';
 import { ConfigModel } from '../models/config';
 import { useAuth } from '../services/auth';
-import { AuthPage } from './auth/auth';
-import { ExpensePage } from './expense/expense';
+
 import { GlobalStyles } from './globalSyles';
-import { GroupPage } from './group/group';
-import { LabelPage } from './label/label';
-import { Routes } from './routes';
-import { SettingsPage } from './settings/settings';
 import { darkTheme } from './theme';
 import { hasValue } from '../helpers/util';
 import { userContext } from '../contexts/user';
-import { PrivateRoute } from '../helpers/privateRouter';
+import { MainPage } from './main';
 
 export type AppProps = {};
 
 export const AppPage: React.FC<AppProps> = React.memo((_props: AppProps) => {
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
     const isDarkMode = React.useMemo(
-        () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
+        () => true, //window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
         []
     );
     const { user, initialising } = useAuth();
+
     const [isReady, setReady] = React.useState<boolean>(false);
 
     React.useEffect(() => {
@@ -62,31 +57,18 @@ export const AppPage: React.FC<AppProps> = React.memo((_props: AppProps) => {
                             isReady: isReady
                         }}
                     >
-                        <HashRouter basename="/">
-                            <HeaderComponent />
-                            <Container className="mt-2">
-                                <Switch>
-                                    <PrivateRoute key={Routes.group} path={Routes.group} component={GroupPage} />
-                                    <PrivateRoute key={Routes.label} path={Routes.label} component={LabelPage} />
-                                    <PrivateRoute key={Routes.expense} path={Routes.expense} component={ExpensePage} />
-                                    <PrivateRoute
-                                        key={Routes.settings}
-                                        path={Routes.settings}
-                                        component={SettingsPage}
-                                    />
-                                    <Route key={Routes.auth} path={Routes.auth} component={AuthPage} />
-                                    <Route key={Routes.home} exact path={Routes.home}>
-                                        <>
-                                            <h3>HOME</h3>
-                                            <h6>Build Version: {config.buildVersion}</h6>
-                                        </>
-                                    </Route>
-                                    <Route key={'*'} path="*">
-                                        <h1> 404 </h1>
-                                    </Route>
-                                </Switch>
-                            </Container>
-                        </HashRouter>
+                        {config.useHashRouter && (
+                            <HashRouter basename="/">
+                                <HeaderComponent />
+                                <MainPage />
+                            </HashRouter>
+                        )}
+                        {!config.useHashRouter && (
+                            <BrowserRouter basename="/">
+                                <HeaderComponent />
+                                <MainPage />
+                            </BrowserRouter>
+                        )}
                     </userContext.Provider>
                 </>
             </ThemeProvider>

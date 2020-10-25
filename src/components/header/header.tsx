@@ -29,7 +29,11 @@ export const HeaderComponent: React.FC<HeaderProps> = React.memo((props: HeaderP
 
     const handleRedirectTo = React.useCallback(
         (path: string) => {
-            history.push(path);
+            if (hasValue(history.location.search)) {
+                history.push({ pathname: path, search: history.location.search });
+            } else {
+                history.push(path);
+            }
         },
         [history]
     );

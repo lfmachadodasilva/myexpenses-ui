@@ -25,7 +25,9 @@
     "SEARCH": {
         "GROUP": "Group",
         "MONTH": "Month",
-        "YEAR": "Year"
+        "YEAR": "Year",
+        "ACTION": "Search",
+        "HEADER": "Search by"
     },
     "AUTH": {
         "FACEBOOK": "Facebook",
@@ -53,6 +55,26 @@
             "NAME": "Name",
             "NAME_PLACEHOLDER": "Enter name",
             "USERS": "Users"
+        }
+    },
+    "LABEL": {
+        "TITLE": "Labels",
+        "ADD": "Add new label",
+        "ERROR": "Something went wrong. Try again later.",
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "TAB_ITEMS": "Items",
+        "TAB_GRAPH": "Graph",
+        "CURRENT_MONTH": "This month",
+        "LAST_MONTH": "Last month",
+        "AVERAGE": "Average",
+        "MODAL": {
+            "ADD_TITLE": "Add new label",
+            "EDIT_TITLE": "Edit label",
+            "ADD_ACTION": "Add",
+            "EDIT_ACTION": "Edit",
+            "NAME": "Name",
+            "NAME_PLACEHOLDER": "Enter name"
         }
     }
 }

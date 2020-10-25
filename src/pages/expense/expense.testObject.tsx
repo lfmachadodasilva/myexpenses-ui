@@ -11,8 +11,4 @@ export class ExpenseTestObject extends TestObjectBase<ExpenseProps> {
     protected render(props: ExpenseProps) {
         return <ExpensePage {...props} />;
     }
-
-    getText(text: string) {
-        return this.queryByText(text);
-    }
 }

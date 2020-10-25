@@ -11,8 +11,4 @@ export class SettingsTestObject extends TestObjectBase<SettingsProps> {
     protected render(props: SettingsProps) {
         return <SettingsPage {...props} />;
     }
-
-    getText(text: string) {
-        return this.queryByText(text);
-    }
 }

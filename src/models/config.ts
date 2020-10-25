@@ -13,9 +13,11 @@ export class ConfigModel {
     buildVersion: string = 'local';
 
     /** request delay time */
-    requestDelay: number = 2000;
+    requestDelay: number = 1000;
 
     /** firebase */
     firebaseApiKey: string = 'AIzaSyDMDE7eTQbjwkQglMJf5KnFtMr48-pAoVM';
     firebaseProject: string = 'lfmachadodasilva-dev';
+
+    useHashRouter: boolean = true;
 }

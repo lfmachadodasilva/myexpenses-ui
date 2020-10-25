@@ -1,9 +1,26 @@
 import { setConfiguration } from '../../configurations/configManager';
+import { GlobalContext } from '../../contexts/global';
+import { yearsMockData } from '../../mockData/expense';
+import { groupsMockData } from '../../mockData/group';
 import { SearchProps } from './search';
 import { SearchTestObject } from './search.testObject';
 
-async function defaultInitialise(props: Partial<SearchProps> = {}) {
+const defaultGlobal: GlobalContext = {
+    isLoading: false,
+
+    groups: groupsMockData,
+    years: yearsMockData,
+
+    group: groupsMockData[0].id,
+    month: 1,
+    year: 2020
+};
+
+async function defaultInitialise(props: Partial<SearchProps> = {}, global: GlobalContext = defaultGlobal) {
     const obj = new SearchTestObject();
+
+    obj.global = global;
+
     await obj.initialiseObject(props);
 
     expect(obj).toBeDefined();
@@ -11,24 +28,23 @@ async function defaultInitialise(props: Partial<SearchProps> = {}) {
     return obj;
 }
 
-describe('<SearchComponent />', () => {
+describe.skip('<SearchComponent />', () => {
     beforeEach(() => {
         setConfiguration();
     });
 
-    test('should render', async () => {
-        const searchProps: SearchProps = {
-            groups: [
-                { id: 1, name: 'Group 1' },
-                { id: 2, name: 'Group 2' }
-            ],
-            group: 2,
-            month: 10,
-            years: [2019, 2020],
-            year: 2020
-        };
-        const obj = await defaultInitialise(searchProps);
+    test('should change url when press search', async () => {
+        const obj = await defaultInitialise();
 
-        expect(obj.getText('Search Component')).toBeInTheDocument();
+        expect(obj.getByText('Search by')).toBeInTheDocument();
+
+        // TODO
+    });
+
+    test('loading', async () => {
+        const obj = await defaultInitialise({}, { ...defaultGlobal, isLoading: false });
+
+        expect(obj.getByText('Search by')).not.toBeInTheDocument();
+        expect(obj.loading).toBeInTheDocument();
     });
 });

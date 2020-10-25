@@ -35,7 +35,7 @@ describe('<GroupPage />', () => {
         axiosMock.onGet('/api/group/full').reply(StatusCodes.OK, groupsFullMockData);
         axiosMock.onPost('/api/group').reply(StatusCodes.OK, groupsFullMockData[0]);
         axiosMock.onPut('/api/group').reply(StatusCodes.OK);
-        axiosMock.onDelete('/api/group').reply(StatusCodes.OK);
+        axiosMock.onDelete('/api/group/1').reply(StatusCodes.OK);
     });
 
     afterEach(() => {
@@ -146,7 +146,7 @@ describe('<GroupPage />', () => {
     });
 
     test('fail to delete group', async () => {
-        axiosMock.onDelete('/api/group').reply(StatusCodes.ERROR);
+        axiosMock.onDelete('/api/group/1').reply(StatusCodes.ERROR);
 
         const obj = await defaultInitialise();
 

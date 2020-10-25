@@ -1,4 +1,4 @@
-# MyExpenses
+# MyExpenses ![npm](https://github.com/lfmachadodasilva/myexpenses-ui/workflows/npm/badge.svg) [![codecov](https://codecov.io/gh/lfmachadodasilva/myexpenses-ui/branch/main/graph/badge.svg?token=RXsaio0GWE)](undefined)
 
 #### Project to control personal expenses
 

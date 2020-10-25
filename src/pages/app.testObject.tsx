@@ -17,8 +17,4 @@ export class AppTestObject extends TestObjectBase<AppProps> {
     protected render(props: AppProps) {
         return <AppPage {...props} />;
     }
-
-    getText(text: string) {
-        return this.queryByText(text);
-    }
 }

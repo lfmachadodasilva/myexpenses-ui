@@ -4,9 +4,6 @@ import { createGlobalStyle } from 'styled-components';
 
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-import Card from 'react-bootstrap/Card';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown';
 import Alert from 'react-bootstrap/Alert';
 
 import { ConfigManager } from '../../configurations/configManager';
@@ -17,11 +14,9 @@ import { GroupService } from '../../services/group';
 import { getUserDisplayName } from '../../helpers/user';
 import { hasValue } from '../../helpers/util';
 import { GroupModalPage } from './groupModal';
+import { ItemComponent } from '../../components/item/item';
 
 const GroupStyle = createGlobalStyle`
-    .card-body {
-        padding: 10px;
-    };
     `;
 
 export type GroupProps = {};
@@ -43,15 +38,18 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
         setShowModal(true);
     }, []);
 
-    const handleOnEdit = React.useCallback((group: GroupFullModel) => {
-        setGroup(group);
-        setShowModal(true);
-    }, []);
+    const handleOnEdit = React.useCallback(
+        (id: number) => {
+            setGroup(groups.find(g => g.id === id));
+            setShowModal(true);
+        },
+        [groups]
+    );
 
     const handleOnDelete = React.useCallback(
-        async (group: GroupFullModel) => {
+        async (id: number) => {
             try {
-                await new GroupService(config).remove(group?.id as number);
+                await new GroupService(config).remove(id);
                 setTimeout(() => {
                     setRefresh(!refresh);
                 }, config.requestDelay);
@@ -92,35 +90,23 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
     const groupElements = React.useMemo(
         () =>
             groups.map((group, index) => (
-                <Card key={`GROUP_${index}`} className="mb-1">
-                    <Card.Body>
-                        <Card.Title>
-                            <div className="d-flex justify-content-between">
-                                {group.name}
-                                <DropdownButton size="sm" variant="secondary" title="" id={`group-menu-${group.id}`}>
-                                    <Dropdown.Item eventKey="1" onClick={() => handleOnEdit(group)}>
-                                        {t('GROUP.EDIT')}
-                                    </Dropdown.Item>
-                                    <Dropdown.Divider />
-                                    <Dropdown.Item eventKey="2" onClick={() => handleOnDelete(group)}>
-                                        {t('GROUP.DELETE')}
-                                    </Dropdown.Item>
-                                </DropdownButton>
-                            </div>
-                        </Card.Title>
-                        <Card.Body>
-                            <div key={`GROUP_USERS_${index}`} className="d-flex flex-wrap justify-content-start">
-                                {group.users.map((user, indexUser) => (
-                                    <small key={`GROUP_SMALL_${index}_${indexUser}`} className="mr-2">
-                                        {getUserDisplayName(user)}
-                                    </small>
-                                ))}
-                            </div>
-                        </Card.Body>
-                    </Card.Body>
-                </Card>
+                <ItemComponent
+                    key={group.id}
+                    id={group.id}
+                    name={group.name}
+                    onEdit={handleOnEdit}
+                    onDelete={handleOnDelete}
+                >
+                    <div key={`GROUP_USERS_${index}`} className="d-flex flex-wrap justify-content-start">
+                        {group.users.map((user, indexUser) => (
+                            <small key={`GROUP_SMALL_${index}_${indexUser}`} className="mr-2">
+                                {getUserDisplayName(user)}
+                            </small>
+                        ))}
+                    </div>
+                </ItemComponent>
             )),
-        [groups, handleOnEdit, handleOnDelete, t]
+        [groups, handleOnEdit, handleOnDelete]
     );
 
     return (

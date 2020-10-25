@@ -39,7 +39,7 @@ export class GroupTestObject extends TestObjectBase<GroupProps> {
     }
 
     async clickEditFor(id: number) {
-        fireEvent.click(this.querySelector(`#group-menu-${id}`) as Element);
+        fireEvent.click(this.querySelector(`#menu-${id}`) as Element);
 
         await wait(() => {
             expect(this.queryByText('Edit')).toBeInTheDocument();
@@ -49,7 +49,7 @@ export class GroupTestObject extends TestObjectBase<GroupProps> {
     }
 
     async clickDeleteFor(id: number) {
-        fireEvent.click(this.querySelector(`#group-menu-${id}`) as Element);
+        fireEvent.click(this.querySelector(`#menu-${id}`) as Element);
 
         await wait(() => {
             expect(this.queryByText('Delete')).toBeInTheDocument();

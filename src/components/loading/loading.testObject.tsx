@@ -11,8 +11,4 @@ export class LoadingTestObject extends TestObjectBase<LoadingProps> {
     protected render(props: LoadingProps) {
         return <LoadingComponent {...props} />;
     }
-
-    getText(text: string) {
-        return this.queryByText(text);
-    }
 }

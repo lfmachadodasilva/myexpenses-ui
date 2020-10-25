@@ -10,14 +10,14 @@ export class GroupService extends ServiceBase {
         super(config);
     }
 
-    async getAllFull(userId: string): Promise<GroupFullModel[]> {
+    async getAllFull(user: string): Promise<GroupFullModel[]> {
         if (this.config.apiUrl === ApiType.FIREBASE) {
         } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
             return this.resolveMockData(groupsFullMockData);
             //return this.rejectMockData();
         }
-        return await this.get<GroupFullModel[]>(this.baseUrl + '/full');
+        return await this.get<GroupFullModel[]>(this.baseUrl + '/full', { user: user });
     }
 
     async getAll(userId: string): Promise<GroupModel[]> {
