@@ -26,9 +26,15 @@ export const HeaderComponent: React.FC<HeaderProps> = React.memo((props: HeaderP
     const { user, initialising } = useContext(userContext);
     const history = useHistory();
     const [t] = useTranslation();
+    const [expanded, setExpand] = React.useState<boolean>(false);
+
+    const handleToggle = React.useCallback((expanded: boolean) => {
+        setExpand(expanded);
+    }, []);
 
     const handleRedirectTo = React.useCallback(
         (path: string) => {
+            setExpand(false);
             if (hasValue(history.location.search)) {
                 history.push({ pathname: path, search: history.location.search });
             } else {
@@ -69,7 +75,7 @@ export const HeaderComponent: React.FC<HeaderProps> = React.memo((props: HeaderP
     return (
         <>
             <HeaderStyle />
-            <Navbar bg="dark" variant="dark" expand="sm">
+            <Navbar bg="dark" variant="dark" expand="sm" onToggle={handleToggle} expanded={expanded}>
                 <Container>
                     <Navbar.Brand onClick={() => handleRedirectTo(Routes.home)}>{t('HEADER.TITLE')}</Navbar.Brand>
 
