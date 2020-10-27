@@ -3,19 +3,18 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router';
 import { createGlobalStyle } from 'styled-components';
 
-import { Routes } from '../routes';
-import { loginWithEmail, loginWithFacebook } from '../../services/auth';
-
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
-import Alert from 'react-bootstrap/Alert';
 import Card from 'react-bootstrap/Card';
 
-const AuthStyle = createGlobalStyle`
-    `;
+import { Routes } from '../routes';
+import { loginWithEmail, loginWithFacebook } from '../../services/auth';
+import { ErrorComponent } from '../../components/error/error';
+
+const AuthStyle = createGlobalStyle``;
 
 export type AuthProps = {};
 
@@ -24,23 +23,23 @@ export const AuthPage: React.FC<AuthProps> = React.memo((props: AuthProps) => {
     const history = useHistory();
 
     const [isLoading, setLoading] = React.useState<boolean>(false);
-    const [hasError, setError] = React.useState<boolean>(false);
+    const [error, setError] = React.useState<string>('');
 
     const [email, setEmail] = React.useState<string>('');
     const [password, setPassword] = React.useState<string>('');
 
     const handleFacebook = React.useCallback(async () => {
         setLoading(true);
-        setError(false);
+        setError('');
         try {
             await loginWithFacebook();
             setTimeout(() => history.push(Routes.home));
         } catch (error) {
-            setError(true);
+            setError(t('AUTH.ERROR'));
         } finally {
             setLoading(false);
         }
-    }, [history]);
+    }, [history, t]);
 
     const handleChangeEmail = React.useCallback((value: any) => {
         setEmail(value.target.value);
@@ -51,28 +50,22 @@ export const AuthPage: React.FC<AuthProps> = React.memo((props: AuthProps) => {
 
     const handleLogin = React.useCallback(async () => {
         setLoading(true);
-        setError(false);
-
+        setError('');
         try {
             await loginWithEmail(email, password);
             setTimeout(() => history.push(Routes.home));
         } catch {
-            setError(true);
+            setError(t('AUTH.ERROR'));
         } finally {
             setLoading(false);
         }
-    }, [email, password, history]);
+    }, [email, password, history, t]);
 
     return (
         <>
             <AuthStyle />
             <Container className="p-4">
-                {hasError && (
-                    <Alert key="AUTH.ERROR" variant="danger">
-                        {t('AUTH.ERROR')}
-                    </Alert>
-                )}
-
+                <ErrorComponent message={error} />
                 <Row>
                     <Col className="p-1" xs={12} sm={6}>
                         <Card className="p-4">
@@ -95,7 +88,6 @@ export const AuthPage: React.FC<AuthProps> = React.memo((props: AuthProps) => {
                                             onChange={handleChangeEmail}
                                         />
                                     </Form.Group>
-
                                     <Form.Group controlId="formBasicPassword">
                                         <Form.Label>{t('AUTH.PASSWORD')}</Form.Label>
                                         <Form.Control
@@ -104,7 +96,6 @@ export const AuthPage: React.FC<AuthProps> = React.memo((props: AuthProps) => {
                                             onChange={handleChangePassword}
                                         />
                                     </Form.Group>
-
                                     <Button variant="primary" onClick={handleLogin} disabled={isLoading}>
                                         {t('AUTH.LOGIN')}
                                     </Button>

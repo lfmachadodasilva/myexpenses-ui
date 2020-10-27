@@ -19,7 +19,7 @@ export type AppProps = {};
 export const AppPage: React.FC<AppProps> = React.memo((_props: AppProps) => {
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
     const isDarkMode = React.useMemo(
-        () => true, //window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
+        () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
         []
     );
     const { user, initialising } = useAuth();

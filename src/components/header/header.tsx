@@ -15,10 +15,10 @@ import { signOut } from '../../services/auth';
 import { getUserDisplayName } from '../../helpers/user';
 
 const HeaderStyle = createGlobalStyle`
-        .navbar-brand {
-            cursor: pointer;
-        };
-    `;
+    .navbar-brand {
+        cursor: pointer;
+    };
+`;
 
 export type HeaderProps = {};
 

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Alert from 'react-bootstrap/Alert';
 
 import { ConfigModel } from '../../models/config';
 import { ConfigManager } from '../../configurations/configManager';
@@ -14,6 +13,7 @@ import { UserModel } from '../../models/user';
 import { hasValue } from '../../helpers/util';
 import { GroupFullModel } from '../../models/group';
 import { GroupService } from '../../services/group';
+import { ErrorComponent } from '../../components/error/error';
 
 export type GroupModalProps = {
     show: boolean;
@@ -141,11 +141,7 @@ export const GroupModalPage: React.FC<GroupModalProps> = React.memo((props: Grou
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {hasValue(error) && (
-                        <Alert key="GROUP.MODAL.ERROR" variant="danger">
-                            {error}
-                        </Alert>
-                    )}
+                    <ErrorComponent message={error} />
                     <Form>
                         <Form.Group controlId="exampleForm.ControlInput1">
                             <Form.Label>{t('GROUP.MODAL.NAME')}</Form.Label>

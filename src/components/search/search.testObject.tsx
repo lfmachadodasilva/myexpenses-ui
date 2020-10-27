@@ -1,14 +1,13 @@
 import React from 'react';
+import { Router } from 'react-router';
 
 import { GlobalContext, globalContext } from '../../contexts/global';
 import { TestObjectBase } from '../../helpers/testObjectBase';
-import { yearsMockData } from '../../mockData/expense';
-import { groupsMockData } from '../../mockData/group';
-import { GroupModel } from '../../models/group';
 import { SearchComponent, SearchProps } from './search';
 
 export class SearchTestObject extends TestObjectBase<SearchProps> {
     defaultParams: Partial<SearchProps> = {};
+    historyMock = { push: jest.fn(), location: {}, listen: jest.fn() };
 
     global!: GlobalContext;
 
@@ -16,24 +15,20 @@ export class SearchTestObject extends TestObjectBase<SearchProps> {
 
     protected render(props: SearchProps) {
         return (
-            <globalContext.Provider
-                value={{
-                    isLoading: this.global.isLoading,
-
-                    groups: this.global.groups,
-                    years: this.global.years,
-
-                    group: this.global.group,
-                    month: this.global.month,
-                    year: this.global.year
-                }}
-            >
-                <SearchComponent {...props} />
+            <globalContext.Provider value={this.global}>
+                <Router history={this.historyMock as any}>
+                    <SearchComponent {...props} />
+                </Router>
             </globalContext.Provider>
         );
     }
 
     get loading() {
         return this.getByTestId('search-loading');
+    }
+
+    checkPageHaveBeenChanged() {
+        expect(this.historyMock.push).toBeCalled();
+        console.log(this.historyMock.push);
     }
 }

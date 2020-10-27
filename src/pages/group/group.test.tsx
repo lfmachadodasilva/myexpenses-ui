@@ -106,13 +106,13 @@ describe('<GroupPage />', () => {
         const obj = await defaultInitialise();
 
         // open modal on edit mode and close
-        await obj.clickEditFor(1);
+        await obj.itemObject.clickEditFor(1);
         await obj.modalObject.waitModalToShow();
         obj.modalObject.clickClose();
         await obj.modalObject.waitModalToHide();
 
         // open modal on edit mode and edit
-        await obj.clickEditFor(1);
+        await obj.itemObject.clickEditFor(1);
         await obj.modalObject.waitModalToShow();
 
         // hack to avoid duplicate "Edit" labels
@@ -134,7 +134,7 @@ describe('<GroupPage />', () => {
     test('delete group', async () => {
         const obj = await defaultInitialise();
 
-        await obj.clickDeleteFor(1);
+        await obj.itemObject.clickDeleteFor(1);
 
         await wait(() => {
             // 1 - get all groups
@@ -150,7 +150,7 @@ describe('<GroupPage />', () => {
 
         const obj = await defaultInitialise();
 
-        await obj.clickDeleteFor(1);
+        await obj.itemObject.clickDeleteFor(1);
 
         await wait(() => {
             expect(obj.queryByText('Something went wrong. Try again later.')).toBeInTheDocument();

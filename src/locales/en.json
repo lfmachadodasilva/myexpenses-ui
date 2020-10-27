@@ -76,5 +76,37 @@
             "NAME": "Name",
             "NAME_PLACEHOLDER": "Enter name"
         }
+    },
+    "EXPENSE": {
+        "TITLE": "Expenses",
+        "ADD": "Add new expense",
+        "ERROR": "Something went wrong. Try again later.",
+        "EDIT": "Edit",
+        "DELETE": "Delete",
+        "SUMMARY": "Summary",
+        "INCOMING": "Incoming",
+        "OUTCOMING": "Outcoming",
+        "VALUE": "Value",
+        "DATE": "Date",
+        "LABEL": "Label",
+        "DATE_FORMAT": "dd/MM/yy",
+        "FIELD_DATE_FORMAT": "yyyy-MM-dd",
+        "TOTAL_INCOMING": "Total incoming",
+        "TOTAL_OUTCOMING": "Total outcoming",
+        "TOTAL_LEFT": "Total left",
+        "MODAL": {
+            "ADD_TITLE": "Add new expense",
+            "EDIT_TITLE": "Edit expense",
+            "ADD_ACTION": "Add",
+            "EDIT_ACTION": "Edit",
+            "NAME": "Name",
+            "VALUE": "Value",
+            "DATE": "Date",
+            "LABEL": "Label",
+            "COMMENTS": "Comments",
+            "NAME_PLACEHOLDER": "Enter name",
+            "VALUE_PLACEHOLDER": "Enter value",
+            "COMMENTS_PLACEHOLDER": "Enter comments"
+        }
     }
 }

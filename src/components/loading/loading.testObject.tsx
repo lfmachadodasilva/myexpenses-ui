@@ -9,6 +9,14 @@ export class LoadingTestObject extends TestObjectBase<LoadingProps> {
     protected initialiseSubObjects(): void {}
 
     protected render(props: LoadingProps) {
-        return <LoadingComponent {...props} />;
+        return (
+            <LoadingComponent {...props}>
+                <div>Loading Component</div>
+            </LoadingComponent>
+        );
+    }
+
+    get getLoading() {
+        return this.querySelector('.spinner-border');
     }
 }

@@ -1,22 +1,11 @@
+import { fireEvent, wait } from '@testing-library/react';
 import { setConfiguration } from '../../configurations/configManager';
 import { GlobalContext } from '../../contexts/global';
-import { yearsMockData } from '../../mockData/expense';
-import { groupsMockData } from '../../mockData/group';
+import { globalMockData } from '../../mockData/global';
 import { SearchProps } from './search';
 import { SearchTestObject } from './search.testObject';
 
-const defaultGlobal: GlobalContext = {
-    isLoading: false,
-
-    groups: groupsMockData,
-    years: yearsMockData,
-
-    group: groupsMockData[0].id,
-    month: 1,
-    year: 2020
-};
-
-async function defaultInitialise(props: Partial<SearchProps> = {}, global: GlobalContext = defaultGlobal) {
+async function defaultInitialise(props: Partial<SearchProps> = {}, global: GlobalContext = globalMockData) {
     const obj = new SearchTestObject();
 
     obj.global = global;
@@ -28,23 +17,37 @@ async function defaultInitialise(props: Partial<SearchProps> = {}, global: Globa
     return obj;
 }
 
-describe.skip('<SearchComponent />', () => {
+describe('<SearchComponent />', () => {
     beforeEach(() => {
         setConfiguration();
     });
 
-    test('should change url when press search', async () => {
+    test.skip('happy path', async () => {
         const obj = await defaultInitialise();
 
-        expect(obj.getByText('Search by')).toBeInTheDocument();
+        expect(obj.getByText('Search by')).not.toBeInTheDocument();
+        expect(obj.getByText('Group 1')).toBeInTheDocument();
 
-        // TODO
+        // expand
+        fireEvent.click(obj.querySelector('.card') as Element);
+
+        await wait(() => {
+            expect(obj.getByText('Search by')).toBeInTheDocument();
+        });
+
+        // TODO change all parameters
+
+        obj.clickByText('Search');
+
+        await wait(() => {
+            expect(obj.checkPageHaveBeenChanged);
+        });
     });
 
     test('loading', async () => {
-        const obj = await defaultInitialise({}, { ...defaultGlobal, isLoading: false });
+        const obj = await defaultInitialise({}, { ...globalMockData, isLoading: true });
 
-        expect(obj.getByText('Search by')).not.toBeInTheDocument();
+        expect(obj.queryByText('Search by')).not.toBeInTheDocument();
         expect(obj.loading).toBeInTheDocument();
     });
 });

@@ -2,22 +2,19 @@ import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createGlobalStyle } from 'styled-components';
 
-import Button from 'react-bootstrap/Button';
-import Spinner from 'react-bootstrap/Spinner';
-import Alert from 'react-bootstrap/Alert';
-
 import { ConfigManager } from '../../configurations/configManager';
 import { userContext } from '../../contexts/user';
 import { ConfigModel } from '../../models/config';
 import { GroupFullModel } from '../../models/group';
 import { GroupService } from '../../services/group';
 import { getUserDisplayName } from '../../helpers/user';
-import { hasValue } from '../../helpers/util';
-import { GroupModalPage } from './groupModal';
+import { GroupModalPage } from '../groupModal/groupModal';
 import { ItemComponent } from '../../components/item/item';
+import { LoadingComponent } from '../../components/loading/loading';
+import { ItemsHeaderComponent } from '../../components/itemsHeader/itemsHeader';
+import { ErrorComponent } from '../../components/error/error';
 
-const GroupStyle = createGlobalStyle`
-    `;
+const GroupStyle = createGlobalStyle``;
 
 export type GroupProps = {};
 
@@ -112,23 +109,9 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
     return (
         <>
             <GroupStyle />
-            <div className="d-flex justify-content-between mb-2">
-                <h4>{t('GROUP.TITLE')}</h4>
-                <Button onClick={handleOnAdd}>{t('GROUP.ADD')}</Button>
-            </div>
-            {hasValue(error) && (
-                <Alert key="GROUP.ERROR" variant="danger">
-                    {error}
-                </Alert>
-            )}
-            {isLoading && (
-                <div className="d-flex justify-content-center m-4">
-                    <Spinner className="group-loading" animation="border" role="status">
-                        <span className="sr-only">Loading...</span>
-                    </Spinner>
-                </div>
-            )}
-            {!isLoading && groupElements}
+            <ItemsHeaderComponent title={t('GROUP.TITLE')} action={t('GROUP.ADD')} onAction={handleOnAdd} />
+            <ErrorComponent message={error} />
+            <LoadingComponent isLoading={isLoading}>{groupElements}</LoadingComponent>
             <GroupModalPage show={showModal} group={group} onHide={handleOnHide} onAction={handleOnAction} />
         </>
     );

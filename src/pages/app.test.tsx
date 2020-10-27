@@ -22,9 +22,13 @@ describe('<AppComponent />', () => {
         setConfiguration();
     });
 
-    test.skip('should render with user', async () => {
+    test.skip('should render with no user', async () => {
         mockUseAuth.mockImplementation(() => {
-            return { user: null, initialising: false, isReady: false };
+            return {
+                user: null,
+                initialising: false,
+                isReady: true
+            };
         });
 
         const obj = await defaultInitialise();
@@ -34,8 +38,6 @@ describe('<AppComponent />', () => {
 
         // go to expense page
         obj.clickByText('Expense');
-
-        obj.debug();
 
         await wait(() => {
             expect(obj.queryByText('Login by email')).toBeInTheDocument();

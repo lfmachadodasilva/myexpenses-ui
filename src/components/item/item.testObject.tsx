@@ -1,3 +1,4 @@
+import { fireEvent, wait } from '@testing-library/react';
 import React from 'react';
 
 import { TestObjectBase } from '../../helpers/testObjectBase';
@@ -9,6 +10,30 @@ export class ItemTestObject extends TestObjectBase<ItemProps> {
     protected initialiseSubObjects(): void {}
 
     protected render(props: ItemProps) {
-        return <ItemComponent {...props} />;
+        return (
+            <ItemComponent {...props}>
+                <div>Some stuff</div>
+            </ItemComponent>
+        );
+    }
+
+    async clickEditFor(id: number) {
+        fireEvent.click(this.querySelector(`#menu-${id}`) as Element);
+
+        await wait(() => {
+            expect(this.queryByText('Edit')).toBeInTheDocument();
+        });
+
+        fireEvent.click(this.getByText('Edit'));
+    }
+
+    async clickDeleteFor(id: number) {
+        fireEvent.click(this.querySelector(`#menu-${id}`) as Element);
+
+        await wait(() => {
+            expect(this.queryByText('Delete')).toBeInTheDocument();
+        });
+
+        fireEvent.click(this.getByText('Delete'));
     }
 }

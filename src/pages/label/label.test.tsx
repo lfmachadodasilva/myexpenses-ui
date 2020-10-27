@@ -1,10 +1,8 @@
 import { fireEvent, wait, within } from '@testing-library/react';
 
 import { setConfiguration } from '../../configurations/configManager';
-import { GlobalContext } from '../../contexts/global';
 import { AxiosMock } from '../../helpers/axiosMock';
-import { yearsMockData } from '../../mockData/expense';
-import { groupsMockData } from '../../mockData/group';
+import { globalMockData } from '../../mockData/global';
 import { labelsFullMockData } from '../../mockData/label';
 import { usersMockData } from '../../mockData/user';
 import { ApiType } from '../../models/config';
@@ -12,18 +10,7 @@ import { StatusCodes } from '../../services/base';
 import { LabelProps } from './label';
 import { AppTestObject } from './label.testObject';
 
-const defaultGlobal: GlobalContext = {
-    isLoading: false,
-
-    groups: groupsMockData,
-    years: yearsMockData,
-
-    group: groupsMockData[0].id,
-    month: 1,
-    year: 2020
-};
-
-async function defaultInitialise(props: Partial<LabelProps> = {}, global: GlobalContext = defaultGlobal) {
+async function defaultInitialise(props: Partial<LabelProps> = {}) {
     const obj = new AppTestObject();
 
     obj.user = {
@@ -32,7 +19,7 @@ async function defaultInitialise(props: Partial<LabelProps> = {}, global: Global
         email: usersMockData[1].email
     } as firebase.User;
 
-    obj.global = global;
+    obj.global = globalMockData;
 
     await obj.initialiseObject(props);
 
@@ -121,13 +108,13 @@ describe('<LabelPage />', () => {
         const obj = await defaultInitialise();
 
         // open modal on edit mode and close
-        await obj.clickEditFor(1);
+        await obj.itemObject.clickEditFor(1);
         await obj.modalObject.waitModalToShow();
         obj.modalObject.clickClose();
         await obj.modalObject.waitModalToHide();
 
         // open modal on edit mode and edit
-        await obj.clickEditFor(1);
+        await obj.itemObject.clickEditFor(1);
         await obj.modalObject.waitModalToShow();
 
         // hack to avoid duplicate "Edit" labels
@@ -148,7 +135,7 @@ describe('<LabelPage />', () => {
     test('delete label', async () => {
         const obj = await defaultInitialise();
 
-        await obj.clickDeleteFor(1);
+        await obj.itemObject.clickDeleteFor(1);
 
         await wait(() => {
             // 1 - get all labels
@@ -164,7 +151,7 @@ describe('<LabelPage />', () => {
 
         const obj = await defaultInitialise();
 
-        await obj.clickDeleteFor(1);
+        await obj.itemObject.clickDeleteFor(1);
 
         await wait(() => {
             expect(obj.queryByText('Something went wrong. Try again later.')).toBeInTheDocument();

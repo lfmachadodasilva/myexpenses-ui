@@ -29,6 +29,7 @@
         "chart.js": "^2.9.4",
         "chartjs-plugin-colorschemes": "^0.4.0",
         "cross-env": "^7.0.2",
+        "date-fns": "^2.16.1",
         "eslint-plugin-prettier": "^3.1.4",
         "firebase": "^7.23.0",
         "i18next": "^19.8.2",

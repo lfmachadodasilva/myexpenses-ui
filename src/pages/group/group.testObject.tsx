@@ -1,10 +1,10 @@
-import { fireEvent, wait } from '@testing-library/react';
 import React from 'react';
 
 import { userContext } from '../../contexts/user';
 import { TestObjectBase } from '../../helpers/testObjectBase';
 import { GroupPage, GroupProps } from './group';
-import { GroupModalTestObject } from './groupModal.testObject';
+import { GroupModalTestObject } from '../groupModal/groupModal.testObject';
+import { ItemTestObject } from '../../components/item/item.testObject';
 
 export class GroupTestObject extends TestObjectBase<GroupProps> {
     defaultParams: Partial<GroupProps> = {};
@@ -14,10 +14,14 @@ export class GroupTestObject extends TestObjectBase<GroupProps> {
     isReady: boolean = false;
 
     modalObject!: GroupModalTestObject;
+    itemObject!: ItemTestObject;
 
     protected initialiseSubObjects(): void {
         this.modalObject = new GroupModalTestObject();
         this.modalObject.initialiseWithParentObject(this.wrapper);
+
+        this.itemObject = new ItemTestObject();
+        this.itemObject.initialiseWithParentObject(this.wrapper);
     }
 
     protected render(props: GroupProps) {
@@ -36,25 +40,5 @@ export class GroupTestObject extends TestObjectBase<GroupProps> {
 
     clickAdd() {
         this.clickByText('Add new group');
-    }
-
-    async clickEditFor(id: number) {
-        fireEvent.click(this.querySelector(`#menu-${id}`) as Element);
-
-        await wait(() => {
-            expect(this.queryByText('Edit')).toBeInTheDocument();
-        });
-
-        fireEvent.click(this.getByText('Edit'));
-    }
-
-    async clickDeleteFor(id: number) {
-        fireEvent.click(this.querySelector(`#menu-${id}`) as Element);
-
-        await wait(() => {
-            expect(this.queryByText('Delete')).toBeInTheDocument();
-        });
-
-        fireEvent.click(this.getByText('Delete'));
     }
 }

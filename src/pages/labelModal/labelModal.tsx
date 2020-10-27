@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Alert from 'react-bootstrap/Alert';
 
 import { ConfigModel } from '../../models/config';
 import { ConfigManager } from '../../configurations/configManager';
@@ -12,6 +11,7 @@ import { hasValue } from '../../helpers/util';
 import { LabelFullModel } from '../../models/label';
 import { LabelService } from '../../services/label';
 import { globalContext } from '../../contexts/global';
+import { ErrorComponent } from '../../components/error/error';
 
 export type LabelModalProps = {
     show: boolean;
@@ -91,11 +91,7 @@ export const LabelModalPage: React.FC<LabelModalProps> = React.memo((props: Labe
                     </Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    {hasValue(error) && (
-                        <Alert key="LABEL.MODAL.ERROR" variant="danger">
-                            {error}
-                        </Alert>
-                    )}
+                    <ErrorComponent message={error} />
                     <Form>
                         <Form.Group controlId="exampleForm.ControlInput1">
                             <Form.Label>{t('LABEL.MODAL.NAME')}</Form.Label>
