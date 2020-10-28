@@ -17,7 +17,7 @@ async function defaultInitialise(props: Partial<AppProps> = {}) {
     return obj;
 }
 
-describe('<AppComponent />', () => {
+describe.skip('<AppComponent />', () => {
     beforeEach(() => {
         setConfiguration();
     });

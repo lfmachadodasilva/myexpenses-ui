@@ -13,6 +13,8 @@ import { darkTheme } from './theme';
 import { hasValue } from '../helpers/util';
 import { userContext } from '../contexts/user';
 import { MainPage } from './main';
+import { UserService } from '../services/user';
+import { UserModel } from '../models/user';
 
 export type AppProps = {};
 
@@ -34,12 +36,12 @@ export const AppPage: React.FC<AppProps> = React.memo((_props: AppProps) => {
         if (hasValue(user)) {
             user.getIdTokenResult().then((value: any) => {
                 axios.defaults.headers.common.Authorization = value.token;
-                // new UserService(config).addOrUpdate({
-                //     id: user.uid,
-                //     email: user.email,
-                //     displayName: user.displayName,
-                //     photoUrl: user.photoURL
-                // } as UserModel);
+                new UserService(config).addOrUpdate({
+                    id: user.uid,
+                    email: user.email,
+                    displayName: user.displayName,
+                    photoUrl: user.photoURL
+                } as UserModel);
                 setReady(true);
             });
         }

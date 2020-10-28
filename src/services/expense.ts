@@ -34,7 +34,7 @@ export class ExpenseService extends ServiceBase {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
             return this.resolveMockData(expensesMockData);
         }
-        return await this.get<ExpenseModel[]>(this.baseUrl);
+        return await this.get<ExpenseModel[]>(this.baseUrl, { group: group });
     }
 
     async add(obj: Partial<ExpenseModel>): Promise<ExpenseModel> {

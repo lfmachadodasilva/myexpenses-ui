@@ -29,7 +29,7 @@ export class LabelService extends ServiceBase {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
             return this.resolveMockData(labelsMockData);
         }
-        return await this.get<LabelModel[]>(this.baseUrl);
+        return await this.get<LabelModel[]>(this.baseUrl, { group: group });
     }
 
     async add(obj: Partial<LabelModel>): Promise<LabelModel> {

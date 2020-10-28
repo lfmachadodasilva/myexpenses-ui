@@ -28,7 +28,13 @@ export const setConfiguration = (overrides: Partial<ConfigModel> = {}): ConfigMo
             overrides.buildVersion,
             configDefault.buildVersion
         ),
-        apiUrl: getValueOrDefault(process.env.REACT_APP_API_URL, overrides.apiUrl, configDefault.apiUrl)
+        apiUrl: getValueOrDefault(process.env.REACT_APP_API_URL, overrides.apiUrl, configDefault.apiUrl),
+        useHashRouter:
+            getValueOrDefault(
+                process.env.REACT_APP_USE_HASH_ROUTER,
+                overrides?.useHashRouter?.toString(),
+                configDefault.useHashRouter.toString()
+            ) === 'true'
     };
 
     ConfigManager.set({ ...configDefault, ...overrides });

@@ -10,6 +10,10 @@ export class UserService extends ServiceBase {
         super(config);
     }
 
+    async addOrUpdate(user: UserModel): Promise<UserModel> {
+        return await this.post<UserModel>('/api/user', {}, user);
+    }
+
     async getAll(): Promise<UserModel[]> {
         if (this.config.apiUrl === ApiType.FIREBASE) {
         } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
