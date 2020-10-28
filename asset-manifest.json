@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/myexpenses-ui/static/css/main.cabb26f2.chunk.css",
-    "main.js": "/myexpenses-ui/static/js/main.9ac60889.chunk.js",
-    "main.js.map": "/myexpenses-ui/static/js/main.9ac60889.chunk.js.map",
+    "main.js": "/myexpenses-ui/static/js/main.b3325285.chunk.js",
+    "main.js.map": "/myexpenses-ui/static/js/main.b3325285.chunk.js.map",
     "runtime-main.js": "/myexpenses-ui/static/js/runtime-main.342f53ef.js",
     "runtime-main.js.map": "/myexpenses-ui/static/js/runtime-main.342f53ef.js.map",
-    "static/js/2.5c8e1209.chunk.js": "/myexpenses-ui/static/js/2.5c8e1209.chunk.js",
-    "static/js/2.5c8e1209.chunk.js.map": "/myexpenses-ui/static/js/2.5c8e1209.chunk.js.map",
+    "static/js/2.8fa893a2.chunk.js": "/myexpenses-ui/static/js/2.8fa893a2.chunk.js",
+    "static/js/2.8fa893a2.chunk.js.map": "/myexpenses-ui/static/js/2.8fa893a2.chunk.js.map",
     "index.html": "/myexpenses-ui/index.html",
-    "precache-manifest.31f04d0881ba5de55a07678ea7337cee.js": "/myexpenses-ui/precache-manifest.31f04d0881ba5de55a07678ea7337cee.js",
+    "precache-manifest.18765db4663ca4ced6e6513a058d70ee.js": "/myexpenses-ui/precache-manifest.18765db4663ca4ced6e6513a058d70ee.js",
     "service-worker.js": "/myexpenses-ui/service-worker.js",
     "static/css/main.cabb26f2.chunk.css.map": "/myexpenses-ui/static/css/main.cabb26f2.chunk.css.map",
-    "static/js/2.5c8e1209.chunk.js.LICENSE.txt": "/myexpenses-ui/static/js/2.5c8e1209.chunk.js.LICENSE.txt"
+    "static/js/2.8fa893a2.chunk.js.LICENSE.txt": "/myexpenses-ui/static/js/2.8fa893a2.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.342f53ef.js",
-    "static/js/2.5c8e1209.chunk.js",
+    "static/js/2.8fa893a2.chunk.js",
     "static/css/main.cabb26f2.chunk.css",
-    "static/js/main.9ac60889.chunk.js"
+    "static/js/main.b3325285.chunk.js"
   ]
 }
