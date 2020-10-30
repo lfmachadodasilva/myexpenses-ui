@@ -10,11 +10,9 @@ import { ConfigManager } from '../../configurations/configManager';
 import { globalContext } from '../../contexts/global';
 import { hasValue } from '../../helpers/util';
 import { ConfigModel } from '../../models/config';
-import { ExpenseFullModel } from '../../models/expense';
+import { ExpenseFullModel, ExpenseType } from '../../models/expense';
 import { ExpenseService } from '../../services/expense';
 import { LabelModel } from '../../models/label';
-import { LabelService } from '../../services/label';
-import { LoadingComponent } from '../../components/loading/loading';
 import { ErrorComponent } from '../../components/error/error';
 
 export type ExpenseModalProps = {
@@ -27,34 +25,35 @@ export type ExpenseModalProps = {
 export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: ExpenseModalProps) => {
     const [t] = useTranslation();
 
-    const { group } = useContext(globalContext);
+    const { group, labels: labelsGroup } = useContext(globalContext);
 
     const [error, setError] = React.useState('');
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
+    const [type, setType] = React.useState<ExpenseType>(ExpenseType.OUTCOMING);
     const [name, setName] = React.useState<string>('');
     const [value, setValue] = React.useState<number>();
     const [date, setDate] = React.useState<Date>(new Date());
     const [label, setLabel] = React.useState<number>();
     const [labels, setLabels] = React.useState<LabelModel[]>([]);
-    const [isLoadingLabels, setLoadingLabels] = React.useState<boolean>(false);
     const [comments, setComments] = React.useState<string>('');
     const [isLoadingAction, setLoadingAction] = React.useState(false);
 
     //#region handles
-    const handleOnChangeName = React.useCallback(event => {
+    const handleOnChangeType = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setType(+event.target.value as ExpenseType);
+    }, []);
+    const handleOnChangeName = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value);
     }, []);
-
-    const handleOnChangeValue = React.useCallback(event => {
-        setValue(event.target.value as number);
+    const handleOnChangeValue = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setValue(+event.target.value);
     }, []);
-
     const handleOnChangeDate = React.useCallback(event => {
         setDate(event.target.value);
     }, []);
-
-    const handleOnChangeLabel = React.useCallback(event => {
-        setLabel(event.target.value as number);
+    const handleOnChangeLabel = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setLabel(+event.target.value);
+        localStorage.setItem('label', event.target.value);
     }, []);
 
     const handleOnChangeComments = React.useCallback(event => {
@@ -68,10 +67,12 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
             try {
                 await new ExpenseService(config).update({
                     ...(props.expense as ExpenseFullModel),
+                    type: type,
                     name: name,
                     value: value as number,
                     date: date,
                     labelId: label as number,
+                    groupId: group,
                     comments: comments
                 });
                 props.onAction();
@@ -84,12 +85,13 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
             setLoadingAction(true);
             try {
                 await new ExpenseService(config).add({
+                    type: type,
                     name: name,
                     value: value as number,
                     date: date,
                     labelId: label as number,
-                    comments: comments,
-                    groupId: group
+                    groupId: group,
+                    comments: comments
                 });
                 props.onAction();
             } catch {
@@ -98,7 +100,7 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
                 setLoadingAction(false);
             }
         }
-    }, [name, value, date, label, comments, t, config, props, group]);
+    }, [type, name, value, date, label, comments, t, config, props, group]);
     //#endregion
 
     React.useEffect(() => {
@@ -106,41 +108,35 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
             return;
         }
 
+        setLabels(labelsGroup);
+        setError('');
+
         if (props.expense) {
+            setType(props.expense?.type);
             setName(props.expense?.name);
             setValue(props.expense?.value);
             setDate(props.expense?.date);
             setLabel(props.expense?.label.id);
             setComments(props.expense?.comments);
         } else {
+            setType(ExpenseType.OUTCOMING);
             setName('');
             setValue(undefined);
             setDate(new Date());
-            setLabel(labels.length > 0 ? labels[0].id : undefined);
+            const l = localStorage.getItem('label');
+            if (hasValue(l) && labelsGroup.some(x => x.id === +(l as string))) {
+                setLabel(+(l as string));
+            } else {
+                setLabel(labelsGroup.length > 0 ? labelsGroup[0].id : undefined);
+            }
+
             setComments('');
         }
-    }, [props, labels]);
-
-    React.useEffect(() => {
-        const runAsync = async () => {
-            setLoadingLabels(true);
-            setError('');
-            try {
-                const data = await new LabelService(config).getAll(group);
-                setLabels(data);
-            } catch {
-                setError(t('EXPENSE.ERROR'));
-            } finally {
-                setLoadingLabels(false);
-            }
-        };
-        runAsync();
-    }, [t, config, group]);
+    }, [props, labelsGroup]);
 
     const disabledAction = React.useMemo(() => {
         if (
             isLoadingAction ||
-            isLoadingLabels ||
             hasValue(error) ||
             !hasValue(name) ||
             !hasValue(value) ||
@@ -151,7 +147,7 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
         }
 
         return false;
-    }, [error, name, value, date, label, isLoadingAction, isLoadingLabels]);
+    }, [error, name, value, date, label, isLoadingAction]);
 
     const labelOptions = React.useMemo(
         () =>
@@ -174,6 +170,17 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
                 <Modal.Body>
                     <ErrorComponent message={error} />
                     <Form>
+                        <Form.Group controlId="formLabel">
+                            <Form.Label>{t('EXPENSE.MODAL.TYPE')}</Form.Label>
+                            <Form.Control as="select" value={type ?? ''} onChange={handleOnChangeType}>
+                                <option key={ExpenseType.OUTCOMING} value={ExpenseType.OUTCOMING}>
+                                    {t('EXPENSE.OUTCOMING')}
+                                </option>
+                                <option key={ExpenseType.INCOMING} value={ExpenseType.INCOMING}>
+                                    {t('EXPENSE.INCOMING')}
+                                </option>
+                            </Form.Control>
+                        </Form.Group>
                         <Form.Group controlId="formName">
                             <Form.Label>{t('EXPENSE.MODAL.NAME')}</Form.Label>
                             <Form.Control
@@ -205,11 +212,9 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
                         </Form.Group>
                         <Form.Group controlId="formLabel">
                             <Form.Label>{t('EXPENSE.MODAL.LABEL')}</Form.Label>
-                            <LoadingComponent isLoading={isLoadingLabels}>
-                                <Form.Control as="select" value={label ?? ''} onChange={handleOnChangeLabel}>
-                                    {labelOptions}
-                                </Form.Control>
-                            </LoadingComponent>
+                            <Form.Control as="select" value={label ?? ''} onChange={handleOnChangeLabel}>
+                                {labelOptions}
+                            </Form.Control>
                         </Form.Group>
                         <Form.Group controlId="formComments">
                             <Form.Label>{t('EXPENSE.MODAL.COMMENTS')}</Form.Label>

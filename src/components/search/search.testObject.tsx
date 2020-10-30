@@ -29,6 +29,5 @@ export class SearchTestObject extends TestObjectBase<SearchProps> {
 
     checkPageHaveBeenChanged() {
         expect(this.historyMock.push).toBeCalled();
-        console.log(this.historyMock.push);
     }
 }

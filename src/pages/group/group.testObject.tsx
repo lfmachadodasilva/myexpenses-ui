@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { userContext } from '../../contexts/user';
+import { UserContext, userContext } from '../../contexts/user';
 import { TestObjectBase } from '../../helpers/testObjectBase';
 import { GroupPage, GroupProps } from './group';
 import { GroupModalTestObject } from '../groupModal/groupModal.testObject';
@@ -8,10 +8,7 @@ import { ItemTestObject } from '../../components/item/item.testObject';
 
 export class GroupTestObject extends TestObjectBase<GroupProps> {
     defaultParams: Partial<GroupProps> = {};
-
-    user: firebase.User | null = null;
-    initialising: boolean = false;
-    isReady: boolean = false;
+    user!: UserContext;
 
     modalObject!: GroupModalTestObject;
     itemObject!: ItemTestObject;
@@ -26,13 +23,7 @@ export class GroupTestObject extends TestObjectBase<GroupProps> {
 
     protected render(props: GroupProps) {
         return (
-            <userContext.Provider
-                value={{
-                    user: this.user,
-                    initialising: this.initialising,
-                    isReady: this.isReady
-                }}
-            >
+            <userContext.Provider value={this.user}>
                 <GroupPage {...props} />
             </userContext.Provider>
         );

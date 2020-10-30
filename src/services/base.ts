@@ -1,6 +1,13 @@
 import axios, { AxiosError } from 'axios';
 import { ConfigModel } from '../models/config';
 
+export enum FetchStatus {
+    READY,
+    LOADING,
+    LOADED,
+    ERROR
+}
+
 export enum StatusCodes {
     OK = 200,
     ERROR = 500

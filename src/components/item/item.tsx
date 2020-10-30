@@ -18,7 +18,7 @@ export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = React
 
         return (
             <div className="item-component">
-                <Card key={`${props.id}_${props.name}`} className="mb-1">
+                <Card key={`${props.id}_${props.name}`} className="mb-2 mt-2">
                     <Card.Title className="mt-2 mr-2 ml-2 mb-0">
                         <div className="d-flex justify-content-between">
                             {props.name}

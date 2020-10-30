@@ -16,7 +16,7 @@ export class ExpenseService extends ServiceBase {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
             return this.resolveMockData(yearsMockData);
         }
-        return await this.get<number[]>(this.baseUrl + '/years');
+        return await this.get<number[]>(this.baseUrl + '/years', { group: group });
     }
 
     async getAllFull(group: number, month: number, year: number): Promise<ExpenseFullModel[]> {

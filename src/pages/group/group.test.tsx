@@ -1,5 +1,6 @@
 import { fireEvent, wait, within } from '@testing-library/react';
 import { setConfiguration } from '../../configurations/configManager';
+import { defaultUserContext } from '../../contexts/user';
 import { AxiosMock } from '../../helpers/axiosMock';
 import { groupsFullMockData } from '../../mockData/group';
 import { usersMockData } from '../../mockData/user';
@@ -10,13 +11,7 @@ import { GroupTestObject } from './group.testObject';
 
 async function defaultInitialise(props: Partial<GroupProps> = {}) {
     const obj = new GroupTestObject();
-
-    obj.user = {
-        uid: usersMockData[1].id,
-        displayName: usersMockData[1].displayName,
-        email: usersMockData[1].email
-    } as firebase.User;
-
+    obj.user = defaultUserContext;
     await obj.initialiseObject(props);
 
     expect(obj).toBeDefined();

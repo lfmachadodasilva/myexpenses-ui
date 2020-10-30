@@ -92,23 +92,6 @@ describe('<ExpenseModalPage />', () => {
 
             expect(obj.getByText('Add')).toHaveAttribute('disabled');
         });
-
-        test('fail to load labels', async () => {
-            axiosMock.onGet('/api/label').reply(StatusCodes.ERROR);
-
-            const mockOnAction = jest.fn();
-            const obj = await defaultInitialise({
-                show: true,
-                onAction: mockOnAction
-            });
-
-            await wait(() => {
-                expect(axiosMock.postSpy).toHaveBeenCalled();
-                expect(obj.queryByText('Something went wrong. Try again later.')).toBeInTheDocument();
-            });
-
-            expect(obj.getByText('Add')).toHaveAttribute('disabled');
-        });
     });
 
     describe('edit mode', () => {
@@ -153,24 +136,6 @@ describe('<ExpenseModalPage />', () => {
             await wait(() => {
                 expect(axiosMock.putSpy).toHaveBeenCalled();
                 expect(mockOnAction).not.toHaveBeenCalled();
-                expect(obj.queryByText('Something went wrong. Try again later.')).toBeInTheDocument();
-            });
-
-            expect(obj.getByText('Edit')).toHaveAttribute('disabled');
-        });
-
-        test('fail to load labels', async () => {
-            axiosMock.onGet('/api/label').reply(StatusCodes.ERROR);
-
-            const mockOnAction = jest.fn();
-            const obj = await defaultInitialise({
-                show: true,
-                onAction: mockOnAction,
-                expense: expensesFullMockData[0]
-            });
-
-            await wait(() => {
-                expect(axiosMock.postSpy).toHaveBeenCalled();
                 expect(obj.queryByText('Something went wrong. Try again later.')).toBeInTheDocument();
             });
 

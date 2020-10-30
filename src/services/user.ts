@@ -11,6 +11,11 @@ export class UserService extends ServiceBase {
     }
 
     async addOrUpdate(user: UserModel): Promise<UserModel> {
+        if (this.config.apiUrl === ApiType.FIREBASE) {
+        } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
+        } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
+            return this.resolveMockData<UserModel>(usersMockData[0]);
+        }
         return await this.post<UserModel>('/api/user', {}, user);
     }
 
@@ -23,23 +28,23 @@ export class UserService extends ServiceBase {
         return await this.get<UserModel[]>(this.baseUrl);
     }
 
-    async add(obj: Partial<UserModel>): Promise<UserModel> {
-        if (this.config.apiUrl === ApiType.FIREBASE) {
-        } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
-        } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
-            return this.resolveMockData(usersMockData[0]);
-        }
-        return await this.post<UserModel>(this.baseUrl, {}, obj);
-    }
+    // async add(obj: Partial<UserModel>): Promise<UserModel> {
+    //     if (this.config.apiUrl === ApiType.FIREBASE) {
+    //     } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
+    //     } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
+    //         return this.resolveMockData(usersMockData[0]);
+    //     }
+    //     return await this.post<UserModel>(this.baseUrl, {}, obj);
+    // }
 
-    async update(obj: UserModel): Promise<void> {
-        if (this.config.apiUrl === ApiType.FIREBASE) {
-        } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
-        } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
-            return this.resolveMockData<void>(undefined);
-        }
-        return await this.put<void>(this.baseUrl, {}, obj);
-    }
+    // async update(obj: UserModel): Promise<void> {
+    //     if (this.config.apiUrl === ApiType.FIREBASE) {
+    //     } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
+    //     } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
+    //         return this.resolveMockData<void>(undefined);
+    //     }
+    //     return await this.put<void>(this.baseUrl, {}, obj);
+    // }
 
     async remove(id: string): Promise<void> {
         if (this.config.apiUrl === ApiType.FIREBASE) {

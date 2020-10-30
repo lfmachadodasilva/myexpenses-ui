@@ -109,7 +109,12 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
     return (
         <>
             <GroupStyle />
-            <ItemsHeaderComponent title={t('GROUP.TITLE')} action={t('GROUP.ADD')} onAction={handleOnAdd} />
+            <ItemsHeaderComponent
+                title={t('GROUP.TITLE')}
+                action={t('GROUP.ADD')}
+                onAction={handleOnAdd}
+                disableAction={isLoading}
+            />
             <ErrorComponent message={error} />
             <LoadingComponent isLoading={isLoading}>{groupElements}</LoadingComponent>
             <GroupModalPage show={showModal} group={group} onHide={handleOnHide} onAction={handleOnAction} />

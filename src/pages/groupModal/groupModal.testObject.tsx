@@ -3,26 +3,17 @@ import { fireEvent, wait } from '@testing-library/react';
 
 import { TestObjectBase } from '../../helpers/testObjectBase';
 import { GroupModalPage, GroupModalProps } from './groupModal';
-import { userContext } from '../../contexts/user';
+import { UserContext, userContext } from '../../contexts/user';
 
 export class GroupModalTestObject extends TestObjectBase<GroupModalProps> {
     defaultParams: Partial<GroupModalProps> = {};
-
-    user: firebase.User | null = null;
-    initialising: boolean = false;
-    isReady: boolean = false;
+    user!: UserContext;
 
     protected initialiseSubObjects(): void {}
 
     protected render(props: GroupModalProps) {
         return (
-            <userContext.Provider
-                value={{
-                    user: this.user,
-                    initialising: this.initialising,
-                    isReady: this.isReady
-                }}
-            >
+            <userContext.Provider value={this.user}>
                 <GroupModalPage {...props} />
             </userContext.Provider>
         );

@@ -1,8 +1,11 @@
 import React from 'react';
 import { GroupModel } from '../models/group';
+import { LabelModel } from '../models/label';
 
 export interface GlobalContext {
     isLoading: boolean;
+
+    labels: LabelModel[];
 
     groups: GroupModel[];
     years: number[];
@@ -12,13 +15,17 @@ export interface GlobalContext {
     year: number;
 }
 
-export const globalContext = React.createContext<GlobalContext>({
+export const defaultGlobalContext: GlobalContext = {
     isLoading: true,
+
+    labels: [],
 
     groups: [],
     years: [],
 
     group: 0,
-    month: 0,
-    year: 0
-});
+    month: 1,
+    year: 2020
+};
+
+export const globalContext = React.createContext<GlobalContext>(defaultGlobalContext);

@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { createGlobalStyle } from 'styled-components';
+import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
-import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
 import { Routes } from '../../pages/routes';
 import { userContext } from '../../contexts/user';
 import { hasValue } from '../../helpers/util';
@@ -23,7 +23,7 @@ const HeaderStyle = createGlobalStyle`
 export type HeaderProps = {};
 
 export const HeaderComponent: React.FC<HeaderProps> = React.memo((props: HeaderProps) => {
-    const { user, initialising } = useContext(userContext);
+    const { user, initialising, isReady } = useContext(userContext);
     const history = useHistory();
     const [t] = useTranslation();
     const [expanded, setExpand] = React.useState<boolean>(false);
@@ -58,6 +58,9 @@ export const HeaderComponent: React.FC<HeaderProps> = React.memo((props: HeaderP
                         <NavDropdown.Item onClick={() => handleRedirectTo(Routes.settings)}>
                             {t('HEADER.SETTINGS')}
                         </NavDropdown.Item>
+                        <NavDropdown.Item onClick={() => handleRedirectTo(Routes.import)}>
+                            {t('HEADER.IMPORT')}
+                        </NavDropdown.Item>
                         <NavDropdown.Divider />
                         <NavDropdown.Item onClick={handleLogout}>{t('HEADER.LOGOUT')}</NavDropdown.Item>
                     </NavDropdown>
@@ -82,11 +85,16 @@ export const HeaderComponent: React.FC<HeaderProps> = React.memo((props: HeaderP
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
 
                     <Navbar.Collapse id="responsive-navbar-nav" className="mr-auto ">
-                        <Nav className="mr-auto">
-                            <Nav.Link onClick={() => handleRedirectTo(Routes.group)}>{t('HEADER.GROUP')}</Nav.Link>
-                            <Nav.Link onClick={() => handleRedirectTo(Routes.label)}>{t('HEADER.LABEL')}</Nav.Link>
-                            <Nav.Link onClick={() => handleRedirectTo(Routes.expense)}>{t('HEADER.EXPENSE')}</Nav.Link>
-                        </Nav>
+                        {isReady && (
+                            <Nav className="mr-auto">
+                                <Nav.Link onClick={() => handleRedirectTo(Routes.group)}>{t('HEADER.GROUP')}</Nav.Link>
+                                <Nav.Link onClick={() => handleRedirectTo(Routes.label)}>{t('HEADER.LABEL')}</Nav.Link>
+                                <Nav.Link onClick={() => handleRedirectTo(Routes.expense)}>
+                                    {t('HEADER.EXPENSE')}
+                                </Nav.Link>
+                            </Nav>
+                        )}
+                        {!isReady && <Nav className="mr-auto"></Nav>}
                         {!initialising && authElement}
                     </Navbar.Collapse>
                 </Container>

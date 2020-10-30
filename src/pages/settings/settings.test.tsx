@@ -19,6 +19,6 @@ describe('<SettingsPage />', () => {
     test('should render', async () => {
         const obj = await defaultInitialise();
 
-        expect(obj.getByText('Settings page')).toBeInTheDocument();
+        expect(obj.getByText('Settings')).toBeInTheDocument();
     });
 });

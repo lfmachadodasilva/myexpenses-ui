@@ -20,7 +20,7 @@ export class GroupService extends ServiceBase {
         return await this.get<GroupFullModel[]>(this.baseUrl + '/full', { user: user });
     }
 
-    async getAll(userId: string): Promise<GroupModel[]> {
+    async getAll(): Promise<GroupModel[]> {
         if (this.config.apiUrl === ApiType.FIREBASE) {
         } else if (this.config.apiUrl === ApiType.LOCAL_STORAGE) {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
@@ -35,7 +35,19 @@ export class GroupService extends ServiceBase {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
             return this.resolveMockData(groupsMockData[0]);
         }
-        return await this.post<GroupModel>(this.baseUrl, {}, obj);
+        return await this.post<GroupModel>(
+            this.baseUrl,
+            {},
+            {
+                ...obj,
+                // TODO refactor back end to use array of strings
+                users: obj.users?.map(x => {
+                    return {
+                        id: x
+                    };
+                })
+            }
+        );
     }
 
     async update(obj: GroupModel): Promise<void> {
@@ -44,7 +56,19 @@ export class GroupService extends ServiceBase {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
             return this.resolveMockData<void>(undefined);
         }
-        return await this.put<void>(this.baseUrl, {}, obj);
+        return await this.put<void>(
+            this.baseUrl,
+            {},
+            {
+                // TODO refactor back end to use array of strings
+                ...obj,
+                users: obj.users?.map(x => {
+                    return {
+                        id: x
+                    };
+                })
+            }
+        );
     }
 
     async remove(id: number): Promise<void> {

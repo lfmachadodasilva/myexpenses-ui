@@ -1,10 +1,10 @@
 import { fireEvent, wait, within } from '@testing-library/react';
 
 import { setConfiguration } from '../../configurations/configManager';
+import { defaultUserContext } from '../../contexts/user';
 import { AxiosMock } from '../../helpers/axiosMock';
 import { globalMockData } from '../../mockData/global';
 import { labelsFullMockData } from '../../mockData/label';
-import { usersMockData } from '../../mockData/user';
 import { ApiType } from '../../models/config';
 import { StatusCodes } from '../../services/base';
 import { LabelProps } from './label';
@@ -13,12 +13,7 @@ import { AppTestObject } from './label.testObject';
 async function defaultInitialise(props: Partial<LabelProps> = {}) {
     const obj = new AppTestObject();
 
-    obj.user = {
-        uid: usersMockData[1].id,
-        displayName: usersMockData[1].displayName,
-        email: usersMockData[1].email
-    } as firebase.User;
-
+    obj.user = defaultUserContext;
     obj.global = globalMockData;
 
     await obj.initialiseObject(props);

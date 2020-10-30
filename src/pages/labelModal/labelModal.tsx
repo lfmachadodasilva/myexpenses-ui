@@ -23,6 +23,8 @@ export type LabelModalProps = {
 export const LabelModalPage: React.FC<LabelModalProps> = React.memo((props: LabelModalProps) => {
     const [t] = useTranslation();
 
+    const { show, label } = props;
+
     const { group } = useContext(globalContext);
 
     const [error, setError] = React.useState('');
@@ -63,16 +65,16 @@ export const LabelModalPage: React.FC<LabelModalProps> = React.memo((props: Labe
     }, [name, t, config, props, group]);
 
     React.useEffect(() => {
-        if (!props.show) {
+        if (!show) {
             return;
         }
 
-        if (props.label) {
-            setName(props.label?.name);
+        if (label) {
+            setName(label?.name ?? '');
         } else {
             setName('');
         }
-    }, [props]);
+    }, [show, label]);
 
     const disabledAction = React.useMemo(() => {
         if (isLoadingAction || hasValue(error) || !hasValue(name)) {

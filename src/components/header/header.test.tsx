@@ -1,5 +1,6 @@
 import { fireEvent, wait } from '@testing-library/react';
 import { setConfiguration } from '../../configurations/configManager';
+import { defaultUserContext } from '../../contexts/user';
 import { Routes } from '../../pages/routes';
 import { signOut } from '../../services/auth';
 import { HeaderProps } from './header';
@@ -16,10 +17,7 @@ async function defaultInitialise(
 ) {
     const obj = new HeaderTestObject();
 
-    obj.user = user;
-    obj.initialising = initialising;
-    obj.isReady = isReady;
-
+    obj.user = { ...defaultUserContext, user: user, initialising: initialising, isReady: isReady };
     await obj.initialiseObject(props);
 
     expect(obj).toBeDefined();
@@ -64,7 +62,7 @@ describe('<HeaderComponent />', () => {
         obj.checkPage(Routes.home);
     });
 
-    test('should redirect to settings', async () => {
+    test('should redirect to settings & import', async () => {
         const obj = await defaultInitialise({}, { displayName: 'User Display Name' } as firebase.User, false, true);
         obj.mockClear();
 
@@ -77,6 +75,12 @@ describe('<HeaderComponent />', () => {
         obj.clickByText('Settings');
 
         expect(obj.checkPage(Routes.settings));
+
+        await wait(() => expect(obj.queryByText('Import')).toBeInTheDocument());
+
+        obj.clickByText('Import');
+
+        expect(obj.checkPage(Routes.import));
     });
 
     test('should redirect to home after logout', async () => {

@@ -20,117 +20,250 @@ import { ExpenseService } from '../services/expense';
 import { globalContext } from '../contexts/global';
 import { SearchModel } from '../models/search';
 import { hasValue } from '../helpers/util';
+import { ImportPage } from './import/import';
+import { LabelModel } from '../models/label';
+import { LabelService } from '../services/label';
 
 export type MainProps = {};
 
 export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
-    const { user, isReady } = useContext(userContext);
+    const { isReady } = useContext(userContext);
     const history = useHistory();
     const location = useLocation();
 
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
 
-    const [isLoading, setLoading] = React.useState<boolean>(true);
+    const [isLoadingGroups, setLoadingGroups] = React.useState<boolean>(false);
+    const [isLoadingLabels, setLoadingLabels] = React.useState<boolean>(false);
+    const [isLoadingYears, setLoadingYears] = React.useState<boolean>(false);
+    const [isSelectingGroup, setSelectingGroup] = React.useState<boolean>(false);
+    const [isSelectingMonth, setSelectingMonth] = React.useState<boolean>(false);
+    const [isSelectingYear, setSelectingYear] = React.useState<boolean>(false);
+    const [isPushing, setPushing] = React.useState<boolean>(false);
+    const isLoading = React.useMemo(
+        () =>
+            isLoadingGroups &&
+            isLoadingLabels &&
+            isLoadingYears &&
+            isSelectingGroup &&
+            isSelectingMonth &&
+            isSelectingYear &&
+            isPushing,
+        [
+            isLoadingGroups,
+            isLoadingLabels,
+            isLoadingYears,
+            isSelectingGroup,
+            isSelectingMonth,
+            isSelectingYear,
+            isPushing
+        ]
+    );
 
+    const [labels, setLabels] = React.useState<LabelModel[]>([]);
     const [groups, setGroups] = React.useState<GroupModel[]>([]);
     const [years, setYears] = React.useState<number[]>([]);
 
     const [group, setGroup] = React.useState<GroupModel>();
-    const [month, setMonth] = React.useState<number>(new Date().getMonth());
-    const [year, setYear] = React.useState<number>(0);
+    const [month, setMonth] = React.useState<number>();
+    const [year, setYear] = React.useState<number>();
 
+    const searchParams = React.useMemo(() => {
+        const jsonString = JSON.stringify(queryString.parse(location.search));
+        return JSON.parse(jsonString) as SearchModel;
+    }, [location]);
+
+    // #region load groups
+    React.useEffect(() => {
+        const runAsync = async () => {
+            let results: GroupModel[] = [];
+
+            if (!isReady) {
+                setGroups(results);
+                return;
+            }
+
+            setLoadingGroups(true);
+            try {
+                results = await new GroupService(config).getAll();
+            } catch {
+                results = [];
+            }
+
+            console.log('load Groups', results);
+            setGroups(results);
+            setLoadingGroups(false);
+        };
+        runAsync();
+    }, [isReady, config]);
+    // #endregion
+
+    // #region select group
+    React.useEffect(() => {
+        if (!isReady || !hasValue(groups)) {
+            setGroup(undefined);
+            return;
+        }
+
+        setSelectingGroup(true);
+
+        let selected: GroupModel | undefined;
+        const lastGroup = localStorage.getItem('group') as string;
+        if (hasValue(searchParams.group) && groups.some(x => x.id === +searchParams.group)) {
+            selected = groups.find(x => x.id === +searchParams.group) as GroupModel;
+        } else if (hasValue(lastGroup) && groups.some(x => x.id === +lastGroup)) {
+            selected = groups.find(x => x.id === +lastGroup) as GroupModel;
+        } else if (hasValue(groups)) {
+            selected = groups[0];
+        } else {
+            // groupResults = {} as Partial<GroupModel>;
+            // show error - does not have groups loaded
+            // setLoading(false);
+            // return undefined;
+        }
+
+        console.log('setGroup', selected, searchParams.group);
+        setGroup(selected);
+        if (selected) {
+            localStorage.setItem('group', selected.id.toString());
+        }
+        setSelectingGroup(false);
+    }, [groups, isReady, searchParams.group]);
+    // #endregion
+
+    // #region load labels
+    React.useEffect(() => {
+        const runAsync = async () => {
+            let results: LabelModel[] = [];
+
+            if (!isReady || !hasValue(group)) {
+                setLabels(results);
+                return;
+            }
+
+            setLoadingLabels(true);
+
+            try {
+                results = await new LabelService(config).getAll(group?.id ?? 0);
+            } catch {
+                results = [];
+            }
+
+            console.log('load Labels', results);
+            setLabels(results);
+            setLoadingLabels(false);
+        };
+        runAsync();
+    }, [isReady, config, group]);
+    // #endregion
+
+    // #region load years
+    React.useEffect(() => {
+        const runAsync = async () => {
+            let results: number[] = [];
+
+            if (!isReady || !hasValue(group)) {
+                setYears(results);
+                return;
+            }
+
+            setLoadingYears(true);
+            try {
+                results = await new ExpenseService(config).getYears(group?.id ?? 0);
+            } catch {
+                results = [];
+            }
+
+            if (!hasValue(results)) {
+                results = [new Date().getFullYear()];
+            }
+
+            console.log('load Years', results, group);
+            setYears(results);
+            setLoadingYears(false);
+        };
+        runAsync();
+    }, [isReady, config, group]);
+    // #endregion
+
+    // #region select year
+    React.useEffect(() => {
+        if (!isReady || !hasValue(years)) {
+            return;
+        }
+
+        setSelectingYear(true);
+
+        let selected = new Date().getFullYear();
+
+        const lastYear = localStorage.getItem('year') as string;
+        if (hasValue(searchParams.year) && years.some(x => x === +searchParams.year)) {
+            selected = +searchParams.year;
+        } else if (hasValue(lastYear) && years.some(x => x === +lastYear)) {
+            selected = +lastYear;
+        }
+
+        console.log('setYear', selected, +searchParams.year);
+        setYear(selected);
+        localStorage.setItem('year', selected.toString());
+        setSelectingYear(false);
+    }, [years, isReady, searchParams.year]);
+    // #endregion
+
+    // #region select month
     React.useEffect(() => {
         if (!isReady) {
             return;
         }
 
-        const jsonString = JSON.stringify(queryString.parse(location.search));
-        const searchParams = JSON.parse(jsonString) as SearchModel;
-        setLoading(true);
+        setSelectingMonth(true);
 
-        const setup = async () => {
-            let groupsResults: GroupModel[];
-            let groupResults: GroupModel | undefined;
-            let monthResults: number;
-            let yearsResults: number[];
-            let yearResults: number;
+        let selected = new Date().getMonth();
+        const lastMonth = localStorage.getItem('month') as string;
+        if (hasValue(searchParams.month) && searchParams.month >= 1 && searchParams.month <= 12) {
+            selected = searchParams.month;
+        } else if (hasValue(lastMonth) && +lastMonth >= 1 && +lastMonth <= 12) {
+            selected = +lastMonth;
+        }
 
-            if (groups.length > 0) {
-                groupsResults = groups;
-            } else {
-                try {
-                    groupsResults = await new GroupService(config).getAll(user?.uid ?? '');
-                } catch {
-                    groupsResults = [];
-                }
+        console.log('setMonth', selected, searchParams.month);
+        setMonth(selected);
+        localStorage.setItem('month', selected.toString());
+        setSelectingMonth(false);
+    }, [isReady, searchParams.month]);
+    // #endregion
 
-                console.log('load again ', groupsResults);
-            }
+    // #region push changes
+    React.useEffect(() => {
+        if (
+            !isReady ||
+            !hasValue(group) ||
+            !hasValue(year) ||
+            !hasValue(month) ||
+            isSelectingGroup ||
+            isSelectingMonth ||
+            isSelectingYear
+        ) {
+            return;
+        }
 
-            const lastGroup = localStorage.getItem('group') as string;
-            setGroups(groupsResults);
-            if (hasValue(searchParams.group) && groupsResults.some(x => x.id === +searchParams.group)) {
-                groupResults = groupsResults.find(x => x.id === +searchParams.group) as GroupModel;
-            } else if (hasValue(lastGroup) && groupsResults.some(x => x.id === +lastGroup)) {
-                groupResults = groupsResults.find(x => x.id === +lastGroup) as GroupModel;
-            } else if (hasValue(groupsResults)) {
-                groupResults = groupsResults[0];
-            } else {
-                // groupResults = {} as Partial<GroupModel>;
-                // show error - does not have groups loaded
-            }
+        setPushing(false);
+        console.log('history.push', group, month, year);
+        history.push({
+            pathname: location.pathname,
+            search: queryString.stringify({
+                group: group?.id,
+                month: month,
+                year: year
+            })
+        });
+        setPushing(true);
+    }, [isReady, group, month, year, history, location.pathname, isSelectingGroup, isSelectingMonth, isSelectingYear]);
+    // #endregion
 
-            setGroup(groupResults);
-            localStorage.setItem('group', groupResults?.id.toString() as string);
-
-            const lastMonth = localStorage.getItem('month') as string;
-            if (hasValue(searchParams.month) && searchParams.month >= 1 && searchParams.month <= 12) {
-                monthResults = searchParams.month;
-            } else if (hasValue(lastMonth) && +lastMonth >= 1 && +lastMonth <= 12) {
-                monthResults = +lastMonth;
-            } else {
-                monthResults = new Date().getMonth();
-            }
-            setMonth(monthResults);
-            localStorage.setItem('month', monthResults.toString());
-
-            if (years.length > 0) {
-                yearsResults = years;
-            } else {
-                try {
-                    yearsResults = await new ExpenseService(config).getYears(groupResults?.id ?? 0);
-                } catch {
-                    yearsResults = [];
-                }
-            }
-
-            // TODO get years from expenses
-            const lastYear = localStorage.getItem('year') as string;
-            setYears(yearsResults);
-            if (hasValue(searchParams.year) && yearsResults.some(x => x === +searchParams.year)) {
-                yearResults = searchParams.year;
-            } else if (hasValue(lastYear) && yearsResults.some(x => x === +lastYear)) {
-                yearResults = +lastYear;
-            } else {
-                yearResults = new Date().getFullYear();
-            }
-            setYear(yearResults);
-            localStorage.setItem('year', yearResults.toString());
-
-            history.push({
-                pathname: location.pathname,
-                search: queryString.stringify({
-                    group: groupResults?.id,
-                    month: monthResults,
-                    year: yearResults
-                })
-            });
-
-            setLoading(false);
-        };
-        setup();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [config, history, location, isReady, user]);
+    const enablePrivateRoute = React.useMemo(() => {
+        return isReady;
+    }, [isReady]);
 
     return (
         <>
@@ -138,20 +271,34 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
                 value={{
                     isLoading: isLoading,
 
+                    labels: labels,
+
                     groups: groups,
                     years: years,
 
                     group: group?.id ?? 0,
-                    month: month,
-                    year: year
+                    month: month ?? 0,
+                    year: year ?? 0
                 }}
             >
                 <Container className="mt-2">
                     <Switch>
-                        {isReady && <PrivateRoute key={Routes.group} path={Routes.group} component={GroupPage} />}
-                        {isReady && <PrivateRoute key={Routes.label} path={Routes.label} component={LabelPage} />}
-                        {isReady && <PrivateRoute key={Routes.expense} path={Routes.expense} component={ExpensePage} />}
-                        <PrivateRoute key={Routes.settings} path={Routes.settings} component={SettingsPage} />
+                        {enablePrivateRoute && (
+                            <PrivateRoute key={Routes.group} path={Routes.group} component={GroupPage} />
+                        )}
+                        {enablePrivateRoute && (
+                            <PrivateRoute key={Routes.label} path={Routes.label} component={LabelPage} />
+                        )}
+                        {enablePrivateRoute && (
+                            <PrivateRoute key={Routes.expense} path={Routes.expense} component={ExpensePage} />
+                        )}
+                        {enablePrivateRoute && (
+                            <PrivateRoute key={Routes.settings} path={Routes.settings} component={SettingsPage} />
+                        )}
+                        {enablePrivateRoute && (
+                            <PrivateRoute key={Routes.import} path={Routes.import} component={ImportPage} />
+                        )}
+
                         <Route key={Routes.auth} path={Routes.auth} component={AuthPage} />
                         <Route key={Routes.home} exact path={Routes.home}>
                             <>
@@ -159,9 +306,12 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
                                 <h6>Build Version: {config.buildVersion}</h6>
                             </>
                         </Route>
-                        <Route key={'*'} path="*">
-                            <h1> 404 </h1>
-                        </Route>
+
+                        {isReady && (
+                            <Route key={'*'} path="*">
+                                <h1> 404 </h1>
+                            </Route>
+                        )}
                     </Switch>
                 </Container>
             </globalContext.Provider>

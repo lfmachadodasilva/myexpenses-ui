@@ -36,9 +36,6 @@ const LabelStyle = createGlobalStyle`
     canvas {
         max-width: 500px;
     };
-    .red-text {
-        color: #dc3545;
-    }
 `;
 
 export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) => {
@@ -125,8 +122,8 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
         () =>
             labels.map(label => {
                 const currValueClass =
-                    label.currValue > label.lastValue || label.currValue > label.avgValue ? 'red-text' : '';
-                const lastValueClass = label.lastValue > label.avgValue ? 'red-text' : '';
+                    label.currValue > label.lastValue || label.currValue > label.avgValue ? 'text-danger' : '';
+                const lastValueClass = label.lastValue > label.avgValue ? 'text-danger' : '';
 
                 return (
                     <ItemComponent
@@ -213,9 +210,14 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
         <>
             <LabelStyle />
             <SearchComponent />
-            <ItemsHeaderComponent title={t('LABEL.TITLE')} action={t('LABEL.ADD')} onAction={handleOnAdd} />
+            <ItemsHeaderComponent
+                title={t('LABEL.TITLE')}
+                action={t('LABEL.ADD')}
+                onAction={handleOnAdd}
+                disableAction={isLoading || global.isLoading}
+            />
             <ErrorComponent message={error} />
-            <LoadingComponent isLoading={isLoading}>
+            <LoadingComponent isLoading={isLoading || global.isLoading}>
                 <Tabs defaultActiveKey="items">
                     <Tab eventKey="items" title={t('LABEL.TAB_ITEMS')}>
                         {itemsElements}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
-import { userContext } from '../../contexts/user';
+import { UserContext, userContext } from '../../contexts/user';
 
 import { TestObjectBase } from '../../helpers/testObjectBase';
 import { HeaderComponent, HeaderProps } from './header';
@@ -8,22 +8,13 @@ import { HeaderComponent, HeaderProps } from './header';
 export class HeaderTestObject extends TestObjectBase<HeaderProps> {
     defaultParams: Partial<HeaderProps> = {};
     historyMock = { push: jest.fn(), location: {}, listen: jest.fn() };
-
-    user: firebase.User | null = null;
-    initialising: boolean = false;
-    isReady: boolean = false;
+    user!: UserContext;
 
     protected initialiseSubObjects(): void {}
 
     protected render(props: HeaderProps) {
         return (
-            <userContext.Provider
-                value={{
-                    user: this.user,
-                    initialising: this.initialising,
-                    isReady: this.isReady
-                }}
-            >
+            <userContext.Provider value={this.user}>
                 <Router history={this.historyMock as any}>
                     <HeaderComponent {...props} />
                 </Router>

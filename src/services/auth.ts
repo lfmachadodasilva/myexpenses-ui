@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import firebase, { auth } from 'firebase/app';
 import 'firebase/auth'; // If using Firebase auth
+import { UserService } from './user';
+import { UserModel } from '../models/user';
+import { ConfigModel } from '../models/config';
 // import { UserService } from './userService';
 // import { ConfigurationManager } from '../configurations/configurationManager';
 // import { UserModel } from '../models/user';
@@ -63,23 +66,20 @@ export const resetPassword = async (email: string) => {
     }
 };
 
-// export const updateUser = async (user: firebase.User | null, displayName: string) => {
-//     try {
-//         await user?.updateProfile({ displayName: displayName });
+export const updateUser = async (config: ConfigModel, user: firebase.User, displayName: string) => {
+    try {
+        await user?.updateProfile({ displayName: displayName });
 
-//         const config = ConfigurationManager.get();
-//         const userObj = user as firebase.User;
-
-//         return await new UserService(config).addOrUpdate({
-//             id: userObj.uid,
-//             email: userObj.email,
-//             displayName: userObj.displayName,
-//             photoUrl: userObj.photoURL
-//         } as UserModel);
-//     } catch (err) {
-//         console.error(err);
-//         throw err;
-//     }
-// };
+        await new UserService(config).addOrUpdate({
+            id: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoUrl: user.photoURL
+        } as UserModel);
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
 
 export const signOut = () => firebase.auth().signOut();

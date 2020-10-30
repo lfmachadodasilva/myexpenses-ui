@@ -9,7 +9,7 @@ import { ConfigModel } from '../models/config';
 import { useAuth } from '../services/auth';
 
 import { GlobalStyles } from './globalSyles';
-import { darkTheme } from './theme';
+import { darkTheme, lightTheme } from './theme';
 import { hasValue } from '../helpers/util';
 import { userContext } from '../contexts/user';
 import { MainPage } from './main';
@@ -20,13 +20,32 @@ export type AppProps = {};
 
 export const AppPage: React.FC<AppProps> = React.memo((_props: AppProps) => {
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
-    const isDarkMode = React.useMemo(
-        () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches,
-        []
-    );
     const { user, initialising } = useAuth();
-
+    const [isDarkTheme, setDarkTheme] = React.useState<boolean>(
+        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+    );
     const [isReady, setReady] = React.useState<boolean>(false);
+
+    const handleDarkTheme = React.useCallback((dark: boolean) => {
+        setDarkTheme(dark);
+    }, []);
+
+    const theme = React.useMemo(() => {
+        let theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (hasValue(localStorage.getItem('darkTheme'))) {
+            theme = JSON.parse(localStorage.getItem('darkTheme') as string);
+            setDarkTheme(theme);
+        }
+
+        if (hasValue(isDarkTheme) && isDarkTheme !== theme) {
+            theme = isDarkTheme as boolean;
+            setDarkTheme(theme);
+            localStorage.setItem('darkTheme', theme.toString());
+        }
+
+        return isDarkTheme ? darkTheme : lightTheme;
+    }, [isDarkTheme]);
 
     React.useEffect(() => {
         if (initialising || !user) {
@@ -49,14 +68,16 @@ export const AppPage: React.FC<AppProps> = React.memo((_props: AppProps) => {
 
     return (
         <>
-            <ThemeProvider theme={isDarkMode ? darkTheme : {}}>
+            <ThemeProvider theme={theme}>
                 <>
                     <GlobalStyles />
                     <userContext.Provider
                         value={{
                             user: user,
                             initialising: initialising,
-                            isReady: isReady
+                            isReady: isReady,
+                            isDarkTheme: isDarkTheme ?? true,
+                            setDarkTheme: handleDarkTheme
                         }}
                     >
                         {config.useHashRouter && (

@@ -38,7 +38,7 @@ export class LabelService extends ServiceBase {
         } else if (this.config.apiUrl === ApiType.TOTAL_FAKE) {
             return this.resolveMockData(labelsMockData[0]);
         }
-        return await this.post<LabelModel>(this.baseUrl, {}, obj);
+        return await this.post<LabelModel>(this.baseUrl, { group: obj.groupId }, obj);
     }
 
     async update(obj: LabelModel): Promise<void> {

@@ -19,6 +19,7 @@
         "LABEL": "Label",
         "EXPENSE": "Expense",
         "SETTINGS": "Settings",
+        "IMPORT": "Import",
         "LOGOUT": "Logout",
         "LOGIN": "Login"
     },
@@ -99,6 +100,7 @@
             "EDIT_TITLE": "Edit expense",
             "ADD_ACTION": "Add",
             "EDIT_ACTION": "Edit",
+            "TYPE": "Type",
             "NAME": "Name",
             "VALUE": "Value",
             "DATE": "Date",
@@ -107,6 +109,35 @@
             "NAME_PLACEHOLDER": "Enter name",
             "VALUE_PLACEHOLDER": "Enter value",
             "COMMENTS_PLACEHOLDER": "Enter comments"
+        }
+    },
+    "SETTINGS": {
+        "TITLE": "Settings",
+        "DARK_THEME": "Dark theme",
+        "DISPLAY_NAME": "Display name",
+        "DISPLAY_NAME_PLACEHOLDER": "Enter display name",
+        "UPDATE": "Update",
+        "ERROR": "Something went wrong. Try again later."
+    },
+    "IMPORT": {
+        "TITLE": "Import",
+        "GROUP": "Group",
+        "SEPARATOR": "Separator",
+        "DATA": "Import data",
+        "DATA_TEXT": "Format per line: TYPE;NAME;VALUE;DATE;LABEL;COMMENTS",
+        "DATA_PLACEHOLDER": "0;Some drinks;8.79;20/12/2020;Pub;2x\n1;Some food;20.55;25/12/2020;Meal;5 Old Mill\n0;Some groceries;18.34;27/12/2020;Market;Aldi",
+        "ACTION": "Process",
+        "TABLE": {
+            "NUMBER": "#",
+            "STATUS": "Status",
+            "TYPE": "Type",
+            "NAME": "Name",
+            "VALUE": "Value",
+            "DATE": "Date",
+            "DATE_FORMAT": "dd/MM/yy",
+            "INVALID_DATE": "Invalid date",
+            "LABEL": "Label",
+            "COMMENTS": "Comments"
         }
     }
 }

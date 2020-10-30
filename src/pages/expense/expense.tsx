@@ -108,11 +108,11 @@ export const ExpensePage: React.FC<ExpenseProps> = React.memo((props: ExpensePro
 
     //#region items
     const incomingItems = React.useMemo(() => {
-        return expenses.filter(x => x.type === ExpenseType.INCOMING);
+        return expenses.filter(x => x.type === +ExpenseType.INCOMING);
     }, [expenses]);
 
     const outcomingItems = React.useMemo(() => {
-        return expenses.filter(x => x.type === ExpenseType.OUTCOMING);
+        return expenses.filter(x => x.type === +ExpenseType.OUTCOMING);
     }, [expenses]);
     //#endregion
 
@@ -120,7 +120,12 @@ export const ExpensePage: React.FC<ExpenseProps> = React.memo((props: ExpensePro
         <>
             <ExpenseStyle />
             <SearchComponent />
-            <ItemsHeaderComponent title={t('EXPENSE.TITLE')} action={t('EXPENSE.ADD')} onAction={handleOnAdd} />
+            <ItemsHeaderComponent
+                title={t('EXPENSE.TITLE')}
+                action={t('EXPENSE.ADD')}
+                onAction={handleOnAdd}
+                disableAction={isLoading || global.isLoading}
+            />
             <ErrorComponent message={error} />
             <LoadingComponent isLoading={isLoading || global.isLoading}>
                 <Tabs defaultActiveKey="summary">

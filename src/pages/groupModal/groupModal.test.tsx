@@ -7,16 +7,18 @@ import { StatusCodes } from '../../services/base';
 import { wait } from '@testing-library/react';
 import { AxiosMock } from '../../helpers/axiosMock';
 import { groupsFullMockData, groupsMockData } from '../../mockData/group';
+import { defaultUserContext } from '../../contexts/user';
 
 async function defaultInitialise(props: Partial<GroupModalProps> = {}) {
     const obj = new GroupModalTestObject();
-
     obj.user = {
-        uid: usersMockData[1].id,
-        displayName: usersMockData[1].displayName,
-        email: usersMockData[1].email
-    } as firebase.User;
-
+        ...defaultUserContext,
+        user: {
+            uid: usersMockData[1].id,
+            displayName: usersMockData[1].displayName,
+            email: usersMockData[1].email
+        } as firebase.User
+    };
     await obj.initialiseObject(props);
 
     expect(obj).toBeDefined();

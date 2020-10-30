@@ -1,7 +1,7 @@
 import { LabelModel } from './label';
 
 export enum ExpenseType {
-    INCOMING = 1,
+    INCOMING = 0,
     OUTCOMING
 }
 

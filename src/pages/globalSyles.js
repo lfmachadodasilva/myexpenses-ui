@@ -5,6 +5,10 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.text};
   };
 
+  .table {
+    color: ${({ theme }) => theme.text};
+  };
+  
   .card {
     background: ${({ theme }) => theme.body};
     color: ${({ theme }) => theme.text};
