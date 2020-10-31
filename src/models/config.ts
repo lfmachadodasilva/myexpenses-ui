@@ -7,7 +7,7 @@ export enum ApiType {
 
 export class ConfigModel {
     /** api backend url */
-    apiUrl: string = 'http://localhost:5000/';
+    apiUrl: string = 'TOTAL_FAKE';
 
     /** build version */
     buildVersion: string = 'local';
