@@ -33,21 +33,21 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
 
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
 
-    const [isLoadingGroups, setLoadingGroups] = React.useState<boolean>(false);
-    const [isLoadingLabels, setLoadingLabels] = React.useState<boolean>(false);
-    const [isLoadingYears, setLoadingYears] = React.useState<boolean>(false);
-    const [isSelectingGroup, setSelectingGroup] = React.useState<boolean>(false);
-    const [isSelectingMonth, setSelectingMonth] = React.useState<boolean>(false);
-    const [isSelectingYear, setSelectingYear] = React.useState<boolean>(false);
-    const [isPushing, setPushing] = React.useState<boolean>(false);
+    const [isLoadingGroups, setLoadingGroups] = React.useState<boolean>(true);
+    const [isLoadingLabels, setLoadingLabels] = React.useState<boolean>(true);
+    const [isLoadingYears, setLoadingYears] = React.useState<boolean>(true);
+    const [isSelectingGroup, setSelectingGroup] = React.useState<boolean>(true);
+    const [isSelectingMonth, setSelectingMonth] = React.useState<boolean>(true);
+    const [isSelectingYear, setSelectingYear] = React.useState<boolean>(true);
+    const [isPushing, setPushing] = React.useState<boolean>(true);
     const isLoading = React.useMemo(
         () =>
-            isLoadingGroups &&
-            isLoadingLabels &&
-            isLoadingYears &&
-            isSelectingGroup &&
-            isSelectingMonth &&
-            isSelectingYear &&
+            isLoadingGroups ||
+            isLoadingLabels ||
+            isLoadingYears ||
+            isSelectingGroup ||
+            isSelectingMonth ||
+            isSelectingYear ||
             isPushing,
         [
             isLoadingGroups,
@@ -64,6 +64,9 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
     const [groups, setGroups] = React.useState<GroupModel[]>([]);
     const [years, setYears] = React.useState<number[]>([]);
 
+    const [loadGroups, setLoadGroups] = React.useState<boolean>(true);
+    const [loadLabels, setLoadLabels] = React.useState<boolean>(true);
+
     const [group, setGroup] = React.useState<GroupModel>();
     const [month, setMonth] = React.useState<number>();
     const [year, setYear] = React.useState<number>();
@@ -75,6 +78,10 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
 
     // #region load groups
     React.useEffect(() => {
+        if (!loadGroups) {
+            return;
+        }
+
         const runAsync = async () => {
             let results: GroupModel[] = [];
 
@@ -93,9 +100,10 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
             console.log('load Groups', results);
             setGroups(results);
             setLoadingGroups(false);
+            setLoadGroups(!loadGroups);
         };
         runAsync();
-    }, [isReady, config]);
+    }, [isReady, config, loadGroups]);
     // #endregion
 
     // #region select group
@@ -133,6 +141,10 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
 
     // #region load labels
     React.useEffect(() => {
+        if (!loadLabels) {
+            return;
+        }
+
         const runAsync = async () => {
             let results: LabelModel[] = [];
 
@@ -152,9 +164,10 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
             console.log('load Labels', results);
             setLabels(results);
             setLoadingLabels(false);
+            setLoadLabels(!loadLabels);
         };
         runAsync();
-    }, [isReady, config, group]);
+    }, [isReady, config, group, loadLabels]);
     // #endregion
 
     // #region load years
@@ -247,7 +260,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
             return;
         }
 
-        setPushing(false);
+        setPushing(true);
         console.log('history.push', group, month, year);
         history.push({
             pathname: location.pathname,
@@ -257,9 +270,14 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
                 year: year
             })
         });
-        setPushing(true);
+        setPushing(false);
     }, [isReady, group, month, year, history, location.pathname, isSelectingGroup, isSelectingMonth, isSelectingYear]);
     // #endregion
+
+    const handleToReloadAll = React.useCallback(() => {
+        setLoadGroups(!loadGroups);
+        setLoadLabels(!loadLabels);
+    }, [loadGroups, loadLabels]);
 
     const enablePrivateRoute = React.useMemo(() => {
         return isReady;
@@ -278,7 +296,9 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
 
                     group: group?.id ?? 0,
                     month: month ?? 0,
-                    year: year ?? 0
+                    year: year ?? 0,
+
+                    reload: handleToReloadAll
                 }}
             >
                 <Container className="mt-2">

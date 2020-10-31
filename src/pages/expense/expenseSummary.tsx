@@ -28,7 +28,12 @@ export const ExpenseSummaryPage: React.FC<ExpenseSummaryProps> = React.memo((pro
         const tmpTotalLeft = tmpTotalIncoming - tmpTotalOutcoming;
 
         setTotalLeft(tmpTotalLeft);
-        setTotalLeftPer((tmpTotalLeft / tmpTotalIncoming) * 100);
+        if (tmpTotalIncoming === 0) {
+            setTotalLeftPer(0);
+        } else {
+            const left = (tmpTotalLeft / tmpTotalIncoming) * 100;
+            setTotalLeftPer(left);
+        }
     }, [incoming, outcoming]);
 
     return (

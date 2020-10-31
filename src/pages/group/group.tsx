@@ -13,6 +13,7 @@ import { ItemComponent } from '../../components/item/item';
 import { LoadingComponent } from '../../components/loading/loading';
 import { ItemsHeaderComponent } from '../../components/itemsHeader/itemsHeader';
 import { ErrorComponent } from '../../components/error/error';
+import { globalContext } from '../../contexts/global';
 
 const GroupStyle = createGlobalStyle``;
 
@@ -20,7 +21,8 @@ export type GroupProps = {};
 
 export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) => {
     const [t] = useTranslation();
-    const { user } = useContext(userContext);
+    const { user, isReady } = useContext(userContext);
+    const { reload } = useContext(globalContext);
 
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
     const [isLoading, setLoading] = React.useState<boolean>(false);
@@ -63,12 +65,18 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
 
     const handleOnAction = React.useCallback(() => {
         setShowModal(false);
+
         setTimeout(() => {
+            reload();
             setRefresh(!refresh);
         }, config.requestDelay);
-    }, [config, refresh]);
+    }, [config, refresh, reload]);
 
     React.useEffect(() => {
+        if (!isReady) {
+            return;
+        }
+
         const setup = async () => {
             setLoading(true);
             try {
@@ -82,7 +90,7 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
             }
         };
         setup();
-    }, [config, user, refresh, t]);
+    }, [isReady, config, user, refresh, t]);
 
     const groupElements = React.useMemo(
         () =>

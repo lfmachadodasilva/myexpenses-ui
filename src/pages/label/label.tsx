@@ -40,7 +40,8 @@ const LabelStyle = createGlobalStyle`
 
 export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) => {
     const [t] = useTranslation();
-    const global = useContext(globalContext);
+
+    const { isLoading: isLoadingGlobal, group, month, year, reload } = useContext(globalContext);
 
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
     const [error, setError] = React.useState<string>('');
@@ -53,14 +54,14 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
 
     // #region main
     React.useEffect(() => {
-        if (global.isLoading) {
+        if (isLoadingGlobal) {
             return;
         }
 
         const runAsync = async () => {
             setLoading(true);
             try {
-                const data = await new LabelService(config).getAllFull(global.group, global.month, global.year);
+                const data = await new LabelService(config).getAllFull(group, month, year);
                 setLabels(data);
             } catch {
                 setLabels([]);
@@ -70,7 +71,7 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
             }
         };
         runAsync();
-    }, [global, config, t, refresh]);
+    }, [isLoadingGlobal, group, month, year, config, t, refresh]);
     // #endregion
 
     // #region handles
@@ -108,9 +109,10 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
     const handleOnAction = React.useCallback(() => {
         setShowModal(false);
         setTimeout(() => {
+            reload();
             setRefresh(!refresh);
         }, config.requestDelay);
-    }, [config, refresh]);
+    }, [config, refresh, reload]);
 
     const handleOnGraphType = React.useCallback((value: number) => {
         setGrahType(value);
@@ -214,10 +216,10 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
                 title={t('LABEL.TITLE')}
                 action={t('LABEL.ADD')}
                 onAction={handleOnAdd}
-                disableAction={isLoading || global.isLoading}
+                disableAction={isLoading || isLoadingGlobal}
             />
             <ErrorComponent message={error} />
-            <LoadingComponent isLoading={isLoading || global.isLoading}>
+            <LoadingComponent isLoading={isLoading || isLoadingGlobal}>
                 <Tabs defaultActiveKey="items">
                     <Tab eventKey="items" title={t('LABEL.TAB_ITEMS')}>
                         {itemsElements}

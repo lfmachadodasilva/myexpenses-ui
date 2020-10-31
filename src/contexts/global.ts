@@ -13,6 +13,8 @@ export interface GlobalContext {
     group: number;
     month: number;
     year: number;
+
+    reload: () => void;
 }
 
 export const defaultGlobalContext: GlobalContext = {
@@ -25,7 +27,9 @@ export const defaultGlobalContext: GlobalContext = {
 
     group: 0,
     month: 1,
-    year: 2020
+    year: 2020,
+
+    reload: () => {}
 };
 
 export const globalContext = React.createContext<GlobalContext>(defaultGlobalContext);

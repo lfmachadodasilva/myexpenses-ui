@@ -7,7 +7,7 @@ export enum ApiType {
 
 export class ConfigModel {
     /** api backend url */
-    apiUrl: string = 'TOTAL_FAKE';
+    apiUrl: string = 'https://myexpenses-backend-dev.herokuapp.com/';
 
     /** build version */
     buildVersion: string = 'local';

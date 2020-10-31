@@ -5,10 +5,12 @@ import { TestObjectBase } from '../../helpers/testObjectBase';
 import { GroupPage, GroupProps } from './group';
 import { GroupModalTestObject } from '../groupModal/groupModal.testObject';
 import { ItemTestObject } from '../../components/item/item.testObject';
+import { GlobalContext, globalContext } from '../../contexts/global';
 
 export class GroupTestObject extends TestObjectBase<GroupProps> {
     defaultParams: Partial<GroupProps> = {};
     user!: UserContext;
+    global!: GlobalContext;
 
     modalObject!: GroupModalTestObject;
     itemObject!: ItemTestObject;
@@ -24,7 +26,9 @@ export class GroupTestObject extends TestObjectBase<GroupProps> {
     protected render(props: GroupProps) {
         return (
             <userContext.Provider value={this.user}>
-                <GroupPage {...props} />
+                <globalContext.Provider value={this.global}>
+                    <GroupPage {...props} />
+                </globalContext.Provider>
             </userContext.Provider>
         );
     }

@@ -2,6 +2,7 @@ import { fireEvent, wait, within } from '@testing-library/react';
 import { setConfiguration } from '../../configurations/configManager';
 import { defaultUserContext } from '../../contexts/user';
 import { AxiosMock } from '../../helpers/axiosMock';
+import { globalMockData } from '../../mockData/global';
 import { groupsFullMockData } from '../../mockData/group';
 import { usersMockData } from '../../mockData/user';
 import { ApiType } from '../../models/config';
@@ -11,7 +12,8 @@ import { GroupTestObject } from './group.testObject';
 
 async function defaultInitialise(props: Partial<GroupProps> = {}) {
     const obj = new GroupTestObject();
-    obj.user = defaultUserContext;
+    obj.user = { ...defaultUserContext, isReady: true };
+    obj.global = globalMockData;
     await obj.initialiseObject(props);
 
     expect(obj).toBeDefined();
