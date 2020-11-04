@@ -39,6 +39,10 @@ export class ExpenseModalTestObject extends TestObjectBase<ExpenseModalProps> {
         this.clickByText('Edit');
     }
 
+    clickDuplicate() {
+        this.clickByText('Duplicate');
+    }
+
     clickClose() {
         fireEvent.click(this.CloseButton as Element);
     }

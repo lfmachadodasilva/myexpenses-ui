@@ -8,6 +8,7 @@ import { ExpenseFullModel } from '../../models/expense';
 export type ExpenseItemsProps = {
     items: ExpenseFullModel[];
     onEdit: (id: number) => void;
+    onDuplicate: (id: number) => void;
     onDelete: (id: number) => void;
 };
 
@@ -22,6 +23,7 @@ export const ExpenseItemsPage: React.FC<ExpenseItemsProps> = React.memo((props: 
                     id={item.id}
                     name={item.name}
                     onEdit={() => props.onEdit(item.id)}
+                    onDuplicate={() => props.onDuplicate(item.id)}
                     onDelete={() => props.onDelete(item.id)}
                 >
                     <div className="d-flex justify-content-between">

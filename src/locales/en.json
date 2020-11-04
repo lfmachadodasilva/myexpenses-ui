@@ -42,6 +42,11 @@
         "BY_EMAIL": "Login by email",
         "ERROR": "Something went wrong. Try again later."
     },
+    "ITEM": {
+        "EDIT": "Edit",
+        "DUPLICATE": "Duplicate",
+        "DELETE": "Delete"
+    },
     "GROUP": {
         "TITLE": "Groups",
         "ADD": "Add new group",
@@ -99,8 +104,10 @@
         "MODAL": {
             "ADD_TITLE": "Add new expense",
             "EDIT_TITLE": "Edit expense",
+            "DUPLICATE_TITLE": "Duplicate expense",
             "ADD_ACTION": "Add",
             "EDIT_ACTION": "Edit",
+            "DUPLICATE_ACTION": "Duplicate",
             "TYPE": "Type",
             "NAME": "Name",
             "VALUE": "Value",

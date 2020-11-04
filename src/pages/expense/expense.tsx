@@ -16,7 +16,7 @@ import { ExpenseFullModel, ExpenseType } from '../../models/expense';
 import { ExpenseService } from '../../services/expense';
 import { ExpenseItemsPage } from './expenseItems';
 import { ExpenseSummaryPage } from './expenseSummary';
-import { ExpenseModalPage } from '../expenseModal/expenseModal';
+import { ExpenseModalPage, ExpenseModalType } from '../expenseModal/expenseModal';
 
 export type ExpenseProps = {};
 
@@ -42,6 +42,7 @@ export const ExpensePage: React.FC<ExpenseProps> = React.memo((props: ExpensePro
     const [expenses, setExpenses] = React.useState<ExpenseFullModel[]>([]);
     const [expense, setExpense] = React.useState<ExpenseFullModel>();
     const [showModal, setShowModal] = React.useState<boolean>(false);
+    const [modalType, setModalType] = React.useState<ExpenseModalType>(ExpenseModalType.ADD);
     const [refresh, setRefresh] = React.useState<boolean>(false);
 
     // #region main
@@ -69,12 +70,23 @@ export const ExpensePage: React.FC<ExpenseProps> = React.memo((props: ExpensePro
     // #region handles
     const handleOnAdd = React.useCallback(() => {
         setExpense(undefined);
+        setModalType(ExpenseModalType.ADD);
         setShowModal(true);
     }, []);
 
     const handleOnEdit = React.useCallback(
         (id: number) => {
             setExpense(expenses.find(x => x.id === id));
+            setModalType(ExpenseModalType.EDIT);
+            setShowModal(true);
+        },
+        [expenses]
+    );
+
+    const handleOnDuplicate = React.useCallback(
+        (id: number) => {
+            setExpense(expenses.find(x => x.id === id));
+            setModalType(ExpenseModalType.DUPLICATE);
             setShowModal(true);
         },
         [expenses]
@@ -133,14 +145,30 @@ export const ExpensePage: React.FC<ExpenseProps> = React.memo((props: ExpensePro
                         <ExpenseSummaryPage incoming={incomingItems} outcoming={outcomingItems} />
                     </Tab>
                     <Tab eventKey="incoming" title={t('EXPENSE.INCOMING')}>
-                        <ExpenseItemsPage items={incomingItems} onEdit={handleOnEdit} onDelete={handleOnDelete} />
+                        <ExpenseItemsPage
+                            items={incomingItems}
+                            onEdit={handleOnEdit}
+                            onDuplicate={handleOnDuplicate}
+                            onDelete={handleOnDelete}
+                        />
                     </Tab>
                     <Tab eventKey="outcoming" title={t('EXPENSE.OUTCOMING')}>
-                        <ExpenseItemsPage items={outcomingItems} onEdit={handleOnEdit} onDelete={handleOnDelete} />
+                        <ExpenseItemsPage
+                            items={outcomingItems}
+                            onEdit={handleOnEdit}
+                            onDuplicate={handleOnDuplicate}
+                            onDelete={handleOnDelete}
+                        />
                     </Tab>
                 </Tabs>
             </LoadingComponent>
-            <ExpenseModalPage show={showModal} expense={expense} onHide={handleOnHide} onAction={handleOnAction} />
+            <ExpenseModalPage
+                show={showModal}
+                type={modalType}
+                expense={expense}
+                onHide={handleOnHide}
+                onAction={handleOnAction}
+            />
         </>
     );
 });

@@ -10,12 +10,19 @@ import { ConfigManager } from '../../configurations/configManager';
 import { globalContext } from '../../contexts/global';
 import { hasValue } from '../../helpers/util';
 import { ConfigModel } from '../../models/config';
-import { ExpenseFullModel, ExpenseType } from '../../models/expense';
+import { ExpenseFullModel, ExpenseModel, ExpenseType } from '../../models/expense';
 import { ExpenseService } from '../../services/expense';
 import { LabelModel } from '../../models/label';
 import { ErrorComponent } from '../../components/error/error';
 
+export enum ExpenseModalType {
+    ADD,
+    EDIT,
+    DUPLICATE
+}
+
 export type ExpenseModalProps = {
+    type: ExpenseModalType;
     show: boolean;
     expense?: ExpenseFullModel;
     onHide: () => void;
@@ -24,6 +31,8 @@ export type ExpenseModalProps = {
 
 export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: ExpenseModalProps) => {
     const [t] = useTranslation();
+
+    const { show, type: modalType, expense, onAction } = props;
 
     const { group, labels: labelsGroup } = useContext(globalContext);
 
@@ -63,19 +72,21 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
     const handleOnAction = React.useCallback(async () => {
         setLoadingAction(true);
 
-        if (hasValue(props.expense)) {
+        const obj = {
+            id: expense?.id ?? 0,
+            type: type,
+            name: name,
+            value: value as number,
+            date: date,
+            labelId: label as number,
+            groupId: group,
+            comments: comments
+        } as ExpenseModel;
+
+        if (modalType === ExpenseModalType.EDIT && hasValue(expense)) {
             try {
-                await new ExpenseService(config).update({
-                    ...(props.expense as ExpenseFullModel),
-                    type: type,
-                    name: name,
-                    value: value as number,
-                    date: date,
-                    labelId: label as number,
-                    groupId: group,
-                    comments: comments
-                });
-                props.onAction();
+                await new ExpenseService(config).update(obj);
+                onAction();
             } catch {
                 setError(t('EXPENSE.ERROR'));
             } finally {
@@ -84,40 +95,32 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
         } else {
             setLoadingAction(true);
             try {
-                await new ExpenseService(config).add({
-                    type: type,
-                    name: name,
-                    value: value as number,
-                    date: date,
-                    labelId: label as number,
-                    groupId: group,
-                    comments: comments
-                });
-                props.onAction();
+                await new ExpenseService(config).add(obj);
+                onAction();
             } catch {
                 setError(t('EXPENSE.ERROR'));
             } finally {
                 setLoadingAction(false);
             }
         }
-    }, [type, name, value, date, label, comments, t, config, props, group]);
+    }, [type, name, value, date, label, comments, t, config, onAction, expense, group, modalType]);
     //#endregion
 
     React.useEffect(() => {
-        if (!props.show) {
+        if (!show) {
             return;
         }
 
         setLabels(labelsGroup);
         setError('');
 
-        if (props.expense) {
-            setType(props.expense?.type);
-            setName(props.expense?.name);
-            setValue(props.expense?.value);
-            setDate(props.expense?.date);
-            setLabel(props.expense?.label.id);
-            setComments(props.expense?.comments);
+        if (expense) {
+            setType(expense?.type);
+            setName(expense?.name);
+            setValue(expense?.value);
+            setDate(expense?.date);
+            setLabel(expense?.label.id);
+            setComments(expense?.comments);
         } else {
             setType(ExpenseType.OUTCOMING);
             setName('');
@@ -132,7 +135,7 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
 
             setComments('');
         }
-    }, [props, labelsGroup]);
+    }, [expense, show, labelsGroup]);
 
     const disabledAction = React.useMemo(() => {
         if (
@@ -159,13 +162,29 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
         [labels]
     );
 
+    const title = React.useMemo(() => {
+        if (modalType === ExpenseModalType.DUPLICATE) {
+            return t('EXPENSE.MODAL.DUPLICATE_TITLE');
+        } else if (modalType === ExpenseModalType.EDIT) {
+            return t('EXPENSE.MODAL.EDIT_TITLE');
+        }
+        return t('EXPENSE.MODAL.ADD_TITLE');
+    }, [modalType, t]);
+
+    const action = React.useMemo(() => {
+        if (modalType === ExpenseModalType.DUPLICATE) {
+            return t('EXPENSE.MODAL.DUPLICATE_ACTION');
+        } else if (modalType === ExpenseModalType.EDIT) {
+            return t('EXPENSE.MODAL.EDIT_ACTION');
+        }
+        return t('EXPENSE.MODAL.ADD_ACTION');
+    }, [modalType, t]);
+
     return (
         <>
             <Modal show={props.show} onHide={props.onHide} size="lg" centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>
-                        {hasValue(props.expense) ? t('EXPENSE.MODAL.EDIT_TITLE') : t('EXPENSE.MODAL.ADD_TITLE')}
-                    </Modal.Title>
+                    <Modal.Title>{title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <ErrorComponent message={error} />
@@ -231,7 +250,7 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="primary" onClick={handleOnAction} disabled={disabledAction}>
-                        {hasValue(props.expense) ? t('EXPENSE.MODAL.EDIT_ACTION') : t('EXPENSE.MODAL.ADD_ACTION')}
+                        {action}
                     </Button>
                 </Modal.Footer>
             </Modal>

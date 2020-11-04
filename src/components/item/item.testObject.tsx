@@ -18,22 +18,24 @@ export class ItemTestObject extends TestObjectBase<ItemProps> {
     }
 
     async clickEditFor(id: number) {
-        fireEvent.click(this.querySelector(`#menu-${id}`) as Element);
-
-        await wait(() => {
-            expect(this.queryByText('Edit')).toBeInTheDocument();
-        });
-
-        fireEvent.click(this.getByText('Edit'));
+        return this.clickFor(id, 'Edit');
     }
 
     async clickDeleteFor(id: number) {
+        return this.clickFor(id, 'Delete');
+    }
+
+    async clickDuplicateFor(id: number) {
+        return this.clickFor(id, 'Duplicate');
+    }
+
+    private async clickFor(id: number, text: string) {
         fireEvent.click(this.querySelector(`#menu-${id}`) as Element);
 
         await wait(() => {
-            expect(this.queryByText('Delete')).toBeInTheDocument();
+            expect(this.queryByText(text)).toBeInTheDocument();
         });
 
-        fireEvent.click(this.getByText('Delete'));
+        fireEvent.click(this.getByText(text));
     }
 }

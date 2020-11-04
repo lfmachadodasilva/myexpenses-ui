@@ -8,13 +8,34 @@ import { useTranslation } from 'react-i18next';
 export interface ItemProps {
     id: number;
     name: string;
-    onEdit: (id: number) => void;
-    onDelete: (id: number) => void;
+    onEdit?: (id: number) => void;
+    onDuplicate?: (id: number) => void;
+    onDelete?: (id: number) => void;
 }
 
 export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = React.memo(
     (props: React.PropsWithChildren<ItemProps>) => {
         const [t] = useTranslation();
+
+        const { id, onEdit, onDelete, onDuplicate } = props;
+
+        const handleOnEdit = React.useCallback(() => {
+            if (onEdit) {
+                onEdit(id);
+            }
+        }, [onEdit, id]);
+
+        const handleOnDuplicate = React.useCallback(() => {
+            if (onDuplicate) {
+                onDuplicate(id);
+            }
+        }, [onDuplicate, id]);
+
+        const handleOnDelete = React.useCallback(() => {
+            if (onDelete) {
+                onDelete(id);
+            }
+        }, [onDelete, id]);
 
         return (
             <div className="item-component">
@@ -23,13 +44,21 @@ export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = React
                         <div className="d-flex justify-content-between">
                             {props.name}
                             <DropdownButton size="sm" variant="secondary" title="" id={`menu-${props.id}`}>
-                                <Dropdown.Item eventKey="1" onClick={() => props.onEdit(props.id)}>
-                                    {t('LABEL.EDIT')}
-                                </Dropdown.Item>
-                                <Dropdown.Divider />
-                                <Dropdown.Item eventKey="2" onClick={() => props.onDelete(props.id)}>
-                                    {t('LABEL.DELETE')}
-                                </Dropdown.Item>
+                                {props.onEdit && (
+                                    <Dropdown.Item eventKey="1" onClick={handleOnEdit}>
+                                        {t('ITEM.EDIT')}
+                                    </Dropdown.Item>
+                                )}
+                                {props.onDuplicate && (
+                                    <Dropdown.Item eventKey="1" onClick={handleOnDuplicate}>
+                                        {t('ITEM.DUPLICATE')}
+                                    </Dropdown.Item>
+                                )}
+                                {props.onDelete && (
+                                    <Dropdown.Item eventKey="2" onClick={handleOnDelete}>
+                                        {t('ITEM.DELETE')}
+                                    </Dropdown.Item>
+                                )}
                             </DropdownButton>
                         </div>
                     </Card.Title>

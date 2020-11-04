@@ -7,7 +7,7 @@ import { globalMockData } from '../../mockData/global';
 import { labelsMockData } from '../../mockData/label';
 import { ApiType } from '../../models/config';
 import { StatusCodes } from '../../services/base';
-import { ExpenseModalProps } from './expenseModal';
+import { ExpenseModalProps, ExpenseModalType } from './expenseModal';
 import { ExpenseModalTestObject } from './expenseModal.testObject';
 
 async function defaultInitialise(props: Partial<ExpenseModalProps> = {}) {
@@ -40,6 +40,7 @@ describe('<ExpenseModalPage />', () => {
         test('happy path', async () => {
             const mockOnAction = jest.fn();
             const obj = await defaultInitialise({
+                type: ExpenseModalType.ADD,
                 show: true,
                 onAction: mockOnAction,
                 onHide: jest.fn()
@@ -73,6 +74,7 @@ describe('<ExpenseModalPage />', () => {
 
             const mockOnAction = jest.fn();
             const obj = await defaultInitialise({
+                type: ExpenseModalType.ADD,
                 show: true,
                 onAction: mockOnAction
             });
@@ -98,6 +100,7 @@ describe('<ExpenseModalPage />', () => {
         test('happy path', async () => {
             const mockOnAction = jest.fn();
             const obj = await defaultInitialise({
+                type: ExpenseModalType.EDIT,
                 show: true,
                 onAction: mockOnAction,
                 expense: expensesFullMockData[0]
@@ -124,6 +127,7 @@ describe('<ExpenseModalPage />', () => {
 
             const mockOnAction = jest.fn();
             const obj = await defaultInitialise({
+                type: ExpenseModalType.EDIT,
                 show: true,
                 onAction: mockOnAction,
                 expense: expensesFullMockData[0]
@@ -140,6 +144,57 @@ describe('<ExpenseModalPage />', () => {
             });
 
             expect(obj.getByText('Edit')).toHaveAttribute('disabled');
+        });
+    });
+
+    describe('duplicate mode', () => {
+        test('happy path', async () => {
+            const mockOnAction = jest.fn();
+            const obj = await defaultInitialise({
+                type: ExpenseModalType.DUPLICATE,
+                show: true,
+                onAction: mockOnAction,
+                expense: expensesFullMockData[0]
+            });
+
+            // check title
+            expect(obj.getByText('Duplicate expense')).toBeInTheDocument();
+            // check action button
+            expect(obj.getByText('Duplicate')).toBeInTheDocument();
+
+            expect(obj.getByText('Duplicate')).not.toHaveAttribute('disabled');
+
+            // main action
+            obj.clickDuplicate();
+
+            await wait(() => {
+                expect(axiosMock.postSpy).toHaveBeenCalled();
+                expect(mockOnAction).toHaveBeenCalled();
+            });
+        });
+
+        test('fail to edit', async () => {
+            axiosMock.onPost('/api/expense').reply(StatusCodes.ERROR);
+
+            const mockOnAction = jest.fn();
+            const obj = await defaultInitialise({
+                type: ExpenseModalType.DUPLICATE,
+                show: true,
+                onAction: mockOnAction,
+                expense: expensesFullMockData[0]
+            });
+
+            expect(obj.getByText('Duplicate')).not.toHaveAttribute('disabled');
+
+            obj.clickDuplicate();
+
+            await wait(() => {
+                expect(axiosMock.postSpy).toHaveBeenCalled();
+                expect(mockOnAction).not.toHaveBeenCalled();
+                expect(obj.queryByText('Something went wrong. Try again later.')).toBeInTheDocument();
+            });
+
+            expect(obj.getByText('Duplicate')).toHaveAttribute('disabled');
         });
     });
 });
