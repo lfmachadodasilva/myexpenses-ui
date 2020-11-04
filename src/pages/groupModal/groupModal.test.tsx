@@ -1,3 +1,5 @@
+import { User } from 'firebase';
+
 import { setConfiguration } from '../../configurations/configManager';
 import { usersMockData } from '../../mockData/user';
 import { ApiType } from '../../models/config';
@@ -17,7 +19,7 @@ async function defaultInitialise(props: Partial<GroupModalProps> = {}) {
             uid: usersMockData[1].id,
             displayName: usersMockData[1].displayName,
             email: usersMockData[1].email
-        } as firebase.User
+        } as User
     };
     await obj.initialiseObject(props);
 

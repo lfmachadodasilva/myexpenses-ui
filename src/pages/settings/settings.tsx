@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { User } from 'firebase';
 
 import Form from 'react-bootstrap/Form';
 
@@ -35,7 +36,7 @@ export const SettingsPage: React.FC<SettingsProps> = React.memo((props: Settings
     const handleOnUpdate = React.useCallback(async () => {
         setLoading(true);
         try {
-            await updateUser(config, user.user as firebase.User, displayName);
+            await updateUser(config, user.user as User, displayName);
         } catch {
             setError(t('SETTINGS.ERROR'));
         } finally {

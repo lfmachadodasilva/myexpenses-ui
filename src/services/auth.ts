@@ -1,36 +1,13 @@
-import React, { useState } from 'react';
-import firebase, { auth } from 'firebase/app';
-import 'firebase/auth'; // If using Firebase auth
+import { auth, User } from 'firebase';
+// import 'firebase/auth'; // If using Firebase auth
+
 import { UserService } from './user';
 import { UserModel } from '../models/user';
 import { ConfigModel } from '../models/config';
-// import { UserService } from './userService';
-// import { ConfigurationManager } from '../configurations/configurationManager';
-// import { UserModel } from '../models/user';
-
-export const useAuth = () => {
-    const [state, setState] = useState(() => {
-        const user = auth().currentUser;
-        return { initialising: !user, user };
-    });
-
-    const onChange = (user: firebase.User | null) => {
-        setState({ initialising: false, user });
-    };
-
-    React.useEffect(() => {
-        // listen for auth state changes
-        const unsubscribe = auth().onAuthStateChanged(onChange);
-        // unsubscribe to the listener when unmounting
-        return () => unsubscribe();
-    }, []);
-
-    return state;
-};
-
-const facebook = new auth.FacebookAuthProvider();
 
 export const loginWithFacebook = async () => {
+    const facebook = new auth.FacebookAuthProvider();
+
     try {
         return await auth().signInWithPopup(facebook);
     } catch (err) {
@@ -66,7 +43,7 @@ export const resetPassword = async (email: string) => {
     }
 };
 
-export const updateUser = async (config: ConfigModel, user: firebase.User, displayName: string) => {
+export const updateUser = async (config: ConfigModel, user: User, displayName: string) => {
     try {
         await user?.updateProfile({ displayName: displayName });
 
@@ -82,4 +59,4 @@ export const updateUser = async (config: ConfigModel, user: firebase.User, displ
     }
 };
 
-export const signOut = () => firebase.auth().signOut();
+export const signOut = () => auth().signOut();

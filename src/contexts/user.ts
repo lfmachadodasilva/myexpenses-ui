@@ -1,5 +1,5 @@
 import React from 'react';
-import { User } from 'firebase/app';
+import { User } from 'firebase';
 
 export type UserContext = {
     user?: User | null;

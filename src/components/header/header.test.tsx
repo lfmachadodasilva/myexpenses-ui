@@ -1,4 +1,5 @@
-import { fireEvent, wait } from '@testing-library/react';
+import { User } from 'firebase';
+import { wait } from '@testing-library/react';
 import { setConfiguration } from '../../configurations/configManager';
 import { defaultUserContext } from '../../contexts/user';
 import { Routes } from '../../pages/routes';
@@ -11,7 +12,7 @@ const mockSignOut = signOut as jest.Mock;
 
 async function defaultInitialise(
     props: Partial<HeaderProps> = {},
-    user: firebase.User | null = null,
+    user: User | null = null,
     initialising: boolean = false,
     isReady: boolean = true
 ) {
@@ -63,7 +64,7 @@ describe('<HeaderComponent />', () => {
     });
 
     test('should redirect to settings & import', async () => {
-        const obj = await defaultInitialise({}, { displayName: 'User Display Name' } as firebase.User, false, true);
+        const obj = await defaultInitialise({}, { displayName: 'User Display Name' } as User, false, true);
         obj.mockClear();
 
         await wait(() => expect(obj.queryByText('User')).toBeInTheDocument());
@@ -84,7 +85,7 @@ describe('<HeaderComponent />', () => {
     });
 
     test('should redirect to home after logout', async () => {
-        const obj = await defaultInitialise({}, { displayName: 'User Display Name' } as firebase.User, false, true);
+        const obj = await defaultInitialise({}, { displayName: 'User Display Name' } as User, false, true);
         obj.mockClear();
 
         await wait(() => expect(obj.queryByText('User')).toBeInTheDocument());

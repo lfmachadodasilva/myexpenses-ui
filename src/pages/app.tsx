@@ -2,11 +2,13 @@ import React from 'react';
 import { HashRouter, BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 import axios from 'axios';
+import useMedia from 'use-media/lib/useMedia';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from 'firebase';
 
 import { HeaderComponent } from '../components/header/header';
 import { ConfigManager } from '../configurations/configManager';
 import { ConfigModel } from '../models/config';
-import { useAuth } from '../services/auth';
 
 import { GlobalStyles } from './globalSyles';
 import { darkTheme, lightTheme } from './theme';
@@ -19,11 +21,11 @@ import { UserModel } from '../models/user';
 export type AppProps = {};
 
 export const AppPage: React.FC<AppProps> = React.memo((_props: AppProps) => {
+    const [user, initialising] = useAuthState(auth());
+    const colorScheme = useMedia('(prefers-color-scheme: dark)');
+
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
-    const { user, initialising } = useAuth();
-    const [isDarkTheme, setDarkTheme] = React.useState<boolean>(
-        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-    );
+    const [isDarkTheme, setDarkTheme] = React.useState<boolean>();
     const [isReady, setReady] = React.useState<boolean>(false);
 
     const handleDarkTheme = React.useCallback((dark: boolean) => {
@@ -31,7 +33,7 @@ export const AppPage: React.FC<AppProps> = React.memo((_props: AppProps) => {
     }, []);
 
     const theme = React.useMemo(() => {
-        let theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let theme = colorScheme;
 
         if (hasValue(localStorage.getItem('darkTheme'))) {
             theme = JSON.parse(localStorage.getItem('darkTheme') as string);
@@ -44,8 +46,8 @@ export const AppPage: React.FC<AppProps> = React.memo((_props: AppProps) => {
             localStorage.setItem('darkTheme', theme.toString());
         }
 
-        return isDarkTheme ? darkTheme : lightTheme;
-    }, [isDarkTheme]);
+        return theme ? darkTheme : lightTheme;
+    }, [isDarkTheme, colorScheme]);
 
     React.useEffect(() => {
         if (initialising || !user) {

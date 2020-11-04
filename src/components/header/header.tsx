@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { createGlobalStyle } from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import { User } from 'firebase';
 
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -51,7 +52,7 @@ export const HeaderComponent: React.FC<HeaderProps> = React.memo((props: HeaderP
 
     const authElement = React.useMemo(() => {
         if (hasValue(user)) {
-            const displayName = getUserDisplayName(user as firebase.User);
+            const displayName = getUserDisplayName(user as User);
             return (
                 <Nav>
                     <NavDropdown title={displayName} id="collasible-nav-dropdown">
