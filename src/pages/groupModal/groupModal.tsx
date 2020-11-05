@@ -81,9 +81,9 @@ export const GroupModalPage: React.FC<GroupModalProps> = React.memo((props: Grou
             setSelectedUsers(props.group?.users.map(x => x.id));
         } else {
             setName('');
-            setSelectedUsers([]);
+            user && setSelectedUsers([user.uid]);
         }
-    }, [props]);
+    }, [props, user]);
 
     React.useEffect(() => {
         const runAsync = async () => {

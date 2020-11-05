@@ -110,15 +110,15 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
                 onDelete={handleOnDelete}
             >
                 <div key={`GROUP_USERS_${index}`} className="d-flex flex-wrap justify-content-start">
-                    {group.users.map((user, indexUser) => (
+                    {group.users.map((u, indexUser) => (
                         <small key={`GROUP_SMALL_${index}_${indexUser}`} className="mr-2">
-                            {getUserDisplayName(user)}
+                            {user && user.uid === u.id ? t('GROUP.YOU') : getUserDisplayName(u)}
                         </small>
                     ))}
                 </div>
             </ItemComponent>
         ));
-    }, [isLoading, error, groups, handleOnEdit, handleOnDelete, t]);
+    }, [user, isLoading, error, groups, handleOnEdit, handleOnDelete, t]);
 
     return (
         <>
