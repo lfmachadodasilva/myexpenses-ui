@@ -82,25 +82,21 @@ describe('<ExpensePage />', () => {
         obj.clickAdd();
 
         // wait to show the modal
-        await obj.modalObject.waitModalToShow();
-
-        fireEvent.click(obj.modalObject.CloseButton as Element);
-
+        await obj.modalObject.modalTestObject.waitModalToShow();
+        fireEvent.click(obj.modalObject.modalTestObject.CloseButton as Element);
         // wait to hide the modal
-        await obj.modalObject.waitModalToHide();
+        await obj.modalObject.modalTestObject.waitModalToHide();
 
         obj.clickAdd();
 
         // wait to show the modal
-        await obj.modalObject.waitModalToShow();
+        await obj.modalObject.modalTestObject.waitModalToShow();
 
         // add name and select a user
         await obj.modalObject.makeReadyToAdd();
-
-        obj.modalObject.clickAdd();
-
+        obj.modalObject.modalTestObject.clickAction();
         // wait to hide the modal and refresh main page
-        await obj.modalObject.waitModalToHide();
+        await obj.modalObject.modalTestObject.waitModalToHide();
 
         await wait(() => {
             // 1 - get all expenses
@@ -114,19 +110,19 @@ describe('<ExpensePage />', () => {
 
         // open modal on edit mode and close
         await obj.itemObject.clickEditFor(1);
-        await obj.modalObject.waitModalToShow();
-        obj.modalObject.clickClose();
-        await obj.modalObject.waitModalToHide();
+        await obj.modalObject.modalTestObject.waitModalToShow();
+        obj.modalObject.modalTestObject.clickClose();
+        await obj.modalObject.modalTestObject.waitModalToHide();
 
         // open modal on edit mode and edit
         await obj.itemObject.clickEditFor(1);
-        await obj.modalObject.waitModalToShow();
+        await obj.modalObject.modalTestObject.waitModalToShow();
 
         // hack to avoid duplicate "Edit" expenses
-        const { getByText } = within(obj.modalObject.Modal as HTMLElement);
+        const { getByText } = within(obj.modalObject.modalTestObject.Modal as HTMLElement);
         fireEvent.click(getByText('Edit'));
 
-        await obj.modalObject.waitModalToHide();
+        await obj.modalObject.modalTestObject.waitModalToHide();
 
         await wait(() => {
             // 1 - get all expenses

@@ -1,4 +1,5 @@
 import { wait } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 import { setConfiguration } from '../../configurations/configManager';
 import { ItemProps } from './item';
 import { ItemTestObject } from './item.testObject';
@@ -63,6 +64,27 @@ describe('<ItemComponent />', () => {
             expect(mockOnEdit).not.toHaveBeenCalled();
             expect(mockOnDuplicate).not.toHaveBeenCalled();
             expect(mockOnDelete).toHaveBeenCalled();
+        });
+    });
+
+    test('on delete and close dialog', async () => {
+        const mockOnEdit = jest.fn((id: number) => {});
+        const mockOnDuplicate = jest.fn((id: number) => {});
+        const mockOnDelete = jest.fn((id: number) => {});
+        const obj = await defaultInitialise({
+            id: 1,
+            name: 'Item name',
+            onEdit: mockOnEdit,
+            onDelete: mockOnDelete,
+            onDuplicate: mockOnDuplicate
+        });
+
+        await obj.clickDeleteAndCloseFor(1);
+
+        await wait(() => {
+            expect(mockOnEdit).not.toHaveBeenCalled();
+            expect(mockOnDuplicate).not.toHaveBeenCalled();
+            expect(mockOnDelete).not.toHaveBeenCalled();
         });
     });
 

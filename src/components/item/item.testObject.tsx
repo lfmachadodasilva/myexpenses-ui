@@ -2,12 +2,17 @@ import { fireEvent, wait } from '@testing-library/react';
 import React from 'react';
 
 import { TestObjectBase } from '../../helpers/testObjectBase';
+import { ModalTestObject } from '../modal/modal.testObject';
 import { ItemComponent, ItemProps } from './item';
 
 export class ItemTestObject extends TestObjectBase<ItemProps> {
     defaultParams: Partial<ItemProps> = {};
+    modalTestObject!: ModalTestObject;
 
-    protected initialiseSubObjects(): void {}
+    protected initialiseSubObjects(): void {
+        this.modalTestObject = new ModalTestObject();
+        this.modalTestObject.initialiseWithParentObject(this.wrapper);
+    }
 
     protected render(props: ItemProps) {
         return (
@@ -18,15 +23,23 @@ export class ItemTestObject extends TestObjectBase<ItemProps> {
     }
 
     async clickEditFor(id: number) {
-        return this.clickFor(id, 'Edit');
+        return await this.clickFor(id, 'Edit');
     }
 
     async clickDeleteFor(id: number) {
-        return this.clickFor(id, 'Delete');
+        await this.clickFor(id, 'Delete');
+
+        await this.modalTestObject.waitClickAction();
+    }
+
+    async clickDeleteAndCloseFor(id: number) {
+        await this.clickFor(id, 'Delete');
+
+        await this.modalTestObject.waitClickClose();
     }
 
     async clickDuplicateFor(id: number) {
-        return this.clickFor(id, 'Duplicate');
+        return await this.clickFor(id, 'Duplicate');
     }
 
     private async clickFor(id: number, text: string) {

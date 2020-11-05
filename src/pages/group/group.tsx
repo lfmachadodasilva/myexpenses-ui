@@ -12,8 +12,9 @@ import { GroupModalPage } from '../groupModal/groupModal';
 import { ItemComponent } from '../../components/item/item';
 import { LoadingComponent } from '../../components/loading/loading';
 import { ItemsHeaderComponent } from '../../components/itemsHeader/itemsHeader';
-import { ErrorComponent } from '../../components/error/error';
+import { AlertComponent } from '../../components/alert/alert';
 import { globalContext } from '../../contexts/global';
+import { hasValue } from '../../helpers/util';
 
 const GroupStyle = createGlobalStyle``;
 
@@ -92,27 +93,32 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
         setup();
     }, [isReady, config, user, refresh, t]);
 
-    const groupElements = React.useMemo(
-        () =>
-            groups.map((group, index) => (
-                <ItemComponent
-                    key={group.id}
-                    id={group.id}
-                    name={group.name}
-                    onEdit={handleOnEdit}
-                    onDelete={handleOnDelete}
-                >
-                    <div key={`GROUP_USERS_${index}`} className="d-flex flex-wrap justify-content-start">
-                        {group.users.map((user, indexUser) => (
-                            <small key={`GROUP_SMALL_${index}_${indexUser}`} className="mr-2">
-                                {getUserDisplayName(user)}
-                            </small>
-                        ))}
-                    </div>
-                </ItemComponent>
-            )),
-        [groups, handleOnEdit, handleOnDelete]
-    );
+    const groupElements = React.useMemo(() => {
+        if (!isLoading && groups.length === 0 && !hasValue(error)) {
+            return <AlertComponent message={t('GROUP.EMPTY')} type="warning" />;
+        }
+        if (hasValue(error)) {
+            return <AlertComponent message={error} type="danger" />;
+        }
+
+        return groups.map((group, index) => (
+            <ItemComponent
+                key={group.id}
+                id={group.id}
+                name={group.name}
+                onEdit={handleOnEdit}
+                onDelete={handleOnDelete}
+            >
+                <div key={`GROUP_USERS_${index}`} className="d-flex flex-wrap justify-content-start">
+                    {group.users.map((user, indexUser) => (
+                        <small key={`GROUP_SMALL_${index}_${indexUser}`} className="mr-2">
+                            {getUserDisplayName(user)}
+                        </small>
+                    ))}
+                </div>
+            </ItemComponent>
+        ));
+    }, [isLoading, error, groups, handleOnEdit, handleOnDelete, t]);
 
     return (
         <>
@@ -123,7 +129,6 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
                 onAction={handleOnAdd}
                 disableAction={isLoading}
             />
-            <ErrorComponent message={error} />
             <LoadingComponent isLoading={isLoading}>{groupElements}</LoadingComponent>
             <GroupModalPage show={showModal} group={group} onHide={handleOnHide} onAction={handleOnAction} />
         </>

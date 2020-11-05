@@ -1,13 +1,18 @@
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 import React from 'react';
+import { ModalTestObject } from '../../components/modal/modal.testObject';
 
 import { TestObjectBase } from '../../helpers/testObjectBase';
 import { LabelModalPage, LabelModalProps } from './labelModal';
 
 export class LabelModalTestObject extends TestObjectBase<LabelModalProps> {
     defaultParams: Partial<LabelModalProps> = {};
+    modalTestObject!: ModalTestObject;
 
-    protected initialiseSubObjects(): void {}
+    protected initialiseSubObjects(): void {
+        this.modalTestObject = new ModalTestObject();
+        this.modalTestObject.initialiseWithParentObject(this.wrapper);
+    }
 
     protected render(props: LabelModalProps) {
         return <LabelModalPage {...props} />;
@@ -21,33 +26,5 @@ export class LabelModalTestObject extends TestObjectBase<LabelModalProps> {
     async makeReadyToAdd() {
         // add name
         this.insertText('label-name-field', 'New group');
-    }
-
-    clickAdd() {
-        this.clickByText('Add');
-    }
-
-    clickEdit() {
-        this.clickByText('Edit');
-    }
-
-    clickClose() {
-        fireEvent.click(this.CloseButton as Element);
-    }
-
-    async waitModalToShow() {
-        await wait(() => expect(this.Modal).toBeInTheDocument());
-    }
-
-    async waitModalToHide() {
-        await wait(() => expect(this.Modal).not.toBeInTheDocument());
-    }
-
-    get Modal() {
-        return this.querySelector('.modal-content');
-    }
-
-    get CloseButton() {
-        return this.querySelector('.close');
     }
 }

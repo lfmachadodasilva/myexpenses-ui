@@ -1,16 +1,20 @@
-import { fireEvent, wait } from '@testing-library/react';
 import React from 'react';
-import { GlobalContext, globalContext } from '../../contexts/global';
-import { userContext } from '../../contexts/user';
+import { fireEvent } from '@testing-library/react';
 
+import { ModalTestObject } from '../../components/modal/modal.testObject';
+import { GlobalContext, globalContext } from '../../contexts/global';
 import { TestObjectBase } from '../../helpers/testObjectBase';
 import { ExpenseModalPage, ExpenseModalProps } from './expenseModal';
 
 export class ExpenseModalTestObject extends TestObjectBase<ExpenseModalProps> {
     defaultParams: Partial<ExpenseModalProps> = {};
+    modalTestObject!: ModalTestObject;
     global!: GlobalContext;
 
-    protected initialiseSubObjects(): void {}
+    protected initialiseSubObjects(): void {
+        this.modalTestObject = new ModalTestObject();
+        this.modalTestObject.initialiseWithParentObject(this.wrapper);
+    }
 
     protected render(props: ExpenseModalProps) {
         return (
@@ -29,37 +33,5 @@ export class ExpenseModalTestObject extends TestObjectBase<ExpenseModalProps> {
         this.insertText('expense-name-field', 'New group');
         this.insertText('expense-value-field', '1.1');
         this.insertText('expense-comments-field', 'New comment');
-    }
-
-    clickAdd() {
-        this.clickByText('Add');
-    }
-
-    clickEdit() {
-        this.clickByText('Edit');
-    }
-
-    clickDuplicate() {
-        this.clickByText('Duplicate');
-    }
-
-    clickClose() {
-        fireEvent.click(this.CloseButton as Element);
-    }
-
-    async waitModalToShow() {
-        await wait(() => expect(this.Modal).toBeInTheDocument());
-    }
-
-    async waitModalToHide() {
-        await wait(() => expect(this.Modal).not.toBeInTheDocument());
-    }
-
-    get Modal() {
-        return this.querySelector('.modal-content');
-    }
-
-    get CloseButton() {
-        return this.querySelector('.close');
     }
 }

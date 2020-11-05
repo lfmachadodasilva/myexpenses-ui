@@ -5,7 +5,7 @@ import { format, isValid } from 'date-fns';
 import Form from 'react-bootstrap/Form';
 
 import { globalContext } from '../../contexts/global';
-import { ErrorComponent } from '../../components/error/error';
+import { AlertComponent } from '../../components/alert/alert';
 import { ItemsHeaderComponent } from '../../components/itemsHeader/itemsHeader';
 import { ExpenseFullModel, ExpenseType } from '../../models/expense';
 import { hasValue } from '../../helpers/util';
@@ -159,7 +159,7 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
                 onAction={handleOnAction}
                 disableAction={disabledAction}
             />
-            <ErrorComponent message={error} />
+            <AlertComponent message={error} type="danger" />
             <Form>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-4">

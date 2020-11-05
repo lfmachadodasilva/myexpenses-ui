@@ -71,25 +71,20 @@ describe('<GroupPage />', () => {
         obj.clickAdd();
 
         // wait to show the modal
-        await obj.modalObject.waitModalToShow();
-
-        fireEvent.click(obj.modalObject.CloseButton as Element);
-
+        await obj.groupModalObject.modalTestObject.waitModalToShow();
+        fireEvent.click(obj.groupModalObject.modalTestObject.CloseButton as Element);
         // wait to hide the modal
-        await obj.modalObject.waitModalToHide();
+        await obj.groupModalObject.modalTestObject.waitModalToHide();
 
         obj.clickAdd();
 
         // wait to show the modal
-        await obj.modalObject.waitModalToShow();
-
+        await obj.groupModalObject.modalTestObject.waitModalToShow();
         // add name and select a user
-        await obj.modalObject.makeReadyToAdd();
-
-        obj.modalObject.clickAdd();
-
+        await obj.groupModalObject.makeReadyToAdd();
+        obj.groupModalObject.modalTestObject.clickAction();
         // wait to hide the modal and refresh main page
-        await obj.modalObject.waitModalToHide();
+        await obj.groupModalObject.modalTestObject.waitModalToHide();
 
         await wait(() => {
             // 1 - get all users
@@ -104,19 +99,19 @@ describe('<GroupPage />', () => {
 
         // open modal on edit mode and close
         await obj.itemObject.clickEditFor(1);
-        await obj.modalObject.waitModalToShow();
-        obj.modalObject.clickClose();
-        await obj.modalObject.waitModalToHide();
+        await obj.groupModalObject.modalTestObject.waitModalToShow();
+        obj.groupModalObject.modalTestObject.clickClose();
+        await obj.groupModalObject.modalTestObject.waitModalToHide();
 
         // open modal on edit mode and edit
         await obj.itemObject.clickEditFor(1);
-        await obj.modalObject.waitModalToShow();
+        await obj.groupModalObject.modalTestObject.waitModalToShow();
 
         // hack to avoid duplicate "Edit" labels
-        const { getByText } = within(obj.modalObject.Modal as HTMLElement);
+        const { getByText } = within(obj.groupModalObject.modalTestObject.Modal as HTMLElement);
         fireEvent.click(getByText('Edit'));
 
-        await obj.modalObject.waitModalToHide();
+        await obj.groupModalObject.modalTestObject.waitModalToHide();
 
         await wait(() => {
             // 1 - get all users

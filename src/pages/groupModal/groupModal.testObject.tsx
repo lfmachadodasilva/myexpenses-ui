@@ -1,15 +1,20 @@
 import React from 'react';
-import { fireEvent, wait } from '@testing-library/react';
+import { fireEvent } from '@testing-library/react';
 
 import { TestObjectBase } from '../../helpers/testObjectBase';
 import { GroupModalPage, GroupModalProps } from './groupModal';
 import { UserContext, userContext } from '../../contexts/user';
+import { ModalTestObject } from '../../components/modal/modal.testObject';
 
 export class GroupModalTestObject extends TestObjectBase<GroupModalProps> {
     defaultParams: Partial<GroupModalProps> = {};
+    modalTestObject!: ModalTestObject;
     user!: UserContext;
 
-    protected initialiseSubObjects(): void {}
+    protected initialiseSubObjects(): void {
+        this.modalTestObject = new ModalTestObject();
+        this.modalTestObject.initialiseWithParentObject(this.wrapper);
+    }
 
     protected render(props: GroupModalProps) {
         return (
@@ -29,33 +34,5 @@ export class GroupModalTestObject extends TestObjectBase<GroupModalProps> {
         this.insertText('group-name-field', 'New group');
         // select one user
         this.insertText('group-users-field', ['1']);
-    }
-
-    clickAdd() {
-        this.clickByText('Add');
-    }
-
-    clickEdit() {
-        this.clickByText('Edit');
-    }
-
-    clickClose() {
-        fireEvent.click(this.CloseButton as Element);
-    }
-
-    async waitModalToShow() {
-        await wait(() => expect(this.Modal).toBeInTheDocument());
-    }
-
-    async waitModalToHide() {
-        await wait(() => expect(this.Modal).not.toBeInTheDocument());
-    }
-
-    get Modal() {
-        return this.querySelector('.modal-content');
-    }
-
-    get CloseButton() {
-        return this.querySelector('.close');
     }
 }

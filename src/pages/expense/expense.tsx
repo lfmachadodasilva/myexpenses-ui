@@ -5,18 +5,19 @@ import { createGlobalStyle } from 'styled-components';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 
-import { ErrorComponent } from '../../components/error/error';
+import { AlertComponent } from '../../components/alert/alert';
 import { ItemsHeaderComponent } from '../../components/itemsHeader/itemsHeader';
 import { LoadingComponent } from '../../components/loading/loading';
 import { SearchComponent } from '../../components/search/search';
 import { ConfigManager } from '../../configurations/configManager';
-import { globalContext } from '../../contexts/global';
+import { defaultGlobalContext, globalContext } from '../../contexts/global';
 import { ConfigModel } from '../../models/config';
 import { ExpenseFullModel, ExpenseType } from '../../models/expense';
 import { ExpenseService } from '../../services/expense';
 import { ExpenseItemsPage } from './expenseItems';
 import { ExpenseSummaryPage } from './expenseSummary';
 import { ExpenseModalPage, ExpenseModalType } from '../expenseModal/expenseModal';
+import { hasValue } from '../../helpers/util';
 
 export type ExpenseProps = {};
 
@@ -128,6 +129,16 @@ export const ExpensePage: React.FC<ExpenseProps> = React.memo((props: ExpensePro
     }, [expenses]);
     //#endregion
 
+    const alertsElement = React.useMemo(() => {
+        if (global.group === defaultGlobalContext.group) {
+            return <AlertComponent message={t('EXPENSE.EMPTY_GROUP')} type="warning" />;
+        }
+        if (expenses.length === 0 && !hasValue(error)) {
+            return <AlertComponent message={t('EXPENSE.EMPTY')} type="warning" />;
+        }
+        return <AlertComponent message={error} type="danger" />;
+    }, [expenses, error, t, global]);
+
     return (
         <>
             <ExpenseStyle />
@@ -138,7 +149,7 @@ export const ExpensePage: React.FC<ExpenseProps> = React.memo((props: ExpensePro
                 onAction={handleOnAdd}
                 disableAction={isLoading || global.isLoading}
             />
-            <ErrorComponent message={error} />
+            {alertsElement}
             <LoadingComponent isLoading={isLoading || global.isLoading}>
                 <Tabs defaultActiveKey="summary">
                     <Tab eventKey="summary" title={t('EXPENSE.SUMMARY')}>

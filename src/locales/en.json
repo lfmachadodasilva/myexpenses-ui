@@ -45,7 +45,10 @@
     "ITEM": {
         "EDIT": "Edit",
         "DUPLICATE": "Duplicate",
-        "DELETE": "Delete"
+        "DELETE": "Delete",
+        "DELETE_TITLE": "Delete confirmation",
+        "DELETE_QUESTON": "Are you sure you want to delete this item?",
+        "DELETE_ACTION": "Delete it!"
     },
     "GROUP": {
         "TITLE": "Groups",
@@ -54,6 +57,7 @@
         "YOU": "You",
         "EDIT": "Edit",
         "DELETE": "Delete",
+        "EMPTY": "You don't have any group. Please create new one to start.",
         "MODAL": {
             "ADD_TITLE": "Add new group",
             "EDIT_TITLE": "Edit group",
@@ -75,6 +79,8 @@
         "CURRENT_MONTH": "This month",
         "LAST_MONTH": "Last month",
         "AVERAGE": "Average",
+        "EMPTY": "You don't have any label. Please create new one to start.",
+        "EMPTY_GROUP": "You don't have any group. Please create new one to start.",
         "MODAL": {
             "ADD_TITLE": "Add new label",
             "EDIT_TITLE": "Edit label",
@@ -101,6 +107,8 @@
         "TOTAL_INCOMING": "Total incoming",
         "TOTAL_OUTCOMING": "Total outcoming",
         "TOTAL_LEFT": "Total left",
+        "EMPTY": "You don't have any expense. Please create new one to start.",
+        "EMPTY_GROUP": "You don't have any group. Please create new one to start.",
         "MODAL": {
             "ADD_TITLE": "Add new expense",
             "EDIT_TITLE": "Edit expense",

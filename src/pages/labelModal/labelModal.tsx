@@ -1,8 +1,6 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 import { ConfigModel } from '../../models/config';
@@ -11,7 +9,8 @@ import { hasValue } from '../../helpers/util';
 import { LabelFullModel } from '../../models/label';
 import { LabelService } from '../../services/label';
 import { globalContext } from '../../contexts/global';
-import { ErrorComponent } from '../../components/error/error';
+import { AlertComponent } from '../../components/alert/alert';
+import { ModalComponent } from '../../components/modal/modal';
 
 export type LabelModalProps = {
     show: boolean;
@@ -86,7 +85,31 @@ export const LabelModalPage: React.FC<LabelModalProps> = React.memo((props: Labe
 
     return (
         <>
-            <Modal show={props.show} onHide={props.onHide} size="lg" centered>
+            <ModalComponent
+                show={props.show}
+                size={'lg'}
+                title={hasValue(props.label) ? t('LABEL.MODAL.EDIT_TITLE') : t('LABEL.MODAL.ADD_TITLE')}
+                onHide={props.onHide}
+                onAction={handleOnAction}
+                actionText={hasValue(props.label) ? t('LABEL.MODAL.EDIT_ACTION') : t('LABEL.MODAL.ADD_ACTION')}
+                actionDisable={disabledAction}
+            >
+                <AlertComponent message={error} type="danger" />
+                <Form>
+                    <Form.Group controlId="exampleForm.ControlInput1">
+                        <Form.Label>{t('LABEL.MODAL.NAME')}</Form.Label>
+                        <Form.Control
+                            data-testid="label-name-field"
+                            type="text"
+                            value={name}
+                            placeholder={t('LABEL.MODAL.NAME_PLACEHOLDER')}
+                            onChange={handleOnChangeName}
+                        />
+                    </Form.Group>
+                </Form>
+            </ModalComponent>
+
+            {/* <Modal show={props.show} onHide={props.onHide} size="lg" centered>
                 <Modal.Header closeButton>
                     <Modal.Title>
                         {hasValue(props.label) ? t('LABEL.MODAL.EDIT_TITLE') : t('LABEL.MODAL.ADD_TITLE')}
@@ -112,7 +135,7 @@ export const LabelModalPage: React.FC<LabelModalProps> = React.memo((props: Labe
                         {hasValue(props.label) ? t('LABEL.MODAL.EDIT_ACTION') : t('LABEL.MODAL.ADD_ACTION')}
                     </Button>
                 </Modal.Footer>
-            </Modal>
+            </Modal> */}
         </>
     );
 });

@@ -2,8 +2,6 @@ import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 import { ConfigManager } from '../../configurations/configManager';
@@ -13,7 +11,8 @@ import { ConfigModel } from '../../models/config';
 import { ExpenseFullModel, ExpenseModel, ExpenseType } from '../../models/expense';
 import { ExpenseService } from '../../services/expense';
 import { LabelModel } from '../../models/label';
-import { ErrorComponent } from '../../components/error/error';
+import { AlertComponent } from '../../components/alert/alert';
+import { ModalComponent } from '../../components/modal/modal';
 
 export enum ExpenseModalType {
     ADD,
@@ -182,78 +181,76 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
 
     return (
         <>
-            <Modal show={props.show} onHide={props.onHide} size="lg" centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>{title}</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <ErrorComponent message={error} />
-                    <Form>
-                        <Form.Group controlId="formLabel">
-                            <Form.Label>{t('EXPENSE.MODAL.TYPE')}</Form.Label>
-                            <Form.Control as="select" value={type ?? ''} onChange={handleOnChangeType}>
-                                <option key={ExpenseType.OUTCOMING} value={ExpenseType.OUTCOMING}>
-                                    {t('EXPENSE.OUTCOMING')}
-                                </option>
-                                <option key={ExpenseType.INCOMING} value={ExpenseType.INCOMING}>
-                                    {t('EXPENSE.INCOMING')}
-                                </option>
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group controlId="formName">
-                            <Form.Label>{t('EXPENSE.MODAL.NAME')}</Form.Label>
-                            <Form.Control
-                                data-testid="expense-name-field"
-                                type="text"
-                                value={name}
-                                placeholder={t('EXPENSE.MODAL.NAME_PLACEHOLDER')}
-                                onChange={handleOnChangeName}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formValue">
-                            <Form.Label>{t('EXPENSE.MODAL.VALUE')}</Form.Label>
-                            <Form.Control
-                                data-testid="expense-value-field"
-                                type="number"
-                                value={value ?? ''}
-                                placeholder={t('EXPENSE.MODAL.VALUE_PLACEHOLDER')}
-                                onChange={handleOnChangeValue}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formDate">
-                            <Form.Label>{t('EXPENSE.MODAL.DATE')}</Form.Label>
-                            <Form.Control
-                                data-testid="expense-date-field"
-                                type="date"
-                                value={format(new Date(date), t('EXPENSE.FIELD_DATE_FORMAT'))}
-                                onChange={handleOnChangeDate}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formLabel">
-                            <Form.Label>{t('EXPENSE.MODAL.LABEL')}</Form.Label>
-                            <Form.Control as="select" value={label ?? ''} onChange={handleOnChangeLabel}>
-                                {labelOptions}
-                            </Form.Control>
-                        </Form.Group>
-                        <Form.Group controlId="formComments">
-                            <Form.Label>{t('EXPENSE.MODAL.COMMENTS')}</Form.Label>
-                            <Form.Control
-                                data-testid="expense-comments-field"
-                                as="textarea"
-                                rows={2}
-                                value={comments}
-                                placeholder={t('EXPENSE.MODAL.COMMENTS_PLACEHOLDER')}
-                                onChange={handleOnChangeComments}
-                            />
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={handleOnAction} disabled={disabledAction}>
-                        {action}
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <ModalComponent
+                show={props.show}
+                size={'lg'}
+                title={title}
+                onHide={props.onHide}
+                onAction={handleOnAction}
+                actionText={action}
+                actionDisable={disabledAction}
+            >
+                <AlertComponent message={error} type="danger" />
+                <Form>
+                    <Form.Group controlId="formLabel">
+                        <Form.Label>{t('EXPENSE.MODAL.TYPE')}</Form.Label>
+                        <Form.Control as="select" value={type ?? ''} onChange={handleOnChangeType}>
+                            <option key={ExpenseType.OUTCOMING} value={ExpenseType.OUTCOMING}>
+                                {t('EXPENSE.OUTCOMING')}
+                            </option>
+                            <option key={ExpenseType.INCOMING} value={ExpenseType.INCOMING}>
+                                {t('EXPENSE.INCOMING')}
+                            </option>
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="formName">
+                        <Form.Label>{t('EXPENSE.MODAL.NAME')}</Form.Label>
+                        <Form.Control
+                            data-testid="expense-name-field"
+                            type="text"
+                            value={name}
+                            placeholder={t('EXPENSE.MODAL.NAME_PLACEHOLDER')}
+                            onChange={handleOnChangeName}
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="formValue">
+                        <Form.Label>{t('EXPENSE.MODAL.VALUE')}</Form.Label>
+                        <Form.Control
+                            data-testid="expense-value-field"
+                            type="number"
+                            value={value ?? ''}
+                            placeholder={t('EXPENSE.MODAL.VALUE_PLACEHOLDER')}
+                            onChange={handleOnChangeValue}
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="formDate">
+                        <Form.Label>{t('EXPENSE.MODAL.DATE')}</Form.Label>
+                        <Form.Control
+                            data-testid="expense-date-field"
+                            type="date"
+                            value={format(new Date(date), t('EXPENSE.FIELD_DATE_FORMAT'))}
+                            onChange={handleOnChangeDate}
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="formLabel">
+                        <Form.Label>{t('EXPENSE.MODAL.LABEL')}</Form.Label>
+                        <Form.Control as="select" value={label ?? ''} onChange={handleOnChangeLabel}>
+                            {labelOptions}
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="formComments">
+                        <Form.Label>{t('EXPENSE.MODAL.COMMENTS')}</Form.Label>
+                        <Form.Control
+                            data-testid="expense-comments-field"
+                            as="textarea"
+                            rows={2}
+                            value={comments}
+                            placeholder={t('EXPENSE.MODAL.COMMENTS_PLACEHOLDER')}
+                            onChange={handleOnChangeComments}
+                        />
+                    </Form.Group>
+                </Form>
+            </ModalComponent>
         </>
     );
 });

@@ -11,15 +11,16 @@ import ToggleButton from 'react-bootstrap/ToggleButton';
 
 import { SearchComponent } from '../../components/search/search';
 import { ConfigManager } from '../../configurations/configManager';
-import { globalContext } from '../../contexts/global';
+import { defaultGlobalContext, globalContext } from '../../contexts/global';
 import { ConfigModel } from '../../models/config';
 import { LabelFullModel } from '../../models/label';
 import { LabelService } from '../../services/label';
 import { ItemComponent } from '../../components/item/item';
 import { LabelModalPage } from '../labelModal/labelModal';
 import { LoadingComponent } from '../../components/loading/loading';
-import { ErrorComponent } from '../../components/error/error';
+import { AlertComponent } from '../../components/alert/alert';
 import { ItemsHeaderComponent } from '../../components/itemsHeader/itemsHeader';
+import { hasValue } from '../../helpers/util';
 
 export type LabelProps = {};
 
@@ -120,93 +121,98 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
     // #endregion
 
     // #region items
-    const itemsElements = React.useMemo(
-        () =>
-            labels.map(label => {
-                const currValueClass =
-                    label.currValue > label.lastValue || label.currValue > label.avgValue ? 'text-danger' : '';
-                const lastValueClass = label.lastValue > label.avgValue ? 'text-danger' : '';
+    const itemsElements = React.useMemo(() => {
+        return labels.map(label => {
+            const currValueClass =
+                label.currValue > label.lastValue || label.currValue > label.avgValue ? 'text-danger' : '';
+            const lastValueClass = label.lastValue > label.avgValue ? 'text-danger' : '';
 
-                return (
-                    <ItemComponent
-                        key={label.id}
-                        id={label.id}
-                        name={label.name}
-                        onEdit={handleOnEdit}
-                        onDelete={handleOnDelete}
-                    >
-                        <div className="d-flex justify-content-between">
-                            <p className={`no-margin ${currValueClass}`}>
-                                <small>{t('LABEL.CURRENT_MONTH')}</small>
-                                <br></br>
-                                {label.currValue.toFixed(2)}
-                            </p>
-                            <p className={`no-margin ${lastValueClass}`}>
-                                <small>{t('LABEL.LAST_MONTH')}</small>
-                                <br></br>
-                                {label.lastValue.toFixed(2)}
-                            </p>
-                            <p className="no-margin">
-                                <small>{t('LABEL.AVERAGE')}</small>
-                                <br></br>
-                                {label.avgValue.toFixed(2)}
-                            </p>
-                        </div>
-                    </ItemComponent>
-                );
-            }),
-        [labels, handleOnEdit, handleOnDelete, t]
-    );
+            return (
+                <ItemComponent
+                    key={label.id}
+                    id={label.id}
+                    name={label.name}
+                    onEdit={handleOnEdit}
+                    onDelete={handleOnDelete}
+                >
+                    <div className="d-flex justify-content-between">
+                        <p className={`no-margin ${currValueClass}`}>
+                            <small>{t('LABEL.CURRENT_MONTH')}</small>
+                            <br></br>
+                            {label.currValue.toFixed(2)}
+                        </p>
+                        <p className={`no-margin ${lastValueClass}`}>
+                            <small>{t('LABEL.LAST_MONTH')}</small>
+                            <br></br>
+                            {label.lastValue.toFixed(2)}
+                        </p>
+                        <p className="no-margin">
+                            <small>{t('LABEL.AVERAGE')}</small>
+                            <br></br>
+                            {label.avgValue.toFixed(2)}
+                        </p>
+                    </div>
+                </ItemComponent>
+            );
+        });
+    }, [labels, handleOnEdit, handleOnDelete, t]);
     // #endregion
 
     // #region graph
-    const graphElement = React.useMemo(
-        () => (
-            <>
-                <Pie
-                    key={graphType}
-                    data={
-                        labels.length > 0
-                            ? {
-                                  labels: labels.map(label => label.name),
-                                  datasets: [
-                                      {
-                                          data: labels.map(label =>
-                                              graphType === LabelGrapyType.CURRENT_MONTH
-                                                  ? label.currValue
-                                                  : graphType === LabelGrapyType.LAST_MONTH
-                                                  ? label.lastValue
-                                                  : label.avgValue
-                                          ),
-                                          borderWidth: 0
-                                      }
-                                  ]
-                              }
-                            : {
-                                  labels: ['Empty'],
-                                  datasets: [
-                                      {
-                                          data: [1],
-                                          borderWidth: 0
-                                      }
-                                  ]
-                              }
-                    }
-                    options={{
-                        plugins: {
-                            colorschemes: {
-                                scheme: 'office.Excel16'
-                            }
+    const graphElement = React.useMemo(() => {
+        return (
+            <Pie
+                key={graphType}
+                data={
+                    labels.length > 0
+                        ? {
+                              labels: labels.map(label => label.name),
+                              datasets: [
+                                  {
+                                      data: labels.map(label =>
+                                          graphType === LabelGrapyType.CURRENT_MONTH
+                                              ? label.currValue
+                                              : graphType === LabelGrapyType.LAST_MONTH
+                                              ? label.lastValue
+                                              : label.avgValue
+                                      ),
+                                      borderWidth: 0
+                                  }
+                              ]
+                          }
+                        : {
+                              labels: ['Empty'],
+                              datasets: [
+                                  {
+                                      data: [1],
+                                      borderWidth: 0
+                                  }
+                              ]
+                          }
+                }
+                options={{
+                    plugins: {
+                        colorschemes: {
+                            scheme: 'office.Excel16'
                         }
-                    }}
-                    width={100}
-                    height={100}
-                />
-            </>
-        ),
-        [labels, graphType]
-    );
+                    }
+                }}
+                width={100}
+                height={100}
+            />
+        );
+    }, [labels, graphType]);
     // #endregion
+
+    const alertElements = React.useMemo(() => {
+        if (group === defaultGlobalContext.group) {
+            return <AlertComponent message={t('LABEL.EMPTY_GROUP')} type="warning" />;
+        }
+        if (!isLoading && !isLoadingGlobal && labels.length === 0 && !hasValue(error)) {
+            return <AlertComponent message={t('LABEL.EMPTY')} type="warning" />;
+        }
+        return <AlertComponent message={error} type="danger" />;
+    }, [error, group, isLoading, isLoadingGlobal, labels, t]);
 
     return (
         <>
@@ -218,7 +224,7 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
                 onAction={handleOnAdd}
                 disableAction={isLoading || isLoadingGlobal}
             />
-            <ErrorComponent message={error} />
+            {alertElements}
             <LoadingComponent isLoading={isLoading || isLoadingGlobal}>
                 <Tabs defaultActiveKey="items">
                     <Tab eventKey="items" title={t('LABEL.TAB_ITEMS')}>

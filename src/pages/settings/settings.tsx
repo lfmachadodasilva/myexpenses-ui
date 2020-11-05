@@ -9,7 +9,7 @@ import { ItemsHeaderComponent } from '../../components/itemsHeader/itemsHeader';
 import { ConfigModel } from '../../models/config';
 import { ConfigManager } from '../../configurations/configManager';
 import { updateUser } from '../../services/auth';
-import { ErrorComponent } from '../../components/error/error';
+import { AlertComponent } from '../../components/alert/alert';
 
 export type SettingsProps = {};
 
@@ -58,7 +58,7 @@ export const SettingsPage: React.FC<SettingsProps> = React.memo((props: Settings
                         onAction={handleOnUpdate}
                         disableAction={isLoading}
                     />
-                    <ErrorComponent message={error} />
+                    <AlertComponent message={error} type="danger" />
                     <Form>
                         <Form.Check
                             className="mb-2"

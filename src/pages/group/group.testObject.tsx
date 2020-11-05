@@ -12,12 +12,12 @@ export class GroupTestObject extends TestObjectBase<GroupProps> {
     user!: UserContext;
     global!: GlobalContext;
 
-    modalObject!: GroupModalTestObject;
+    groupModalObject!: GroupModalTestObject;
     itemObject!: ItemTestObject;
 
     protected initialiseSubObjects(): void {
-        this.modalObject = new GroupModalTestObject();
-        this.modalObject.initialiseWithParentObject(this.wrapper);
+        this.groupModalObject = new GroupModalTestObject();
+        this.groupModalObject.initialiseWithParentObject(this.wrapper);
 
         this.itemObject = new ItemTestObject();
         this.itemObject.initialiseWithParentObject(this.wrapper);

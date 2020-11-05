@@ -1,8 +1,6 @@
 import React, { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 import { ConfigModel } from '../../models/config';
@@ -13,7 +11,8 @@ import { UserModel } from '../../models/user';
 import { hasValue } from '../../helpers/util';
 import { GroupFullModel } from '../../models/group';
 import { GroupService } from '../../services/group';
-import { ErrorComponent } from '../../components/error/error';
+import { AlertComponent } from '../../components/alert/alert';
+import { ModalComponent } from '../../components/modal/modal';
 
 export type GroupModalProps = {
     show: boolean;
@@ -134,46 +133,42 @@ export const GroupModalPage: React.FC<GroupModalProps> = React.memo((props: Grou
 
     return (
         <>
-            <Modal show={props.show} onHide={props.onHide} size="lg" centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>
-                        {hasValue(props.group) ? t('GROUP.MODAL.EDIT_TITLE') : t('GROUP.MODAL.ADD_TITLE')}
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <ErrorComponent message={error} />
-                    <Form>
-                        <Form.Group controlId="exampleForm.ControlInput1">
-                            <Form.Label>{t('GROUP.MODAL.NAME')}</Form.Label>
-                            <Form.Control
-                                data-testid="group-name-field"
-                                type="text"
-                                value={name}
-                                placeholder={t('GROUP.MODAL.NAME_PLACEHOLDER')}
-                                onChange={handleOnChangeName}
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="exampleForm.ControlSelect2">
-                            <Form.Label>{t('GROUP.MODAL.USERS')}</Form.Label>
-                            <Form.Control
-                                data-testid="group-users-field"
-                                as="select"
-                                multiple
-                                value={selectedUsers}
-                                readOnly={isLoadingUsers && hasValue(error)}
-                                onChange={handleOnChangeUsers}
-                            >
-                                {usersOption}
-                            </Form.Control>
-                        </Form.Group>
-                    </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="primary" onClick={handleOnAction} disabled={disabledAction}>
-                        {hasValue(props.group) ? t('GROUP.MODAL.EDIT_ACTION') : t('GROUP.MODAL.ADD_ACTION')}
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            <ModalComponent
+                show={props.show}
+                size={'lg'}
+                title={hasValue(props.group) ? t('GROUP.MODAL.EDIT_TITLE') : t('GROUP.MODAL.ADD_TITLE')}
+                onHide={props.onHide}
+                onAction={handleOnAction}
+                actionText={hasValue(props.group) ? t('GROUP.MODAL.EDIT_ACTION') : t('GROUP.MODAL.ADD_ACTION')}
+                actionDisable={disabledAction}
+            >
+                <AlertComponent message={error} type="danger" />
+                <Form>
+                    <Form.Group controlId="exampleForm.ControlInput1">
+                        <Form.Label>{t('GROUP.MODAL.NAME')}</Form.Label>
+                        <Form.Control
+                            data-testid="group-name-field"
+                            type="text"
+                            value={name}
+                            placeholder={t('GROUP.MODAL.NAME_PLACEHOLDER')}
+                            onChange={handleOnChangeName}
+                        />
+                    </Form.Group>
+                    <Form.Group controlId="exampleForm.ControlSelect2">
+                        <Form.Label>{t('GROUP.MODAL.USERS')}</Form.Label>
+                        <Form.Control
+                            data-testid="group-users-field"
+                            as="select"
+                            multiple
+                            value={selectedUsers}
+                            readOnly={isLoadingUsers && hasValue(error)}
+                            onChange={handleOnChangeUsers}
+                        >
+                            {usersOption}
+                        </Form.Control>
+                    </Form.Group>
+                </Form>
+            </ModalComponent>
         </>
     );
 });
