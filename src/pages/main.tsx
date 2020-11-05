@@ -23,6 +23,7 @@ import { hasValue } from '../helpers/util';
 import { ImportPage } from './import/import';
 import { LabelModel } from '../models/label';
 import { LabelService } from '../services/label';
+import { ExportPage } from './export/export';
 
 export type MainProps = {};
 
@@ -317,6 +318,9 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
                         )}
                         {enablePrivateRoute && (
                             <PrivateRoute key={Routes.import} path={Routes.import} component={ImportPage} />
+                        )}
+                        {enablePrivateRoute && (
+                            <PrivateRoute key={Routes.export} path={Routes.export} component={ExportPage} />
                         )}
 
                         <Route key={Routes.auth} path={Routes.auth} component={AuthPage} />

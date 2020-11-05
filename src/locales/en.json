@@ -21,6 +21,7 @@
         "EXPENSE": "Expense",
         "SETTINGS": "Settings",
         "IMPORT": "Import",
+        "EXPORT": "Export",
         "LOGOUT": "Logout",
         "LOGIN": "Login"
     },
@@ -155,5 +156,18 @@
             "LABEL": "Label",
             "COMMENTS": "Comments"
         }
+    },
+    "EXPORT": {
+        "TITLE": "Export",
+        "GROUP": "Group",
+        "SEPARATOR": "Separator",
+        "DATA": "Export data",
+        "DATA_TEXT": "Format per line: TYPE;NAME;VALUE;DATE;LABEL;COMMENTS",
+        "DATA_PLACEHOLDER": "Press Process button to export all data from the selected group",
+        "ACTION": "Process",
+        "EXPORTING": "Exporting...",
+        "ERROR": "Something went wrong. Try again later.",
+        "EMPTY": "You don't have any expense. Please create new one to start.",
+        "EMPTY_GROUP": "You don't have any group. Please create new one to start."
     }
 }

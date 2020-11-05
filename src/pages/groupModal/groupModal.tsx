@@ -45,6 +45,7 @@ export const GroupModalPage: React.FC<GroupModalProps> = React.memo((props: Grou
     const handleOnAction = React.useCallback(async () => {
         setLoadingAction(true);
 
+        setError('');
         if (hasValue(props.group)) {
             try {
                 await new GroupService(config).update({

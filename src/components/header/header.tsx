@@ -62,6 +62,9 @@ export const HeaderComponent: React.FC<HeaderProps> = React.memo((props: HeaderP
                         <NavDropdown.Item onClick={() => handleRedirectTo(Routes.import)}>
                             {t('HEADER.IMPORT')}
                         </NavDropdown.Item>
+                        <NavDropdown.Item onClick={() => handleRedirectTo(Routes.export)}>
+                            {t('HEADER.EXPORT')}
+                        </NavDropdown.Item>
                         <NavDropdown.Divider />
                         <NavDropdown.Item onClick={handleLogout}>{t('HEADER.LOGOUT')}</NavDropdown.Item>
                     </NavDropdown>

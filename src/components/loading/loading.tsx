@@ -5,6 +5,7 @@ import { createGlobalStyle } from 'styled-components';
 
 export type LoadingProps = {
     isLoading: boolean;
+    text?: string;
 };
 
 const LoadingStyle = createGlobalStyle`
@@ -29,7 +30,7 @@ export const LoadingComponent: React.FC<React.PropsWithChildren<LoadingProps>> =
                     }
                     text={
                         <>
-                            <p>{t('LOADING')}</p>
+                            <p>{props.text ?? t('LOADING')}</p>
                         </>
                     }
                 >

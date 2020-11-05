@@ -82,6 +82,7 @@ export const ExpenseModalPage: React.FC<ExpenseModalProps> = React.memo((props: 
             comments: comments
         } as ExpenseModel;
 
+        setError('');
         if (modalType === ExpenseModalType.EDIT && hasValue(expense)) {
             try {
                 await new ExpenseService(config).update(obj);

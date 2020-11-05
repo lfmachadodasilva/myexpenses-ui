@@ -61,6 +61,7 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
 
         const runAsync = async () => {
             setLoading(true);
+            setError('');
             try {
                 const data = await new LabelService(config).getAllFull(group, month, year);
                 setLabels(data);
@@ -91,6 +92,7 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
 
     const handleOnDelete = React.useCallback(
         async (id: number) => {
+            setError('');
             try {
                 await new LabelService(config).remove(id);
                 setTimeout(() => {

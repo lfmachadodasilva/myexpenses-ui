@@ -48,6 +48,7 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
 
     const handleOnDelete = React.useCallback(
         async (id: number) => {
+            setError('');
             try {
                 await new GroupService(config).remove(id);
                 setTimeout(() => {
@@ -78,6 +79,7 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
             return;
         }
 
+        setError('');
         const setup = async () => {
             setLoading(true);
             try {

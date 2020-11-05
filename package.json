@@ -79,7 +79,8 @@
             "!src/helpers/testObjectBase.ts",
             "!src/helpers/axiosMock.ts",
             "!src/configurations/firebase.ts",
-            "!src/mockData/*.ts"
+            "!src/mockData/*.ts",
+            "!src/@types/*.ts"
         ]
     },
     "browserslist": {

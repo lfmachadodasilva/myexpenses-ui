@@ -38,6 +38,7 @@ export const LabelModalPage: React.FC<LabelModalProps> = React.memo((props: Labe
     const handleOnAction = React.useCallback(async () => {
         setLoadingAction(true);
 
+        setError('');
         if (hasValue(props.label)) {
             try {
                 await new LabelService(config).update({

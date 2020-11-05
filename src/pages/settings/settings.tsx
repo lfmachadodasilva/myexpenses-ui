@@ -35,6 +35,7 @@ export const SettingsPage: React.FC<SettingsProps> = React.memo((props: Settings
 
     const handleOnUpdate = React.useCallback(async () => {
         setLoading(true);
+        setError('');
         try {
             await updateUser(config, user.user as User, displayName);
         } catch {

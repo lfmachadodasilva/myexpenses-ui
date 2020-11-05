@@ -53,6 +53,7 @@ export const ExpensePage: React.FC<ExpenseProps> = React.memo((props: ExpensePro
         }
 
         const runAsync = async () => {
+            setError('');
             setLoading(true);
             try {
                 const data = await new ExpenseService(config).getAllFull(global.group, global.month, global.year);
