@@ -6,7 +6,7 @@ import Button from 'react-bootstrap/Button';
 export type ModalProps = {
     show: boolean;
     title: string;
-    size?: 'lg' | 'sm' | 'xl';
+    size?: 'lg' | 'sm' | 'xl' | undefined;
     actionText: string;
     actionVariant?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'light' | 'link';
     actionDisable?: boolean;

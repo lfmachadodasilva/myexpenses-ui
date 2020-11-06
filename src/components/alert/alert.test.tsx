@@ -33,5 +33,14 @@ describe('<AlertComponent />', () => {
 
         expect(obj.getAlert).toBeInTheDocument();
         expect(obj.queryByText('Show alert')).toBeInTheDocument();
+        expect(obj.querySelector('.alert-danger')).toBeInTheDocument();
+    });
+
+    test('should show alert with warning color', async () => {
+        const obj = await defaultInitialise({ message: 'Show alert', type: 'warning' });
+
+        expect(obj.getAlert).toBeInTheDocument();
+        expect(obj.queryByText('Show alert')).toBeInTheDocument();
+        expect(obj.querySelector('.alert-warning')).toBeInTheDocument();
     });
 });

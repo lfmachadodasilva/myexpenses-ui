@@ -64,6 +64,12 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
             status[index] = StatusType.PROCESSING;
             setStatus({ ...status });
 
+            if (!isValid(expense.date)) {
+                status[index] = StatusType.ERROR;
+                setStatus({ ...status });
+                continue;
+            }
+
             // check if the label already exist
             let label = labels.find(l => l.name.trim().toLowerCase() === expense.label.name.trim().toLowerCase());
             if (!hasValue(label)) {
@@ -74,7 +80,7 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
                 } catch {
                     status[index] = StatusType.ERROR;
                     setStatus({ ...status });
-                    return;
+                    continue;
                 }
             }
 
@@ -83,7 +89,7 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
             } catch {
                 status[index] = StatusType.ERROR;
                 setStatus({ ...status });
-                return;
+                continue;
             }
 
             status[index] = StatusType.PROCESSED;

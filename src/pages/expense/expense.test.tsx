@@ -133,6 +133,34 @@ describe('<ExpensePage />', () => {
         });
     });
 
+    test.skip('duplicate expense', async () => {
+        const obj = await defaultInitialise();
+
+        // open modal on duplicate mode and close
+        await obj.itemObject.clickDeleteFor(1);
+        await obj.modalObject.modalTestObject.waitModalToShow();
+        obj.modalObject.modalTestObject.clickClose();
+        await obj.modalObject.modalTestObject.waitModalToHide();
+
+        // open modal on duplicate mode and edit
+        await obj.itemObject.clickDeleteFor(1);
+        await obj.modalObject.modalTestObject.waitModalToShow();
+
+        // hack to avoid duplicate "Edit" expenses
+        const { getByText } = within(obj.modalObject.modalTestObject.Modal as HTMLElement);
+        fireEvent.click(getByText('Duplicate'));
+
+        await obj.modalObject.modalTestObject.waitModalToHide();
+
+        await wait(() => {
+            // 1 - get all expenses
+            // 2 - after duplicate expense main page will refresh
+            expect(axiosMock.getSpy).toHaveBeenCalledTimes(2);
+
+            expect(axiosMock.postSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
     test('delete expense', async () => {
         const obj = await defaultInitialise();
 

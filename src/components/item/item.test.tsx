@@ -1,5 +1,4 @@
 import { wait } from '@testing-library/react';
-import { act } from 'react-dom/test-utils';
 import { setConfiguration } from '../../configurations/configManager';
 import { ItemProps } from './item';
 import { ItemTestObject } from './item.testObject';

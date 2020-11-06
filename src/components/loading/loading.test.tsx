@@ -17,10 +17,11 @@ describe('<LoadingComponent />', () => {
     });
 
     test('should show loading', async () => {
-        const obj = await defaultInitialise({ isLoading: true });
+        const obj = await defaultInitialise({ isLoading: true, text: 'New loading' });
 
         expect(obj.getLoading).toBeInTheDocument();
         expect(obj.queryByText('Loading Component')).toBeInTheDocument();
+        expect(obj.queryByText('New loading')).toBeInTheDocument();
     });
 
     test('should not show loading', async () => {

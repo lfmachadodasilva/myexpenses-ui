@@ -302,7 +302,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
                     reload: handleToReloadAll
                 }}
             >
-                <Container className="mt-2">
+                <Container className="mt-2 pl-1 pr-1">
                     <Switch>
                         {enablePrivateRoute && (
                             <PrivateRoute key={Routes.group} path={Routes.group} component={GroupPage} />

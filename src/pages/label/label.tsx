@@ -138,21 +138,27 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
                     onDelete={handleOnDelete}
                 >
                     <div className="d-flex justify-content-between">
-                        <p className={`no-margin ${currValueClass}`}>
-                            <small>{t('LABEL.CURRENT_MONTH')}</small>
+                        <h6 className={`no-margin ${currValueClass}`}>
+                            <small>
+                                <small>{t('LABEL.CURRENT_MONTH')}</small>
+                            </small>
                             <br></br>
-                            {label.currValue.toFixed(2)}
-                        </p>
-                        <p className={`no-margin ${lastValueClass}`}>
-                            <small>{t('LABEL.LAST_MONTH')}</small>
+                            <small>{label.currValue.toFixed(2)}</small>
+                        </h6>
+                        <h6 className={`no-margin ${lastValueClass}`}>
+                            <small>
+                                <small>{t('LABEL.LAST_MONTH')}</small>
+                            </small>
                             <br></br>
-                            {label.lastValue.toFixed(2)}
-                        </p>
-                        <p className="no-margin">
-                            <small>{t('LABEL.AVERAGE')}</small>
+                            <small>{label.lastValue.toFixed(2)}</small>
+                        </h6>
+                        <h6 className="no-margin">
+                            <small>
+                                <small>{t('LABEL.AVERAGE')}</small>
+                            </small>
                             <br></br>
-                            {label.avgValue.toFixed(2)}
-                        </p>
+                            <small>{label.avgValue.toFixed(2)}</small>
+                        </h6>
                     </div>
                 </ItemComponent>
             );

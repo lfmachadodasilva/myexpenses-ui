@@ -27,21 +27,21 @@ export const ExpenseItemsPage: React.FC<ExpenseItemsProps> = React.memo((props: 
                     onDelete={() => props.onDelete(item.id)}
                 >
                     <div className="d-flex justify-content-between">
-                        <p className="no-margin">
-                            <small>{t('EXPENSE.VALUE')}</small>
-                            <br></br>
-                            {item.value.toFixed(2)}
-                        </p>
-                        <p className="no-margin">
-                            <small>{t('EXPENSE.DATE')}</small>
-                            <br></br>
-                            {format(new Date(item.date), t('EXPENSE.DATE_FORMAT'))}
-                        </p>
-                        <p className="no-margin">
-                            <small>{t('EXPENSE.LABEL')}</small>
-                            <br></br>
-                            {item.label.name}
-                        </p>
+                        <h6 className="no-margin">
+                            {/* <small>{t('EXPENSE.VALUE')}</small> */}
+                            {/* <br></br> */ ' '}
+                            <small>{item.value.toFixed(2)}</small>
+                        </h6>
+                        <h6 className="no-margin">
+                            {/* <small>{t('EXPENSE.DATE')}</small> */}
+                            {/* <br></br> */ ' '}
+                            <small>{format(new Date(item.date), t('EXPENSE.DATE_FORMAT'))}</small>
+                        </h6>
+                        <h6 className="no-margin">
+                            {/* <small>{t('EXPENSE.LABEL')}</small> */}
+                            {/* <br></br> */ ' '}
+                            <small>{item.label.name}</small>
+                        </h6>
                     </div>
                 </ItemComponent>
             ))}
