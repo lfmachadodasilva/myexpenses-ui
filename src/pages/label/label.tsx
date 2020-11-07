@@ -41,7 +41,7 @@ const LabelStyle = createGlobalStyle`
 export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) => {
     const [t] = useTranslation();
 
-    const { isLoading: isLoadingGlobal, group, month, year, reload } = useContext(globalContext);
+    const { isLoading: isLoadingGlobal, group, month, year, reloadLabels } = useContext(globalContext);
 
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
     const [error, setError] = React.useState<string>('');
@@ -109,10 +109,10 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
     const handleOnAction = React.useCallback(() => {
         setShowModal(false);
         setTimeout(() => {
-            reload();
+            reloadLabels();
             setRefresh(!refresh);
         }, config.requestDelay);
-    }, [config, refresh, reload]);
+    }, [config, refresh, reloadLabels]);
 
     const handleOnGraphType = React.useCallback((value: number) => {
         setGrahType(value);

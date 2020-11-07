@@ -22,7 +22,7 @@ export type GroupProps = {};
 export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) => {
     const [t] = useTranslation();
     const { user, isReady } = useContext(userContext);
-    const { reload } = useContext(globalContext);
+    const { reloadGroups } = useContext(globalContext);
 
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
     const [isLoading, setLoading] = React.useState<boolean>(false);
@@ -67,10 +67,10 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
         setShowModal(false);
 
         setTimeout(() => {
-            reload();
+            reloadGroups();
             setRefresh(!refresh);
         }, config.requestDelay);
-    }, [config, refresh, reload]);
+    }, [config, refresh, reloadGroups]);
 
     React.useEffect(() => {
         if (!isReady) {

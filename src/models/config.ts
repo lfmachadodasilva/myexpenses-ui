@@ -19,5 +19,5 @@ export class ConfigModel {
     firebaseApiKey: string = 'AIzaSyDMDE7eTQbjwkQglMJf5KnFtMr48-pAoVM';
     firebaseProject: string = 'lfmachadodasilva-dev';
 
-    useHashRouter: boolean = true;
+    useHashRouter: boolean = false;
 }

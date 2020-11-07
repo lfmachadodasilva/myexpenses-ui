@@ -274,7 +274,11 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
     }, [isReady, group, month, year, history, location.pathname, isSelectingGroup, isSelectingMonth, isSelectingYear]);
     // #endregion
 
-    const handleToReloadAll = React.useCallback(() => {
+    const handleToReloadLabels = React.useCallback(() => {
+        setLoadLabels(!loadLabels);
+    }, [loadLabels]);
+
+    const handleToReloadGroups = React.useCallback(() => {
         setLoadGroups(!loadGroups);
         setLoadLabels(!loadLabels);
     }, [loadGroups, loadLabels]);
@@ -298,7 +302,8 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
                     month: month ?? 0,
                     year: year ?? 0,
 
-                    reload: handleToReloadAll
+                    reloadLabels: handleToReloadLabels,
+                    reloadGroups: handleToReloadGroups
                 }}
             >
                 <Container className="mt-2">
