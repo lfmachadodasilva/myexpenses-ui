@@ -109,7 +109,7 @@
         "TOTAL_OUTCOMING": "Total outcoming",
         "TOTAL_LEFT": "Total left",
         "EMPTY": "You don't have any expense. Please create new one to start.",
-        "EMPTY_GROUP": "You don't have any group. Please create new one to start.",
+        "EMPTY_GROUP": "You don't have any group or label. Please create new one to start.",
         "MODAL": {
             "ADD_TITLE": "Add new expense",
             "EDIT_TITLE": "Edit expense",

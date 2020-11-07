@@ -42,7 +42,7 @@ const LabelStyle = createGlobalStyle`
 export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) => {
     const [t] = useTranslation();
 
-    const { isLoading: isLoadingGlobal, group, month, year, reloadLabels } = useContext(globalContext);
+    const { isLoading: isLoadingGlobal, group, groups, month, year, reloadLabels } = useContext(globalContext);
 
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
     const [error, setError] = React.useState<string>('');
@@ -96,13 +96,14 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
             try {
                 await new LabelService(config).remove(id);
                 setTimeout(() => {
+                    reloadLabels();
                     setRefresh(!refresh);
                 }, config.requestDelay);
             } catch {
                 setError(t('LABEL.ERROR'));
             }
         },
-        [config, t, refresh]
+        [config, t, refresh, reloadLabels]
     );
 
     const handleOnHide = React.useCallback(() => {
@@ -230,7 +231,7 @@ export const LabelPage: React.FC<LabelProps> = React.memo((_props: LabelProps) =
                 title={t('LABEL.TITLE')}
                 action={t('LABEL.ADD')}
                 onAction={handleOnAdd}
-                disableAction={isLoading || isLoadingGlobal}
+                disableAction={isLoading || isLoadingGlobal || !hasValue(groups)}
             />
             {alertElements}
             <LoadingComponent isLoading={isLoading || isLoadingGlobal}>

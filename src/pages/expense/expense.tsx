@@ -131,7 +131,7 @@ export const ExpensePage: React.FC<ExpenseProps> = React.memo((props: ExpensePro
     //#endregion
 
     const alertsElement = React.useMemo(() => {
-        if (global.group === defaultGlobalContext.group) {
+        if (global.group === defaultGlobalContext.group || !hasValue(global.groups) || !hasValue(global.labels)) {
             return <AlertComponent message={t('EXPENSE.EMPTY_GROUP')} type="warning" />;
         }
         if (expenses.length === 0 && !hasValue(error)) {
@@ -139,6 +139,10 @@ export const ExpensePage: React.FC<ExpenseProps> = React.memo((props: ExpensePro
         }
         return <AlertComponent message={error} type="danger" />;
     }, [expenses, error, t, global]);
+
+    const disableAction = React.useMemo(() => {
+        return isLoading || global.isLoading || !hasValue(global.groups) || !hasValue(global.labels);
+    }, [isLoading, global]);
 
     return (
         <>
@@ -148,7 +152,7 @@ export const ExpensePage: React.FC<ExpenseProps> = React.memo((props: ExpensePro
                 title={t('EXPENSE.TITLE')}
                 action={t('EXPENSE.ADD')}
                 onAction={handleOnAdd}
-                disableAction={isLoading || global.isLoading}
+                disableAction={disableAction}
             />
             {alertsElement}
             <LoadingComponent isLoading={isLoading || global.isLoading}>

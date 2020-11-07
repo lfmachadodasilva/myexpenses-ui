@@ -27,6 +27,8 @@ import { ExportPage } from './export/export';
 
 export type MainProps = {};
 
+const consoleLog = false;
+
 export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
     const { isReady } = useContext(userContext);
     const history = useHistory();
@@ -98,7 +100,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
                 results = [];
             }
 
-            console.log('load Groups', results);
+            consoleLog && console.log('load Groups', results);
             setGroups(results);
             setLoadingGroups(false);
             setLoadGroups(!loadGroups);
@@ -111,6 +113,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
     React.useEffect(() => {
         if (!isReady || !hasValue(groups)) {
             setGroup(undefined);
+            setSelectingGroup(false);
             return;
         }
 
@@ -131,7 +134,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
             // return undefined;
         }
 
-        console.log('setGroup', selected, searchParams.group);
+        consoleLog && console.log('setGroup', selected, searchParams.group);
         setGroup(selected);
         if (selected) {
             localStorage.setItem('group', selected.id.toString());
@@ -151,6 +154,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
 
             if (!isReady || !hasValue(group)) {
                 setLabels(results);
+                setLoadingLabels(false);
                 return;
             }
 
@@ -162,7 +166,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
                 results = [];
             }
 
-            console.log('load Labels', results);
+            consoleLog && console.log('load Labels', results);
             setLabels(results);
             setLoadingLabels(false);
             setLoadLabels(!loadLabels);
@@ -178,6 +182,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
 
             if (!isReady || !hasValue(group)) {
                 setYears(results);
+                setLoadingYears(false);
                 return;
             }
 
@@ -192,7 +197,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
                 results = [new Date().getFullYear()];
             }
 
-            console.log('load Years', results, group);
+            consoleLog && console.log('load Years', results, group);
             setYears(results);
             setLoadingYears(false);
         };
@@ -203,6 +208,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
     // #region select year
     React.useEffect(() => {
         if (!isReady || !hasValue(years)) {
+            setSelectingYear(false);
             return;
         }
 
@@ -217,7 +223,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
             selected = +lastYear;
         }
 
-        console.log('setYear', selected, +searchParams.year);
+        consoleLog && console.log('setYear', selected, +searchParams.year);
         setYear(selected);
         localStorage.setItem('year', selected.toString());
         setSelectingYear(false);
@@ -240,7 +246,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
             selected = +lastMonth;
         }
 
-        console.log('setMonth', selected, searchParams.month);
+        consoleLog && console.log('setMonth', selected, searchParams.month);
         setMonth(selected);
         localStorage.setItem('month', selected.toString());
         setSelectingMonth(false);
@@ -258,11 +264,12 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
             isSelectingMonth ||
             isSelectingYear
         ) {
+            setPushing(false);
             return;
         }
 
         setPushing(true);
-        console.log('history.push', group, month, year);
+        consoleLog && console.log('history.push', group, month, year);
         history.push({
             pathname: location.pathname,
             search: queryString.stringify({

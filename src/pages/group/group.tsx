@@ -52,13 +52,14 @@ export const GroupPage: React.FC<GroupProps> = React.memo((props: GroupProps) =>
             try {
                 await new GroupService(config).remove(id);
                 setTimeout(() => {
+                    reloadGroups();
                     setRefresh(!refresh);
                 }, config.requestDelay);
             } catch {
                 setError(t('GROUP.ERROR'));
             }
         },
-        [config, refresh, t]
+        [config, refresh, t, reloadGroups]
     );
 
     const handleOnHide = React.useCallback(() => {
