@@ -12,7 +12,7 @@ import Card from 'react-bootstrap/Card';
 
 import { Routes } from '../routes';
 import { loginWithEmail, loginWithFacebook } from '../../services/auth';
-import { ErrorComponent } from '../../components/error/error';
+import { AlertComponent } from '../../components/alert/alert';
 
 const AuthStyle = createGlobalStyle``;
 
@@ -65,7 +65,7 @@ export const AuthPage: React.FC<AuthProps> = React.memo((props: AuthProps) => {
         <>
             <AuthStyle />
             <Container className="p-4">
-                <ErrorComponent message={error} />
+                <AlertComponent message={error} type="danger" />
                 <Row>
                     <Col className="p-1" xs={12} sm={6}>
                         <Card className="p-4">

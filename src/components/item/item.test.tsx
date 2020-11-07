@@ -66,6 +66,27 @@ describe('<ItemComponent />', () => {
         });
     });
 
+    test('on delete and close dialog', async () => {
+        const mockOnEdit = jest.fn((id: number) => {});
+        const mockOnDuplicate = jest.fn((id: number) => {});
+        const mockOnDelete = jest.fn((id: number) => {});
+        const obj = await defaultInitialise({
+            id: 1,
+            name: 'Item name',
+            onEdit: mockOnEdit,
+            onDelete: mockOnDelete,
+            onDuplicate: mockOnDuplicate
+        });
+
+        await obj.clickDeleteAndCloseFor(1);
+
+        await wait(() => {
+            expect(mockOnEdit).not.toHaveBeenCalled();
+            expect(mockOnDuplicate).not.toHaveBeenCalled();
+            expect(mockOnDelete).not.toHaveBeenCalled();
+        });
+    });
+
     test('on duplicate', async () => {
         const mockOnEdit = jest.fn((id: number) => {});
         const mockOnDuplicate = jest.fn((id: number) => {});

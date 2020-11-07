@@ -63,7 +63,7 @@ describe('<HeaderComponent />', () => {
         obj.checkPage(Routes.home);
     });
 
-    test('should redirect to settings & import', async () => {
+    test('should redirect to settings & import & export', async () => {
         const obj = await defaultInitialise({}, { displayName: 'User Display Name' } as User, false, true);
         obj.mockClear();
 
@@ -72,16 +72,16 @@ describe('<HeaderComponent />', () => {
         obj.clickByText('User');
 
         await wait(() => expect(obj.queryByText('Settings')).toBeInTheDocument());
-
         obj.clickByText('Settings');
-
         expect(obj.checkPage(Routes.settings));
 
         await wait(() => expect(obj.queryByText('Import')).toBeInTheDocument());
-
         obj.clickByText('Import');
-
         expect(obj.checkPage(Routes.import));
+
+        await wait(() => expect(obj.queryByText('Export')).toBeInTheDocument());
+        obj.clickByText('Export');
+        expect(obj.checkPage(Routes.export));
     });
 
     test('should redirect to home after logout', async () => {

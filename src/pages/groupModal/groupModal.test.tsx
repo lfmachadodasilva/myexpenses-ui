@@ -78,7 +78,7 @@ describe('<GroupModalPage />', () => {
             });
 
             // main action
-            obj.clickAdd();
+            obj.modalTestObject.clickAction();
 
             await wait(() => {
                 expect(axiosMock.postSpy).toHaveBeenCalled();
@@ -104,7 +104,7 @@ describe('<GroupModalPage />', () => {
                 expect(obj.getByText('Add')).not.toHaveAttribute('disabled');
             });
 
-            obj.clickAdd();
+            obj.modalTestObject.clickAction();
 
             await wait(() => {
                 expect(axiosMock.postSpy).toHaveBeenCalled();
@@ -156,7 +156,7 @@ describe('<GroupModalPage />', () => {
             expect(obj.getByText('Edit')).not.toHaveAttribute('disabled');
 
             // main action
-            obj.clickEdit();
+            obj.modalTestObject.clickAction();
 
             await wait(() => {
                 expect(axiosMock.putSpy).toHaveBeenCalled();
@@ -181,7 +181,7 @@ describe('<GroupModalPage />', () => {
 
             expect(obj.getByText('Edit')).not.toHaveAttribute('disabled');
 
-            obj.clickEdit();
+            obj.modalTestObject.clickAction();
 
             await wait(() => {
                 expect(axiosMock.putSpy).toHaveBeenCalled();

@@ -55,6 +55,7 @@ export abstract class TestObjectBase<T> extends BaseTestTool {
 
     initialiseWithParentObject(wrapper: RenderResult) {
         this.wrapper = wrapper;
+        this.initialiseSubObjects();
     }
 
     debug() {

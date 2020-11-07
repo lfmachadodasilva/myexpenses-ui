@@ -5,7 +5,7 @@ import { format, isValid } from 'date-fns';
 import Form from 'react-bootstrap/Form';
 
 import { globalContext } from '../../contexts/global';
-import { ErrorComponent } from '../../components/error/error';
+import { AlertComponent } from '../../components/alert/alert';
 import { ItemsHeaderComponent } from '../../components/itemsHeader/itemsHeader';
 import { ExpenseFullModel, ExpenseType } from '../../models/expense';
 import { hasValue } from '../../helpers/util';
@@ -64,6 +64,12 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
             status[index] = StatusType.PROCESSING;
             setStatus({ ...status });
 
+            if (!isValid(expense.date)) {
+                status[index] = StatusType.ERROR;
+                setStatus({ ...status });
+                continue;
+            }
+
             // check if the label already exist
             let label = labels.find(l => l.name.trim().toLowerCase() === expense.label.name.trim().toLowerCase());
             if (!hasValue(label)) {
@@ -74,7 +80,7 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
                 } catch {
                     status[index] = StatusType.ERROR;
                     setStatus({ ...status });
-                    return;
+                    continue;
                 }
             }
 
@@ -83,7 +89,7 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
             } catch {
                 status[index] = StatusType.ERROR;
                 setStatus({ ...status });
-                return;
+                continue;
             }
 
             status[index] = StatusType.PROCESSED;
@@ -159,7 +165,7 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
                 onAction={handleOnAction}
                 disableAction={disabledAction}
             />
-            <ErrorComponent message={error} />
+            <AlertComponent message={error} type="danger" />
             <Form>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-4">

@@ -23,6 +23,7 @@ import { hasValue } from '../helpers/util';
 import { ImportPage } from './import/import';
 import { LabelModel } from '../models/label';
 import { LabelService } from '../services/label';
+import { ExportPage } from './export/export';
 
 export type MainProps = {};
 
@@ -306,7 +307,7 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
                     reloadGroups: handleToReloadGroups
                 }}
             >
-                <Container className="mt-2">
+                <Container className="mt-2 pl-1 pr-1">
                     <Switch>
                         {enablePrivateRoute && (
                             <PrivateRoute key={Routes.group} path={Routes.group} component={GroupPage} />
@@ -322,6 +323,9 @@ export const MainPage: React.FC<MainProps> = React.memo((_props: MainProps) => {
                         )}
                         {enablePrivateRoute && (
                             <PrivateRoute key={Routes.import} path={Routes.import} component={ImportPage} />
+                        )}
+                        {enablePrivateRoute && (
+                            <PrivateRoute key={Routes.export} path={Routes.export} component={ExportPage} />
                         )}
 
                         <Route key={Routes.auth} path={Routes.auth} component={AuthPage} />

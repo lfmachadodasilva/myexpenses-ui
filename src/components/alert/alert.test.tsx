@@ -1,9 +1,9 @@
 import { setConfiguration } from '../../configurations/configManager';
-import { ErrorProps } from './error';
-import { ErrorTestObject } from './error.testObject';
+import { AlertProps } from './alert';
+import { AlertTestObject } from './alert.testObject';
 
-async function defaultInitialise(props: Partial<ErrorProps> = {}) {
-    const obj = new ErrorTestObject();
+async function defaultInitialise(props: Partial<AlertProps> = {}) {
+    const obj = new AlertTestObject();
     await obj.initialiseObject(props);
 
     expect(obj).toBeDefined();
@@ -11,7 +11,7 @@ async function defaultInitialise(props: Partial<ErrorProps> = {}) {
     return obj;
 }
 
-describe('<ErrorComponent />', () => {
+describe('<AlertComponent />', () => {
     beforeEach(() => {
         setConfiguration();
     });
@@ -33,5 +33,14 @@ describe('<ErrorComponent />', () => {
 
         expect(obj.getAlert).toBeInTheDocument();
         expect(obj.queryByText('Show alert')).toBeInTheDocument();
+        expect(obj.querySelector('.alert-danger')).toBeInTheDocument();
+    });
+
+    test('should show alert with warning color', async () => {
+        const obj = await defaultInitialise({ message: 'Show alert', type: 'warning' });
+
+        expect(obj.getAlert).toBeInTheDocument();
+        expect(obj.queryByText('Show alert')).toBeInTheDocument();
+        expect(obj.querySelector('.alert-warning')).toBeInTheDocument();
     });
 });

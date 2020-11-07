@@ -61,7 +61,7 @@ describe('<ExpenseModalPage />', () => {
             });
 
             // main action
-            obj.clickAdd();
+            obj.modalTestObject.clickAction();
 
             await wait(() => {
                 expect(axiosMock.postSpy).toHaveBeenCalled();
@@ -85,7 +85,7 @@ describe('<ExpenseModalPage />', () => {
                 expect(obj.getByText('Add')).not.toHaveAttribute('disabled');
             });
 
-            obj.clickAdd();
+            obj.modalTestObject.clickAction();
 
             await wait(() => {
                 expect(axiosMock.postSpy).toHaveBeenCalled();
@@ -114,7 +114,7 @@ describe('<ExpenseModalPage />', () => {
             expect(obj.getByText('Edit')).not.toHaveAttribute('disabled');
 
             // main action
-            obj.clickEdit();
+            obj.modalTestObject.clickAction();
 
             await wait(() => {
                 expect(axiosMock.putSpy).toHaveBeenCalled();
@@ -135,7 +135,7 @@ describe('<ExpenseModalPage />', () => {
 
             expect(obj.getByText('Edit')).not.toHaveAttribute('disabled');
 
-            obj.clickEdit();
+            obj.modalTestObject.clickAction();
 
             await wait(() => {
                 expect(axiosMock.putSpy).toHaveBeenCalled();
@@ -165,7 +165,7 @@ describe('<ExpenseModalPage />', () => {
             expect(obj.getByText('Duplicate')).not.toHaveAttribute('disabled');
 
             // main action
-            obj.clickDuplicate();
+            obj.modalTestObject.clickAction();
 
             await wait(() => {
                 expect(axiosMock.postSpy).toHaveBeenCalled();
@@ -186,7 +186,7 @@ describe('<ExpenseModalPage />', () => {
 
             expect(obj.getByText('Duplicate')).not.toHaveAttribute('disabled');
 
-            obj.clickDuplicate();
+            obj.modalTestObject.clickAction();
 
             await wait(() => {
                 expect(axiosMock.postSpy).toHaveBeenCalled();
