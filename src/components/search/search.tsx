@@ -4,14 +4,16 @@ import { useHistory } from 'react-router';
 import queryString from 'query-string';
 import { createGlobalStyle } from 'styled-components';
 
+import { BsSearch } from 'react-icons/bs';
+
 import Accordion from 'react-bootstrap/Accordion';
 import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
 
+import { ButtonComponent } from '../button/button';
 import { globalContext } from '../../contexts/global';
 
 export type SearchProps = {};
@@ -185,9 +187,14 @@ export const SearchComponent: React.FC<SearchProps> = React.memo((props: SearchP
                                 </Col>
                             </Row>
                             <div className="d-flex justify-content-end">
-                                <Button className="mb-2" onClick={handleOnSearch} size="sm">
-                                    Search
-                                </Button>
+                                <ButtonComponent
+                                    size="sm"
+                                    className="mb-2"
+                                    type="primary"
+                                    text={t('SEARCH.ACTION')}
+                                    icon={<BsSearch size={12} />}
+                                    onClick={handleOnSearch}
+                                />
                             </div>
                         </Card.Body>
                     </Accordion.Collapse>

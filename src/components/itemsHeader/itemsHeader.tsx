@@ -1,4 +1,5 @@
 import React from 'react';
+import { ButtonComponent } from '../button/button';
 
 export interface ItemsHeaderProps {
     title: string;
@@ -11,14 +12,13 @@ export const ItemsHeaderComponent: React.FC<ItemsHeaderProps> = React.memo((prop
     return (
         <div className="d-flex justify-content-between mb-2">
             <h4>{props.title}</h4>
-            <button
-                type="button"
-                className="btn btn-primary"
+            <ButtonComponent
+                className="mb-2"
+                type="primary"
+                text={props.action}
                 onClick={props.onAction}
                 disabled={props.disableAction ?? false}
-            >
-                {props.action}
-            </button>
+            />
         </div>
     );
 });

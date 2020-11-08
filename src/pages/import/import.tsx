@@ -21,7 +21,7 @@ const defaultSeparator = ';';
 
 export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps) => {
     const [t] = useTranslation();
-    const { groups, group: groupGlobal, labels } = useContext(globalContext);
+    const { isLoading: isLoadingGlobal, groups, group: groupGlobal, labels } = useContext(globalContext);
     const [config] = React.useState<ConfigModel>(ConfigManager.get());
 
     enum StatusType {
@@ -52,11 +52,11 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
     );
 
     const disabledAction = React.useMemo(() => {
-        if (!hasValue(separator) || isLoading) {
+        if (!hasValue(separator) || isLoading || isLoadingGlobal) {
             return true;
         }
         return false;
-    }, [separator, isLoading]);
+    }, [separator, isLoading, isLoadingGlobal]);
 
     const handleOnAction = React.useCallback(async () => {
         setLoading(true);
@@ -74,6 +74,7 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
                 continue;
             }
 
+            // for debug propuse
             // await new Promise((resolve, _reject) => {
             //     setTimeout(() => {
             //         resolve(data);
@@ -215,7 +216,10 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
                 disableAction={disabledAction}
             />
             <AlertComponent message={error} type="danger" />
-
+            <AlertComponent
+                message={!isLoadingGlobal && groups.length === 0 ? t('EXPORT.EMPTY_GROUP') : ''}
+                type="warning"
+            />
             <Form>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-4">

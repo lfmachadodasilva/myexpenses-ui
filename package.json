@@ -46,6 +46,7 @@
         "react-firebase-hooks": "^2.2.0",
         "react-global-configuration": "^1.4.0",
         "react-i18next": "^11.7.3",
+        "react-icons": "^3.11.0",
         "react-loading-overlay": "^1.0.1",
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0",

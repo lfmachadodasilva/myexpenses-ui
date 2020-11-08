@@ -53,4 +53,7 @@ export const GlobalStyles = createGlobalStyle`
       color: ${({ theme }) => theme.text};
       border-color: ${({ theme }) => theme.toggleBorder};
   };
+  .react-icons {
+    vertical-align: middle;
+  }
   `
