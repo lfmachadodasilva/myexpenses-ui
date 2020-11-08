@@ -142,8 +142,10 @@
         "SEPARATOR": "Separator",
         "DATA": "Import data",
         "DATA_TEXT": "Format per line: TYPE;NAME;VALUE;DATE;LABEL;COMMENTS",
-        "DATA_PLACEHOLDER": "0;Some drinks;8.79;20/12/2020;Pub;2x\n1;Some food;20.55;25/12/2020;Meal;5 Old Mill\n0;Some groceries;18.34;27/12/2020;Market;Aldi",
+        "DATA_PLACEHOLDER": "1;Some drinks;8.79;20/12/2020;Pub;2x\n1;Some food;20.55;25/12/2020;Meal;5 Old Mill\n0;Your salary;999.99;27/12/2020;Salary;your salary + bonus",
         "ACTION": "Process",
+        "ERROR": "Some of the import expenses went wrong.",
+        "CANCEL": "Cancel",
         "TABLE": {
             "NUMBER": "#",
             "STATUS": "Status",

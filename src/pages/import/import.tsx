@@ -38,6 +38,8 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
     const [status, setStatus] = React.useState<StatusType[]>([]);
     const [separator, setSeparator] = React.useState<string>(defaultSeparator);
     const [error, setError] = React.useState('');
+    const [total, setTotal] = React.useState(0);
+    const [value, setValue] = React.useState(0);
 
     const groupsOptions = React.useMemo(
         () =>
@@ -58,6 +60,8 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
 
     const handleOnAction = React.useCallback(async () => {
         setLoading(true);
+        setTotal(expenses.length);
+        setValue(0);
         for (let index = 0; index < expenses.length; index++) {
             const expense = expenses[index];
 
@@ -70,6 +74,12 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
                 continue;
             }
 
+            // await new Promise((resolve, _reject) => {
+            //     setTimeout(() => {
+            //         resolve(data);
+            //     }, 5000);
+            // });
+
             // check if the label already exist
             let label = labels.find(l => l.name.trim().toLowerCase() === expense.label.name.trim().toLowerCase());
             if (!hasValue(label)) {
@@ -80,6 +90,8 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
                 } catch {
                     status[index] = StatusType.ERROR;
                     setStatus({ ...status });
+                    setValue(index + 1);
+                    setError(t('IMPORT.ERROR'));
                     continue;
                 }
             }
@@ -89,14 +101,17 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
             } catch {
                 status[index] = StatusType.ERROR;
                 setStatus({ ...status });
+                setValue(index + 1);
+                setError(t('IMPORT.ERROR'));
                 continue;
             }
 
             status[index] = StatusType.PROCESSED;
             setStatus({ ...status });
+            setValue(index + 1);
         }
         setLoading(false);
-    }, [group, labels, expenses, config, status, StatusType.ERROR, StatusType.PROCESSING, StatusType.PROCESSED]);
+    }, [t, group, labels, expenses, config, status, StatusType.ERROR, StatusType.PROCESSING, StatusType.PROCESSED]);
 
     const handleOnChangeGroup = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
         setGroup(+event.target.value);
@@ -121,16 +136,50 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
             setStatus(tmpExpenses.map(_ => StatusType.NOT_PROCESSED));
             setExpenses(tmpExpenses);
         } catch {
-            setError('IMPORT.ERROR');
             setExpenses([]);
         }
     }, [separator, data, group, t, StatusType.NOT_PROCESSED]);
+
+    const progressElement = React.useMemo(() => {
+        if (!isLoading) {
+            return <></>;
+        }
+
+        const tmp = total === 0 || value === 0 ? 0 : (value / total) * 100;
+
+        const styles = {
+            width: `${tmp.toFixed(0)}%`
+        } as React.CSSProperties;
+        return (
+            <div className="card mb-2">
+                <div className="card-body">
+                    <div className="progress">
+                        <div
+                            className={`progress-bar progress-bar-striped ${
+                                hasValue(error) ? 'bg-danger' : 'bg-success'
+                            }`}
+                            role="progressbar"
+                            style={styles}
+                            aria-valuenow={tmp}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                        >
+                            {`${value}/${total}`}
+                        </div>
+                    </div>
+                </div>
+                {/* <button type="button" className="btn btn-danger" onClick={() => setCancel(true)}>
+                    {t('IMPORT.CANCEL')}
+                </button> */}
+            </div>
+        );
+    }, [isLoading, error, value, total]);
 
     const expensesRows = React.useMemo(() => {
         return expenses.map((expense, index) => {
             return (
                 <tr key={index}>
-                    <th scope="row">{index}</th>
+                    <th scope="row">{index + 1}</th>
                     <td
                         className={
                             status[index] === StatusType.ERROR
@@ -166,6 +215,7 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
                 disableAction={disabledAction}
             />
             <AlertComponent message={error} type="danger" />
+
             <Form>
                 <div className="row">
                     <div className="col-sm-12 col-md-6 col-lg-4">
@@ -208,6 +258,7 @@ export const ImportPage: React.FC<ImportProps> = React.memo((props: ImportProps)
                     </div>
                 </div>
             </Form>
+            {progressElement}
             <div className="table-responsive">
                 <table className="table table-striped">
                     <thead>
