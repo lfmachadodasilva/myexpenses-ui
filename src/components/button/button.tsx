@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { hasValue } from '../../helpers/util';
 
 export interface ButtonProps {
@@ -26,7 +27,7 @@ export const ButtonComponent: React.FC<ButtonProps> = React.memo((props: ButtonP
     }
 
     return (
-        <>
+        <div className="dropdown-button">
             <button
                 type="button"
                 className={`btn btn-${type} btn-${size} ${className}`}
@@ -34,10 +35,10 @@ export const ButtonComponent: React.FC<ButtonProps> = React.memo((props: ButtonP
                 disabled={disabled}
             >
                 <div className="d-flex justify-content-center">
-                    {icon && <div className="mr-1 align-middle">{icon}</div>}
+                    {icon && <div>{icon}</div>}
                     {text}
                 </div>
             </button>
-        </>
+        </div>
     );
 });

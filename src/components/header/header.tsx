@@ -4,6 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { User } from 'firebase';
 
+import { IoMdSettings } from 'react-icons/io';
+import { BiImport, BiExport } from 'react-icons/bi';
+
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
@@ -57,12 +60,15 @@ export const HeaderComponent: React.FC<HeaderProps> = React.memo((props: HeaderP
                 <Nav>
                     <NavDropdown title={displayName} id="collasible-nav-dropdown">
                         <NavDropdown.Item onClick={() => handleRedirectTo(Routes.settings)}>
+                            <IoMdSettings />
                             {t('HEADER.SETTINGS')}
                         </NavDropdown.Item>
                         <NavDropdown.Item onClick={() => handleRedirectTo(Routes.import)}>
+                            <BiImport className="react-icons" />
                             {t('HEADER.IMPORT')}
                         </NavDropdown.Item>
                         <NavDropdown.Item onClick={() => handleRedirectTo(Routes.export)}>
+                            <BiExport className="react-icons" />
                             {t('HEADER.EXPORT')}
                         </NavDropdown.Item>
                         <NavDropdown.Divider />

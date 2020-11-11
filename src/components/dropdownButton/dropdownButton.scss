@@ -1,0 +1,33 @@
+.dropdown-button {
+    .dropdown-toggle {
+        background-color: transparent;
+        border: none;
+
+        padding-right: 6px;
+        padding-left: 6px;
+        padding-top: 2px;
+        padding-bottom: 4px;
+
+        svg {
+            margin: 0px;
+            padding: 0px;
+        }
+    }
+
+    .dropdown-toggle::after {
+        display: none;
+    }
+
+    .dropdown-toggle:not(:disabled):not(.disabled):active,
+    .dropdown-toggle:not(:disabled):not(.disabled).active,
+    .show > .dropdown-toggle {
+        background-color: transparent;
+        border: none;
+    }
+
+    .btn-primary:not(:disabled):not(.disabled):active:focus,
+    .btn-primary:not(:disabled):not(.disabled).active:focus,
+    .show > .btn-primary.dropdown-toggle:focus {
+        box-shadow: none;
+    }
+}

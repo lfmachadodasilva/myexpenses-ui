@@ -1,4 +1,4 @@
-import { createGlobalStyle} from "styled-components"
+import { createGlobalStyle } from "styled-components"
 export const GlobalStyles = createGlobalStyle`
   body {
     background: ${({ theme }) => theme.body};
@@ -53,7 +53,4 @@ export const GlobalStyles = createGlobalStyle`
       color: ${({ theme }) => theme.text};
       border-color: ${({ theme }) => theme.toggleBorder};
   };
-  .react-icons {
-    vertical-align: middle;
-  }
   `

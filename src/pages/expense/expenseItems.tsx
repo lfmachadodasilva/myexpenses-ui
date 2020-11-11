@@ -2,6 +2,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 
+import { IoIosCalendar } from 'react-icons/io';
+import { BiLabel } from 'react-icons/bi';
+import { FaRegMoneyBillAlt } from 'react-icons/fa';
+
 import { ItemComponent } from '../../components/item/item';
 import { ExpenseFullModel } from '../../models/expense';
 
@@ -28,18 +32,21 @@ export const ExpenseItemsPage: React.FC<ExpenseItemsProps> = React.memo((props: 
                 >
                     <div className="d-flex justify-content-between">
                         <h6 className="no-margin">
-                            {/* <small>{t('EXPENSE.VALUE')}</small> */}
-                            {/* <br></br> */ ' '}
+                            <span className="mr-1">
+                                <FaRegMoneyBillAlt />
+                            </span>
                             <small>{item.value.toFixed(2)}</small>
                         </h6>
                         <h6 className="no-margin">
-                            {/* <small>{t('EXPENSE.DATE')}</small> */}
-                            {/* <br></br> */ ' '}
+                            <span className="mr-1">
+                                <IoIosCalendar />
+                            </span>
                             <small>{format(new Date(item.date), t('EXPENSE.DATE_FORMAT'))}</small>
                         </h6>
                         <h6 className="no-margin">
-                            {/* <small>{t('EXPENSE.LABEL')}</small> */}
-                            {/* <br></br> */ ' '}
+                            <span className="mr-1">
+                                <BiLabel />
+                            </span>
                             <small>{item.label.name}</small>
                         </h6>
                     </div>

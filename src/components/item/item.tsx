@@ -1,10 +1,11 @@
 import React from 'react';
-
-import Card from 'react-bootstrap/Card';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown';
 import { useTranslation } from 'react-i18next';
+
+import { BsThreeDotsVertical, BsTrash, BsPencil, BsLayersHalf } from 'react-icons/bs';
+import Card from 'react-bootstrap/Card';
+
 import { ModalComponent } from '../modal/modal';
+import { DropdownButtonComponent, DropdownItem } from '../dropdownButton/dropdownButton';
 
 export interface ItemProps {
     id: number;
@@ -48,6 +49,21 @@ export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = React
             }
         }, [onDelete, handleOnHide, id]);
 
+        const itemsElement = React.useMemo(() => {
+            let items: DropdownItem[] = [];
+            if (onEdit) {
+                items.push({ text: t('ITEM.EDIT'), icon: <BsPencil />, onClick: handleOnEdit });
+            }
+            if (onDuplicate) {
+                items.push({ text: t('ITEM.DUPLICATE'), icon: <BsLayersHalf />, onClick: handleOnDuplicate });
+            }
+            if (onDelete) {
+                items.push({ text: t('ITEM.DELETE'), icon: <BsTrash />, onClick: handleOnShowDeleteModel });
+            }
+
+            return items;
+        }, [onEdit, onDuplicate, onDelete, handleOnEdit, handleOnDuplicate, handleOnShowDeleteModel, t]);
+
         return (
             <div className="item-component">
                 <Card key={`${props.id}_${props.name}`} className="mb-2 mt-2">
@@ -58,23 +74,11 @@ export const ItemComponent: React.FC<React.PropsWithChildren<ItemProps>> = React
                                 {props.children}
                             </div>
                             <div className="col-auto">
-                                <DropdownButton size="sm" variant="secondary" title="" id={`menu-${props.id}`}>
-                                    {props.onEdit && (
-                                        <Dropdown.Item eventKey="1" onClick={handleOnEdit}>
-                                            {t('ITEM.EDIT')}
-                                        </Dropdown.Item>
-                                    )}
-                                    {props.onDuplicate && (
-                                        <Dropdown.Item eventKey="1" onClick={handleOnDuplicate}>
-                                            {t('ITEM.DUPLICATE')}
-                                        </Dropdown.Item>
-                                    )}
-                                    {props.onDelete && (
-                                        <Dropdown.Item eventKey="2" onClick={handleOnShowDeleteModel}>
-                                            {t('ITEM.DELETE')}
-                                        </Dropdown.Item>
-                                    )}
-                                </DropdownButton>
+                                <DropdownButtonComponent
+                                    id={`menu-${props.id}`}
+                                    icon={<BsThreeDotsVertical />}
+                                    items={itemsElement}
+                                />
                             </div>
                         </div>
                     </Card.Body>
